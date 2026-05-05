@@ -1,0 +1,21 @@
+site_name: Fraud-Anomoly Detection & Behavioral Analytics
+site_description: "Scalable ML system for fraud & Anomoly detection and transaction behavior analysis"
+site_author: "MergeDeployGraduate"
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - API Reference: api.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - toc
