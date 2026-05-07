@@ -130,7 +130,6 @@ data/processed/*
 
 # Models
 models/*.pt
-models/*.pkl
 models/*.h5
 !models/.gitkeep
 
@@ -148,3 +147,4 @@ Thumbs.db
 # Project specific
 config/local_settings.py
 /data
+.claude/
