@@ -1,0 +1,5 @@
+outs:
+- md5: 13d0d075b9eb74dedabd8ebbcc15b064
+  size: 3479
+  hash: md5
+  path: lr_balanced_20260506.joblib

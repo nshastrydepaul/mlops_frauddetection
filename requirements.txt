@@ -17,3 +17,4 @@ lightgbm>=4.6.0
 xgboost>=3.2.0
 shap>=0.51.0
 imbalanced-learn>=0.14.1
+dvc[gdrive]>=3.55.0
