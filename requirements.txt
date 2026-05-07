@@ -11,3 +11,4 @@ omegaconf>=2.3.0
 dvc>=3.55.0
 seaborn>=0.13.0
 jupyter>=1.0.0
+dvc[gdrive]>=3.55.0
