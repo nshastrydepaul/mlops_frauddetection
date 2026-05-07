@@ -31,8 +31,9 @@ The team established the repository structure, configured the development enviro
 ### 2. Data Exploration
 - Dataset statistics analyzed
 - Fraud class imbalance identified
-- Transaction behavior patterns explored
-- Visualizations generated for label distribution and model evaluation
+- Transaction behavior patterns explored across time, location and spending
+- Key predictive features identified for downstream modeling    
+- Visualizations generated for all major distribution and behavioral patterns 
 
 ### 3. Data Processing Pipeline
 - Data loading functions implemented
