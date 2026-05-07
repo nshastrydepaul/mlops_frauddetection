@@ -1,29 +1,101 @@
-# Fraud-Anomoly Detection & Behavioral Analytics
+# Fraud Anomaly Classification & Behavioral Analytics
 
-Scalable ML system for fraud & Anomoly detection and transaction behavior analysis
+Scalable machine learning system for multi-class fraud anomaly classification, transaction behavior analysis, and financial risk analytics.
 
 ## Team Information
 
 - **Project Lead:** MergeDeployGraduate (nshastry@depaul.edu)
-- **Team Members:** *To be filled in*
+- **Team Members:**
+    - Nishanth Shekhar Shastry
+    - Mohammed Musaddiq Vavartar
+    - Lohith Poola
+    - Israail Ghazzal
 
 ## Project Overview
 
-Fraud-Anomoly Detection & Behavioral Analytics is a machine learning project that implements Scalable ML system for fraud & Anomoly detection and transaction behavior analysis.
+Fraud Anomaly Classification & Behavioral Analytics is an MLOps-focused machine learning project designed to classify financial transactions into multiple behavioral and fraud-risk categories.
 
-**Key Objectives:**
-- [ ] Objective 1
-- [ ] Objective 2
-- [ ] Objective 3
+Unlike traditional binary fraud detection systems, this project introduces a multi-class classification approach to better represent varying levels of transactional risk and suspicious activity.
+
+The system processes synthetic financial transaction data containing customer behavior, merchant activity, temporal patterns, and transaction metadata. The project focuses on building a reproducible and scalable ML workflow using modern MLOps practices such as DVC, modular pipelines, reproducible preprocessing, feature engineering, version control, and experiment tracking.
+
+The project currently includes:
+- Reproducible preprocessing pipelines
+- Feature engineering for behavioral analytics
+- Logistic Regression baseline model
+- Random Forest ensemble model experimentation
+- DVC integration for dataset versioning
+- Modular `src/`-based architecture
+- Automated testing and linting support
+
+### Transaction Classes
+
+| Label | Description |
+|---|---|
+| TT | Fully legitimate transaction |
+| TF | Legitimate transaction with suspicious behavior |
+| FT | Fraudulent transaction with lower financial impact |
+| FF | Fraudulent transaction with high financial impact |
+
+### Key Objectives
+
+- Build a scalable fraud anomaly classification pipeline
+- Analyze customer and merchant behavioral patterns
+- Compare baseline and ensemble ML models
+- Establish reproducible MLOps workflows for future deployment
+
+## Dataset Information
+
+This project uses a synthetic financial transaction dataset designed for fraud analytics and behavioral risk modeling.
+
+### Dataset Characteristics
+
+- 43 total features
+- Synthetic transaction records
+- Customer demographic information
+- Merchant activity information
+- Transaction behavioral metrics
+- Temporal transaction features
+- Fraud labels and risk indicators
+
+### Key Feature Categories
+
+#### Customer Features
+- Gender
+- Age
+- Job
+- Customer transaction frequency
+- Average spending behavior
+
+#### Merchant Features
+- Merchant name
+- Merchant transaction counts
+- Merchant risk scores
+
+#### Transaction Features
+- Transaction amount
+- Transaction category
+- Transaction timestamps
+- Weekend/night indicators
+
+### Target Variable
+
+Current Phase 1 experimentation uses the binary `is_fraud` target as the baseline benchmark for fraud detection.
+
+The project is designed to evolve toward a future multi-class fraud anomaly classification system with the following planned categories:
+
+| Label | Description |
+|---|---|
+| TT | Fully legitimate transaction |
+| TF | Legitimate transaction with suspicious behavior |
+| FT | Fraudulent transaction with lower financial impact |
+| FF | Fraudulent transaction with high financial impact |
 
 ## Architecture Diagram
 
-```
-[Placeholder for architecture diagram]
+The following architecture represents the end-to-end MLOps workflow implemented for fraud anomaly classification and behavioral analytics.
 
-Insert your system architecture diagram here, showing data flow, components,
-and interactions between different parts of the system.
-```
+![Pipeline Architecture](reports/figures/pipeline_architecture.png)
 
 ## Phase Deliverables
 
@@ -218,16 +290,41 @@ make docker_run
 make docs
 ```
 
+## Results & Visualizations
+
+### Generated Outputs
+
+The project currently generates:
+- Label distribution analysis
+- Confusion matrices
+- Model evaluation summaries
+- Comparative model performance metrics
+
+### Example Results
+
+| Model | Train Accuracy | Test Accuracy | Test F1 |
+|---|---|---|---|
+| Logistic Regression | 66.12% | 65.28% | 0.6555 |
+| SMOTE + Logistic Regression | 51.33% | 60.77% | 0.6149 |
+
+Generated figures are stored in:
+
+```bash
+reports/figures/
+```
+
 ## Contribution Summary
 
-- [ ] Team members have been assigned
-- [ ] Development environment has been set up
-- [ ] Initial data exploration completed
-- [ ] Model baseline established
-- [ ] Evaluation metrics defined
-- [ ] Documentation updated
-- [ ] All tests passing
-- [ ] Code reviewed and merged
+- [x] Team members assigned
+- [x] Development environment configured
+- [x] Initial data exploration completed
+- [x] Feature engineering implemented
+- [x] DVC pipeline initialized
+- [x] Baseline model established
+- [x] Evaluation metrics defined
+- [x] Documentation updated
+- [x] Tests passing successfully
+- [x] Code reviewed and merged
 
 ## References
 
