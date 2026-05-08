@@ -32,7 +32,11 @@ The project currently includes:
 
 **Source:** [Kaggle  Credit Card Transaction Fraud Detection](https://www.kaggle.com/datasets/orogunadebola/credit-card-transaction-dataset-fraud-detection)
 
-### Transaction Classes
+## Detailed Description
+
+This project focuses on building a scalable MLOps workflow for fraud anomaly classification and financial transaction behavior analysis using a synthetic credit card transaction dataset. The system is designed to support reproducible preprocessing, behavioral feature engineering, model experimentation, and evaluation through modular machine learning pipelines and modern MLOps practices such as DVC integration, automated testing, linting, and version control. The preprocessing pipeline includes data cleaning, categorical encoding, train-test splitting, and engineered behavioral features such as customer transaction frequency and merchant activity metrics to improve fraud pattern analysis. Phase 1 establishes the foundational architecture for future multi-class fraud anomaly classification while maintaining reproducibility, collaborative development standards, and scalable project organization.
+
+## Transaction Classes
 
 | Label | Description |
 |---|---|
@@ -41,7 +45,7 @@ The project currently includes:
 | FT | Fraudulent transaction with lower financial impact |
 | FF | Fraudulent transaction with high financial impact |
 
-### Key Objectives
+## Key Objectives
 
 - Build a scalable fraud anomaly classification pipeline
 - Analyze customer and merchant behavioral patterns
@@ -61,6 +65,8 @@ This project uses a synthetic financial transaction dataset designed for fraud a
 - Transaction behavioral metrics
 - Temporal transaction features
 - Fraud labels and risk indicators
+
+> **Scalability Note:** Current Phase 1 experimentation uses a sampled dataset of approximately 100K transaction records to accelerate preprocessing, experimentation, and model benchmarking. Future phases of the project will expand the pipeline to support datasets exceeding 1 million transaction records in order to evaluate scalability, pipeline efficiency, and model performance under larger data workloads.
 
 ### Key Feature Categories
 
