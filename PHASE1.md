@@ -60,7 +60,7 @@ This phase emphasized reproducibility, modular project organization, collaborati
 - [x] **Baseline Model**: Implement and train a baseline model
 - [ ] **Hyperparameter Configuration**: Document baseline hyperparameters and rationale
 - [x] **Evaluation Metrics**: Define and calculate relevant metrics (accuracy, F1, RMSE, etc.)
-- [ ] **Model Persistence**: Save trained models with version information
+- [x] **Model Persistence**: Save trained models with version information
 - [ ] **Training Reproducibility**: Ensure training is reproducible (seed management, logging)
 - [x] **Performance Baseline**: Document baseline model performance as reference point
 
@@ -104,6 +104,14 @@ Additional behavioral features were engineered to improve fraud pattern detectio
 
 - `merchant_txn_count`
   - Total transactions processed by a merchant
+
+## 7.1 Additional Feature Engineering:
+
+- `amt_ratio`  Amount involved in transaction compared to customer's average spending
+- `combined_risk`  Combination of the two types of merchant risk mentioned previously
+- `amt_risk_score`  Interaction effect of `amt_ratio` on `combined_risk`
+- `is_high_spend`  Boolean variable indicating that the transaction amount is more than 1.5 times the customer's average
+- `night_high_amt`  Boolean variable representing
 
 These features help capture transactional behavior patterns commonly associated with fraud analytics systems.
 
@@ -151,6 +159,15 @@ The baseline Logistic Regression model demonstrated stable generalization perfor
 
 SMOTE oversampling was evaluated to address class imbalance. While synthetic oversampling improved minority-class representation during training, it reduced test generalization performance. The original baseline configuration was retained for Phase 1 benchmarking.
 
+### SMOTE + Logistic Regression
+
+| Metric | Value |
+|---|---|
+| Train Accuracy | 51.33% |
+| Test Accuracy | 60.77% |
+| Train F1 Score | 0.5016 |
+| Test F1 Score | 0.6149 |
+
 ---
 
 ## Phase 1 Achievements
@@ -182,9 +199,9 @@ SMOTE oversampling was evaluated to address class imbalance. While synthetic ove
 
 | Team Member | Responsibilities |
 |---|---|
-| Nishanth Shastry | DVC setup, preprocessing pipeline, feature engineering, Base documentation |
-| Raail | Random Forest implementation |
-| Musaddiq | Logistic Regression baseline model |
-| Lohith | Exploratory Data Analysis and visualization |
+| Nishanth Shastry | DVC setup, preprocessing pipeline, feature engineering, base documentation, code review |
+| Raail | Logistic Regression, Random Forest, LightGBM, XGBoost implementation & evaluation, project documentation  |
+| Musaddiq | Logistic Regression baseline model, feature engineering, project documentation, code review |
+| Lohith | Exploratory Data Analysis, visualization, project documentation, document review |
 
 > **Checklist:** Use this as a guide for documenting your Phase 1 deliverables.
