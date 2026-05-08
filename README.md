@@ -40,6 +40,8 @@ This project focuses on building a scalable MLOps workflow for fraud anomaly cla
 
 This project included developing machine learning models through logistic regression for anomaly detection with respect to fraud cases. Four classes of fraud risk labeling was created to classify transaction risks into four classes  totally valid transactions, suspect but still valid transactions, lower level fraudulent transactions, and higher level fraudulent transactions  through the combination of fraud label and merchant risk rating. Two different models were developed where one was a basic logistic regression model while the other was an imbalanced logistic regression model with SMOTE data over-sampling technique. Five newly engineered features were added including the ratio of transaction amounts, merchant risk rating, and night time high-amount flagging to help improve the machine learning model. These models were then tested using 5-Fold Stratified Cross-Validation and weighted F1-score. Models were then versioned and saved using DVC tool with Google drive as a remote storage device.
 
+The exploration phase analyzed all the credit card transactions to understand the data modeling. The dataset revealed a heavy class imbalance with fraud rate approximately 1% which directly influenced modeling decisions. Transaction behavior was examined across time, location, spending patterns and customer demographics to surface meaningful signals. Rolling spend and frequency windows, customer merchant distance, merchant category and transaction hour emerged as the strongest indicators of fraud. Visualization were generated throughout to support findings and guide feature selection for the model building phases. For the full detailed analysis, see the [Data Exploration Report](reports/phase1-data-exploration-report.md) 
+
 ## Transaction Classes
 
 | Label | Description |
@@ -354,6 +356,7 @@ reports/figures/
 
 - [Project Documentation](docs/index.md)
 - [Phase 1 — Project Design & Model Development](PHASE1.md)
+- [Phase 1 — Exploratory Data Analysis Report](reports/phase1-data-exploration-report.md)
 - [Phase 2 — Containerization & Monitoring](PHASE2.md)
 - [Phase 3 — CI/CD & Deployment](PHASE3.md)
 
