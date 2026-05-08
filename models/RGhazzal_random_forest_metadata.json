@@ -1,0 +1,13 @@
+{
+    "20260507": {
+        "filename": "random_forest_20260507.joblib",
+        "date_trained": "20260507",
+        "train_accuracy": 1.0,
+        "accuracy": 0.991,
+        "f1": 0.5028,
+        "precision": 0.65,
+        "recall": 0.4099,
+        "roc_auc": 0.9238,
+        "avg_precision": 0.4953
+    }
+}
