@@ -348,7 +348,7 @@ reports/figures/
 
 | Team Member | Responsibilities |
 |---|---|
-| Nishanth Shastry | DVC setup, preprocessing pipeline, feature engineering, base documentation, code review |
+| Nishanth Shastry | DVC setup, preprocessing pipeline, feature engineering, project documentation, code review |
 | Raail | Logistic Regression, Random Forest, LightGBM, XGBoost implementation & evaluation, project documentation  |
 | Musaddiq | Logistic Regression baseline model, feature engineering, project documentation, code review |
 | Lohith | Exploratory Data Analysis, visualization, project documentation, document review |
