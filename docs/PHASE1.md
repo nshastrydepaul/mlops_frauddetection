@@ -31,8 +31,9 @@ The team established the repository structure, configured the development enviro
 ### 2. Data Exploration
 - Dataset statistics analyzed
 - Fraud class imbalance identified
-- Transaction behavior patterns explored
-- Visualizations generated for label distribution and model evaluation
+- Transaction behavior patterns explored across time, location and spending
+- Key predictive features identified for downstream modeling    
+- Visualizations generated for all major distribution and behavioral patterns 
 
 ### 3. Data Processing Pipeline
 - Data loading functions implemented
@@ -47,11 +48,30 @@ Implemented behavioral analytics features:
 - Average transaction amount per customer
 - Merchant transaction frequency
 
-### 5. Baseline Modeling
+### 4.1 Additional Feature Engineering
+- `amt_ratio` - Ratio of transaction amount compared to average amount spent by customer.
+- `combined_risk` - Weighing of 30-day and 7-day risk of merchants.
+- `amt_risk_score` - Combination of `amt_ratio` and `merchant_risk`.
+- `is_high_spend` - Indicator variable for transaction amount greater than 1.5 times customer’s average spending.
+- `night_high_amt` - Indicator variable for high-value transactions made during night time.
+
+### 5. 4-Class Fraud Risk Label Scheme
+- Created multi-label scheme merging `is_fraud` with merchant risk score
+- TT (Truth Truth), TF (Truth False), FT (False Truth), FF (False False)
+- FT/FF classification was based on the `merchant_risk_30_day` threshold (48/52 balanced ratio)
+
+### 6. Baseline Modeling
 - Logistic Regression baseline trained
 - SMOTE imbalance experimentation completed
 - Evaluation metrics generated using accuracy and F1-score
 - Confusion matrices generated
+
+## 7. Random Forest, LightGBM, XGBoost implementation & evaluation
+
+
+### 8. Model Versioning
+- Trained models were versioned using DVC and kept in Google Drive remote storage 
+- Model metadata is present in the file models/LR_SMOTE_model_metadata.json
 
 ---
 
@@ -78,7 +98,7 @@ Phase 2 will focus on:
 
 ## Status
 
-- Start Date: 
-- Estimated Completion: 
-- Actual Completion: 
+- Start Date: 04/30/2026
+- Estimated Completion: 05/04/2026
+- Actual Completion: 05/07/2026
 - Status: Completed

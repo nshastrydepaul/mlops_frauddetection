@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mlops_frauddetection"
 version = "0.1.0"
-description = "Scalable ML system for fraud & Anomoly detection and transaction behavior analysis"
+description = "Scalable machine learning system for multi-class fraud anomaly classification, transaction behavior analysis, and financial risk analytics."
 authors = [
     {name = "MergeDeployGraduate", email = "nshastry@depaul.edu"}
 ]
@@ -45,6 +45,7 @@ select = ["E", "F", "I", "N", "W", "B", "UP"]
 python_version = "3.11"
 warn_return_any = true
 disallow_untyped_defs = true
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

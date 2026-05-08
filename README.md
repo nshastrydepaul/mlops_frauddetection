@@ -28,7 +28,19 @@ The project currently includes:
 - Modular `src/`-based architecture
 - Automated testing and linting support
 
-### Transaction Classes
+## Dataset
+
+**Source:** [Kaggle  Credit Card Transaction Fraud Detection](https://www.kaggle.com/datasets/orogunadebola/credit-card-transaction-dataset-fraud-detection)
+
+## Detailed Description
+
+This project focuses on building a scalable MLOps workflow for fraud anomaly classification and financial transaction behavior analysis using a synthetic credit card transaction dataset. The system is designed to support reproducible preprocessing, behavioral feature engineering, model experimentation, and evaluation through modular machine learning pipelines and modern MLOps practices such as DVC integration, automated testing, linting, and version control. The preprocessing pipeline includes data cleaning, categorical encoding, train-test splitting, and engineered behavioral features such as customer transaction frequency and merchant activity metrics to improve fraud pattern analysis. Phase 1 establishes the foundational architecture for future multi-class fraud anomaly classification while maintaining reproducibility, collaborative development standards, and scalable project organization.
+
+
+
+The machine learning model for detecting/classifying the fraud anomalies using Logistic Regression. In the course of my project, I developed an approach that assigns each transaction to one out of four classes – a fully legitimate one, suspicious legitimate transaction, transaction associated with low-risk fraud, and high-risk fraud – by integrating both fraud classification and merchant risk rating along with certain behavior. I trained two models: a Logistic Regression model with class weights set as balanced and another one where SMOTE oversampling was used due to class imbalance. I also created five additional features – namely, transaction ratio, merchant risk score, and high amount at nighttime. Model training was done using 5-Fold Stratified Cross-Validation with weighted F1-score. Trained models were then versioned and saved with the help of DVC, Google Drive being selected as remote storage. I also carried out code reviews focusing on MLOps best practices such as avoiding large files commits in Git repository and following correct naming conventions for notebooks.
+
+## Transaction Classes
 
 | Label | Description |
 |---|---|
@@ -37,7 +49,7 @@ The project currently includes:
 | FT | Fraudulent transaction with lower financial impact |
 | FF | Fraudulent transaction with high financial impact |
 
-### Key Objectives
+## Key Objectives
 
 - Build a scalable fraud anomaly classification pipeline
 - Analyze customer and merchant behavioral patterns
@@ -57,6 +69,8 @@ This project uses a synthetic financial transaction dataset designed for fraud a
 - Transaction behavioral metrics
 - Temporal transaction features
 - Fraud labels and risk indicators
+
+> **Scalability Note:** Current Phase 1 experimentation uses a sampled dataset of approximately 100K transaction records to accelerate preprocessing, experimentation, and model benchmarking. Future phases of the project will expand the pipeline to support datasets exceeding 1 million transaction records in order to evaluate scalability, pipeline efficiency, and model performance under larger data workloads.
 
 ### Key Feature Categories
 
@@ -325,6 +339,16 @@ reports/figures/
 - [x] Documentation updated
 - [x] Tests passing successfully
 - [x] Code reviewed and merged
+
+## Team Contributions - Phase 1
+
+| Team Member | Responsibilities |
+|---|---|
+| Nishanth Shastry | DVC setup, preprocessing pipeline, feature engineering, base documentation, code review |
+| Raail | Logistic Regression, Random Forest, LightGBM, XGBoost implementation & evaluation, project documentation  |
+| Musaddiq | Logistic Regression baseline model, feature engineering, project documentation, code review |
+| Lohith | Exploratory Data Analysis, visualization, project documentation, document review |
+
 
 ## References
 
