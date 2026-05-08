@@ -40,6 +40,8 @@ This project focuses on building a scalable MLOps workflow for fraud anomaly cla
 
 The machine learning model for detecting/classifying the fraud anomalies using Logistic Regression. In the course of my project, I developed an approach that assigns each transaction to one out of four classes – a fully legitimate one, suspicious legitimate transaction, transaction associated with low-risk fraud, and high-risk fraud – by integrating both fraud classification and merchant risk rating along with certain behavior. I trained two models: a Logistic Regression model with class weights set as balanced and another one where SMOTE oversampling was used due to class imbalance. I also created five additional features – namely, transaction ratio, merchant risk score, and high amount at nighttime. Model training was done using 5-Fold Stratified Cross-Validation with weighted F1-score. Trained models were then versioned and saved with the help of DVC, Google Drive being selected as remote storage. I also carried out code reviews focusing on MLOps best practices such as avoiding large files commits in Git repository and following correct naming conventions for notebooks.
 
+The exploration phase analyzed all the credit card transactions to understand the data modeling. The dataset revealed a heavy class imbalance with fraud rate approximately 1% which directly influenced modeling decisions. Transaction behavior was examined across time, location, spending patterns and customer demographics to surface meaningful signals. Rolling spend and frequency windows, customer merchant distance, merchant category and transaction hour emerged as the strongest indicators of fraud. Visualization were generated throughout to support findings and guide feature selection for the model building phases. For the full detailed analysis, see the [Data Exploration Report](reports/phase1-data-exploration-report.md) 
+
 ## Transaction Classes
 
 | Label | Description |
@@ -354,6 +356,7 @@ reports/figures/
 
 - [Project Documentation](docs/index.md)
 - [Phase 1 — Project Design & Model Development](PHASE1.md)
+- [Phase 1 — Exploratory Data Analysis Report](reports/phase1-data-exploration-report.md)
 - [Phase 2 — Containerization & Monitoring](PHASE2.md)
 - [Phase 3 — CI/CD & Deployment](PHASE3.md)
 
