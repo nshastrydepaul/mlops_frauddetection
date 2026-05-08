@@ -148,3 +148,4 @@ Thumbs.db
 config/local_settings.py
 /data
 .claude/
+ds-venv/
