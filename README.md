@@ -36,6 +36,10 @@ The project currently includes:
 
 This project focuses on building a scalable MLOps workflow for fraud anomaly classification and financial transaction behavior analysis using a synthetic credit card transaction dataset. The system is designed to support reproducible preprocessing, behavioral feature engineering, model experimentation, and evaluation through modular machine learning pipelines and modern MLOps practices such as DVC integration, automated testing, linting, and version control. The preprocessing pipeline includes data cleaning, categorical encoding, train-test splitting, and engineered behavioral features such as customer transaction frequency and merchant activity metrics to improve fraud pattern analysis. Phase 1 establishes the foundational architecture for future multi-class fraud anomaly classification while maintaining reproducibility, collaborative development standards, and scalable project organization.
 
+
+
+The machine learning model for detecting/classifying the fraud anomalies using Logistic Regression. In the course of my project, I developed an approach that assigns each transaction to one out of four classes – a fully legitimate one, suspicious legitimate transaction, transaction associated with low-risk fraud, and high-risk fraud – by integrating both fraud classification and merchant risk rating along with certain behavior. I trained two models: a Logistic Regression model with class weights set as balanced and another one where SMOTE oversampling was used due to class imbalance. I also created five additional features – namely, transaction ratio, merchant risk score, and high amount at nighttime. Model training was done using 5-Fold Stratified Cross-Validation with weighted F1-score. Trained models were then versioned and saved with the help of DVC, Google Drive being selected as remote storage. I also carried out code reviews focusing on MLOps best practices such as avoiding large files commits in Git repository and following correct naming conventions for notebooks.
+
 ## Transaction Classes
 
 | Label | Description |
