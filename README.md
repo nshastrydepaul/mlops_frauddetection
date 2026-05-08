@@ -28,6 +28,10 @@ The project currently includes:
 - Modular `src/`-based architecture
 - Automated testing and linting support
 
+## Dataset
+
+**Source:** [Kaggle  Credit Card Transaction Fraud Detection](https://www.kaggle.com/datasets/orogunadebola/credit-card-transaction-dataset-fraud-detection)
+
 ### Transaction Classes
 
 | Label | Description |
@@ -325,6 +329,16 @@ reports/figures/
 - [x] Documentation updated
 - [x] Tests passing successfully
 - [x] Code reviewed and merged
+
+## Team Contributions - Phase 1
+
+| Team Member | Responsibilities |
+|---|---|
+| Nishanth Shastry | DVC setup, preprocessing pipeline, feature engineering, base documentation, code review |
+| Raail | Logistic Regression, Random Forest, LightGBM, XGBoost implementation & evaluation, project documentation  |
+| Musaddiq | Logistic Regression baseline model, feature engineering, project documentation, code review |
+| Lohith | Exploratory Data Analysis, visualization, project documentation, document review |
+
 
 ## References
 
