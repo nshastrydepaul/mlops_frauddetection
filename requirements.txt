@@ -1,6 +1,4 @@
 numpy>=1.26.0
-pandas>=2.2.0
-scikit-learn>=1.5.0
 joblib>=1.4.0
 matplotlib>=3.9.0
 tqdm>=4.66.0
@@ -23,3 +21,4 @@ scikit-learn==1.8.0
 typing_extensions==4.15.0
 typing-inspection==0.4.2
 xgboost==3.2.0
+scalene>=1.5.0
