@@ -153,3 +153,4 @@ config/local_settings.py
 ds-venv/
 =======
 >>>>>>> origin/main
+mlruns/
