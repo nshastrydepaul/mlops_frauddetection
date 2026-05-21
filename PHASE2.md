@@ -136,15 +136,15 @@ Training metrics and runtime outputs are logged and persisted as artifacts durin
 
 ## 4. Experiment Management & Tracking
 
-- [ ] **MLflow Setup**: Initialize MLflow tracking server and client configuration
+- [x] **MLflow Setup**: Initialize MLflow tracking server and client configuration
   - OR **Weights & Biases Setup**: Initialize W&B project and team workspace
-- [ ] **Metric Logging**: Log training/validation metrics for each experiment
-- [ ] **Parameter Logging**: Log all hyperparameters and configuration values
-- [ ] **Model Artifact Logging**: Save model checkpoints and artifacts to tracking system
-- [ ] **Experiment Comparison**: Create comparison of at least 3 different experiments
-- [ ] **Visualization**: Generate performance comparison charts/plots
-- [ ] **Best Model Selection**: Document criteria and process for selecting best model from experiments
-- [ ] **Experiment Documentation**: Create table summarizing all experiments with results
+- [x] **Metric Logging**: Log training/validation metrics for each experiment
+- [x] **Parameter Logging**: Log all hyperparameters and configuration values
+- [x] **Model Artifact Logging**: Save model checkpoints and artifacts to tracking system
+- [x] **Experiment Comparison**: Create comparison of at least 3 different experiments
+- [x] **Visualization**: Generate performance comparison charts/plots
+- [x] **Best Model Selection**: Document criteria and process for selecting best model from experiments
+- [x] **Experiment Documentation**: Create table summarizing all experiments with results
 
 ---
 
