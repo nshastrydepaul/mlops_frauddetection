@@ -1,7 +1,7 @@
 {
-  "20260521": {
+  "20260520": {
     "dataset": "Credit Card Fraud Detection - Kaggle",
-    "training_date": "20260521",
+    "training_date": "20260520",
     "train_samples": 102846,
     "test_samples": 20000,
     "features": 38,
