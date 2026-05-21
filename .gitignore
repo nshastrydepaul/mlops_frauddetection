@@ -153,3 +153,6 @@ config/local_settings.py
 ds-venv/
 =======
 >>>>>>> origin/main
+
+# Runtime logs
+logs/*.log
