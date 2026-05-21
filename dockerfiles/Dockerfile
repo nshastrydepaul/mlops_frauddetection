@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     curl \
+    git \
     libffi-dev \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*

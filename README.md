@@ -180,6 +180,81 @@ make predict
 make help
 ```
 
+## Docker Containerization (Phase 2)
+
+Phase 2 operationalized the fraud detection platform using Docker and Docker Compose to provide reproducible machine learning workflows across environments.
+
+### Docker Features
+
+* Multi-stage Docker build
+* Reproducible Python 3.11 environment
+* MLflow-compatible runtime
+* Containerized preprocessing and training
+* Persistent artifact mounting support
+* Docker Compose orchestration
+
+### Build Docker Image
+
+```bash
+docker compose build --no-cache
+```
+
+### Run Containerized Pipeline
+
+```bash
+docker compose up
+```
+
+### Run in Detached Mode
+
+```bash
+docker compose up -d
+```
+
+### Stop Containers
+
+```bash
+docker compose down
+```
+
+### Persistent Volume Mounts
+
+The Docker workflow mounts local project directories into the container to preserve:
+
+* trained models
+* MLflow artifacts
+* processed datasets
+* generated reports
+
+### Docker Runtime Validation
+
+The following workflows were successfully validated inside Docker:
+
+* Logistic Regression
+* Random Forest
+* LightGBM
+* XGBoost
+* SMOTE preprocessing workflows
+
+Container execution completed successfully with:
+
+```text
+exited with code 0
+```
+
+### Docker Troubleshooting
+
+The following dependency/runtime issues were identified and resolved during containerization:
+
+* missing make dependency
+* missing curl dependency
+* missing git dependency
+* missing libgomp1 runtime dependency for LightGBM
+
+For additional operational details, see:
+
+* [PHASE2.md](PHASE2.md)
+
 ## Technology Stack
 
 ### Core Dependencies
@@ -311,6 +386,34 @@ make docker_run
 # Serve documentation locally
 make docs
 ```
+
+## Phase 2 Operational Updates
+
+Phase 2 introduced operational MLOps improvements including:
+
+* Docker containerization
+* Docker Compose orchestration
+* runtime validation
+* MLflow-compatible execution workflows
+* structured logging integration
+* preprocessing validation
+* reproducible training execution
+
+### Phase 2 Deliverables
+
+| Component                         | Status    |
+| --------------------------------- | --------- |
+| Docker Containerization           | Completed |
+| Docker Compose Runtime Validation | Completed |
+| Environment Reproducibility       | Completed |
+| Persistent Artifact Mounting      | Completed |
+| Logging Validation                | Completed |
+| MLflow Runtime Compatibility      | Completed |
+
+### Related Documentation
+
+* [PHASE2.md](PHASE2.md)
+* [docs/PHASE2.md](docs/PHASE2.md)
 
 ## Results & Visualizations
 
