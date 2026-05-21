@@ -154,3 +154,5 @@ ds-venv/
 =======
 >>>>>>> origin/main
 mlruns/
+mlflow.db
+src/mlops_frauddetection/mlflow.db
