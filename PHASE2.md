@@ -65,38 +65,26 @@ confirming reproducible end-to-end ML execution inside Docker.
 
 ## 2. Monitoring & Debugging
 
-- [ ] **Debugging Tools**: Set up pdb/ipdb for interactive debugging
-- [ ] **Debugging Documentation**: Document how to debug in containerized environment
-- [ ] **Debug Scenario 1**: Create example scenario and solution document for [specific problem]
-- [ ] **Debug Scenario 2**: Create example scenario and solution document for [specific problem]
+- [x] **Debugging Tools**: Set up pdb/ipdb for interactive debugging
+- [x] **Debugging Documentation**: Document how to debug in containerized environment
+- [x] **Debug Scenario 1**: Create example scenario and solution document for [specific problem]
+- [x] **Debug Scenario 2**: Create example scenario and solution document for [specific problem]
 - [x] **Logging for Debugging**: Implement detailed logging at critical points in code
 - [x] **Model Assertion Checks**: Add assertions to catch data/model anomalies early
 - [x] **Training Validation**: Implement sanity checks (NaN detection, shape validation, etc.)
 
-Implemented Monitoring & Validation
+Implemented monitoring and debugging features include:
 
-The project currently implements:
-
-- dataset shape validation
-- fraud distribution logging
-- preprocessing validation
-- runtime metric logging
-- NaN detection and handling
-- structured INFO/WARNING/ERROR logs
-
-Validation checks were added throughout:
-
-- preprocessing pipeline
-- feature engineering
-- train/test splitting
-- model training workflows
-
-Rich logging provides:
-
-- colored logs
-- runtime diagnostics
-- structured console output
-- traceback visibility
+* psutil-based CPU and RAM monitoring
+* optional GPU monitoring using GPUtil
+* CSV-based resource usage logging during training
+* structured INFO/WARNING/ERROR logs
+* runtime diagnostics
+* dataset shape logging
+* fraud class distribution logging
+* assertion-based validation checks
+* pdb line-by-line debugging support
+* For detailed Monitoring and Debugging, see the [Monitoring & Debug Report](reports/phase2-monitoring-debugging.md)
 
 ---
 
