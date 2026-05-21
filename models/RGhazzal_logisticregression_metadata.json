@@ -1,0 +1,20 @@
+{
+  "20260521": {
+    "dataset": "Credit Card Fraud Detection - Kaggle",
+    "training_date": "20260521",
+    "train_samples": 102846,
+    "test_samples": 20000,
+    "features": 38,
+    "smote_strategy": 0.3,
+    "seed": 42,
+    "train_acc": 0.8224821577893161,
+    "test_acc": 0.83455,
+    "f1": 0.09068425391591096,
+    "precision": 0.048287971905179985,
+    "recall": 0.7432432432432432,
+    "roc_auc": 0.8386520558378178,
+    "avg_prec": 0.283960175089648,
+    "cv_mean_f1": 0.378850428210225,
+    "cv_std_f1": 0.3604557870922605
+  }
+}

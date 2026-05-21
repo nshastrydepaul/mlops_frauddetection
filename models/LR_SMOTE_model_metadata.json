@@ -1,7 +1,7 @@
 {
-  "dataset": "Credit Card Fraud Detection  Kaggle",
-  "dataset_version": "DVC tracked  data/processed/",
-  "training_date": "20260506",
+  "dataset": "Credit Card Fraud Detection - Kaggle",
+  "dataset_version": "DVC tracked - data/processed/",
+  "training_date": "20260521",
   "train_samples": 80000,
   "test_samples": 20000,
   "features": 44,
@@ -11,33 +11,28 @@
     "2": "FT-Fraud-LowRisk",
     "3": "FF-Fraud-HighRisk"
   },
-  "model_1": {
-    "name": "LogisticRegression",
-    "class_weight": "balanced",
-    "max_iter": 1000,
-    "cv_f1_mean": 0.6265,
-    "cv_f1_std": 0.0272,
-    "train_accuracy": 0.6612,
-    "test_accuracy": 0.6528,
-    "test_f1": 0.6555,
-    "file": "../models/lr_balanced_20260506.joblib"
-  },
-  "model_2": {
-    "name": "LogisticRegression + SMOTE",
-    "class_weight": "balanced",
-    "max_iter": 1000,
-    "smote_strategy": "auto (equal classes)",
-    "cv_f1_mean": 0.5206,
-    "cv_f1_std": 0.0112,
-    "train_accuracy": 0.5133,
-    "test_accuracy": 0.6077,
-    "test_f1": 0.6149,
-    "file": "../models/lr_smote_20260506.joblib"
-  },
   "reproducibility": {
     "random_seed": 42,
-    "cv_strategy": "StratifiedKFold(n_splits=5)",
-    "data_versioning": "DVC (Google Drive remote)",
-    "environment": "requirements.txt pinned versions"
+    "cv_strategy": "StratifiedKFold(n_splits=5)"
+  },
+  "model_1": {
+    "name": "LR_balanced",
+    "max_iter": 1000,
+    "cv_f1_mean": 0.6331,
+    "cv_f1_std": 0.0091,
+    "train_acc": 0.6155,
+    "test_acc": 0.6111,
+    "test_f1": 0.6269,
+    "file": "/app/models/lr_balanced_20260521.joblib"
+  },
+  "model_2": {
+    "name": "LR_SMOTE",
+    "max_iter": 1000,
+    "cv_f1_mean": 0.5142,
+    "cv_f1_std": 0.0077,
+    "train_acc": 0.5287,
+    "test_acc": 0.5936,
+    "test_f1": 0.6135,
+    "file": "/app/models/lr_smote_20260521.joblib"
   }
 }

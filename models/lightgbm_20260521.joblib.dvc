@@ -1,0 +1,5 @@
+outs:
+- md5: 055371ed7f8f2889434c43e33dcf99dc
+  size: 3495140
+  hash: md5
+  path: lightgbm_20260521.joblib
