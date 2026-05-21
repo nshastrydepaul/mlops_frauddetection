@@ -23,11 +23,13 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from gto import ext
 import joblib
 import mlflow
 import mlflow.sklearn
 import numpy as np
 import pandas as pd
+from seaborn import cm
 import lightgbm as lgb
 import xgboost as xgb
 from imblearn.over_sampling import SMOTE
@@ -65,9 +67,10 @@ logging.getLogger("mlflow.sklearn").setLevel(logging.ERROR)
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+from sklearn.metrics import classification_report as skl_report
 
 Mlflow_track = "sqlite:///mlflow.db"
-Mlflow_name = "fraud-anomaly-detection"
+Mlflow_name = "fraud-anomaly-detection-v4-rf300-lgb100"
 
 logger = get_logger(__name__)
 
@@ -334,7 +337,7 @@ def train_lr_pipeline(
     m1_path = model_dir / f"lr_balanced_{timestamp}.joblib"
     joblib.dump(model_lr, m1_path)
 
-    with mlflow.start_run(run_name=f"LR_balanced_4class_{timestamp}"):
+    with mlflow.start_run(run_name=f"LR_balanced_maxiter{max_iter}_{timestamp}"):
         mlflow.log_params({"model": "LR_balanced", "class_weight": "balanced",
                            "max_iter": max_iter, "seed": seed,
                            "smote": False, "cv_folds": 5, "pipeline": "A"})
@@ -345,10 +348,21 @@ def train_lr_pipeline(
         mlflow.log_artifact(str(m1_path))
 
         cm = confusion_matrix(y_test_4, y_pred_m1)
-        fig, ax = plt.subplots(figsize=(8, 6))
-        ConfusionMatrixDisplay(cm, display_labels=list(lr_label_names_m.values())).plot(ax=ax)
+        fig, ax = plt.subplots(figsize=(10, 8))
+        disp = ConfusionMatrixDisplay(cm, display_labels=list(lr_label_names_m.values()))
+        disp.plot(ax=ax, colorbar=True)
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=15, ha='right', fontsize=9)
+        ax.set_yticklabels(ax.get_yticklabels(), fontsize=9)
+        for text in ax.texts:
+            try:
+                val = float(text.get_text())
+                if val >= 1000:
+                    text.set_text(f"{int(val):,}")
+                text.set_fontsize(9)
+            except ValueError:
+                pass
         plt.tight_layout()
-        plt.savefig("reports/figures/mlflow_cm_lr_balanced.png")
+        plt.savefig("reports/figures/mlflow_cm_lr_balanced.png", dpi=150, bbox_inches='tight')
         mlflow.log_artifact("reports/figures/mlflow_cm_lr_balanced.png")
         plt.close(fig)
     logger.info("Model 1 saved and logged -> %s", m1_path)
@@ -384,7 +398,7 @@ def train_lr_pipeline(
         m2_path = model_dir / f"lr_smote_{timestamp}.joblib"
         joblib.dump(model_smote, m2_path)
 
-        with mlflow.start_run(run_name=f"LR_SMOTE_4class_{timestamp}"):
+        with mlflow.start_run(run_name=f"LR_SMOTE_maxiter{max_iter}_{timestamp}"):
             mlflow.log_params({"model": "LR_SMOTE", "class_weight": "balanced",
                                "max_iter": max_iter, "seed": seed,
                                "smote": True, "smote_strategy": "auto",
@@ -394,6 +408,26 @@ def train_lr_pipeline(
                                 "test_f1": m2_test_f1})
             mlflow.sklearn.log_model(model_smote, "lr_smote")
             mlflow.log_artifact(str(m2_path))
+
+            cm2 = confusion_matrix(y_test_4, y_pred_m2)
+            fig2, ax2 = plt.subplots(figsize=(10, 8))  # bigger figure
+            disp = ConfusionMatrixDisplay(cm2, display_labels=list(lr_label_names_m.values()))
+            disp.plot(ax=ax2, colorbar=True)
+            ax2.set_xticklabels(ax2.get_xticklabels(), rotation=15, ha='right', fontsize=9)
+            ax2.set_yticklabels(ax2.get_yticklabels(), fontsize=9)
+            # Format large numbers in cells
+            for text in ax2.texts:
+                try:
+                    val = float(text.get_text())
+                    if val >= 1000:
+                        text.set_text(f"{int(val):,}")
+                    text.set_fontsize(9)
+                except ValueError:
+                    pass
+            plt.tight_layout()
+            plt.savefig("reports/figures/mlflow_cm_lr_smote.png", dpi=150, bbox_inches='tight')
+            mlflow.log_artifact("reports/figures/mlflow_cm_lr_smote.png")
+            plt.close(fig2)
         logger.info("Model 2 saved and logged -> %s", m2_path)
 
     # Metadata
@@ -608,7 +642,7 @@ def train_ensemble_pipeline(
         mpath = model_dir / fname
         joblib.dump(model, mpath)
 
-        with mlflow.start_run(run_name=f"{name}_{timestamp}"):
+        with mlflow.start_run(run_name=f"{name}_rf{n_estimators_rf}_{timestamp}"):
             mlflow.log_params({"model": name, "seed": seed,
                                "smote_strategy": 0.3, "cv_folds": 5,
                                "pipeline": "B"})
@@ -620,6 +654,12 @@ def train_ensemble_pipeline(
                                 "cv_std_f1":  float(cv_scores.std())})
             mlflow.sklearn.log_model(model, name.lower())
             mlflow.log_artifact(str(mpath))
+
+            report = skl_report(y_test, y_pred)
+            report_path = f"reports/figures/{name.lower()}_classification_report.txt"
+            with open(report_path, "w") as f:
+                f.write(report)
+            mlflow.log_artifact(report_path)
         logger.info("  %s saved and logged -> %s", name, mpath)
 
     for name, res in all_results.items():
