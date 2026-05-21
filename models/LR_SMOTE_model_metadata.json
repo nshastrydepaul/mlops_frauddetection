@@ -1,7 +1,7 @@
 {
   "dataset": "Credit Card Fraud Detection - Kaggle",
   "dataset_version": "DVC tracked - data/processed/",
-  "training_date": "20260521",
+  "training_date": "20260520",
   "train_samples": 80000,
   "test_samples": 20000,
   "features": 44,
@@ -18,21 +18,21 @@
   "model_1": {
     "name": "LR_balanced",
     "max_iter": 1000,
-    "cv_f1_mean": 0.6331,
-    "cv_f1_std": 0.0091,
-    "train_acc": 0.6155,
-    "test_acc": 0.6111,
-    "test_f1": 0.6269,
-    "file": "/app/models/lr_balanced_20260521.joblib"
+    "cv_f1_mean": 0.6413,
+    "cv_f1_std": 0.0077,
+    "train_acc": 0.6418,
+    "test_acc": 0.6362,
+    "test_f1": 0.6423,
+    "file": "/Users/musaddiq/Library/CloudStorage/OneDrive-DePaulUniversity/MS in CS/Spring 2026/SE 489/project_phas2/mlops_frauddetection/models/lr_balanced_20260520.joblib"
   },
   "model_2": {
     "name": "LR_SMOTE",
     "max_iter": 1000,
-    "cv_f1_mean": 0.5142,
-    "cv_f1_std": 0.0077,
-    "train_acc": 0.5287,
-    "test_acc": 0.5936,
-    "test_f1": 0.6135,
-    "file": "/app/models/lr_smote_20260521.joblib"
+    "cv_f1_mean": 0.5215,
+    "cv_f1_std": 0.0089,
+    "train_acc": 0.5364,
+    "test_acc": 0.6271,
+    "test_f1": 0.6363,
+    "file": "/Users/musaddiq/Library/CloudStorage/OneDrive-DePaulUniversity/MS in CS/Spring 2026/SE 489/project_phas2/mlops_frauddetection/models/lr_smote_20260520.joblib"
   }
 }
