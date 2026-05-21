@@ -69,9 +69,28 @@ Implemented behavioral analytics features:
 
 ## 7. Random Forest, LightGBM, XGBoost implementation & evaluation
 
+### Models Trained
+Four classification models were trained on the SMOTE-resampled training set and evaluated on the original (untouched) test set:
 
+| Model               | Train Acc | Test Acc | F1     | ROC-AUC |
+|---------------------|-----------|----------|--------|---------|
+| Logistic Regression | 0.8225    | 0.8346   | 0.0907 | 0.8387  |
+| Random Forest       | 1.0000    | 0.9910   | 0.5028 | 0.9238  |
+| LightGBM            | 1.0000    | 0.9917   | 0.5608 | 0.9562  |
+| XGBoost             | 0.9991    | 0.9917   | 0.5829 | 0.9614  |
+
+### Key Observations
+- **Logistic Regression** shows consistent train/test accuracy (0.8225 vs 0.8346) but very low F1 (0.0907), meaning it struggles to detect fraud despite decent overall accuracy
+- **Random Forest and LightGBM** have train accuracy of 1.0000 vs test accuracy ~0.991 — a clear sign of overfitting on the training set
+- **XGBoost** is the best overall model with the highest ROC-AUC (0.9614) and F1 (0.5829), with minimal gap between train and test accuracy
+- High test accuracy across all models is misleading due to class imbalance — F1, ROC-AUC, and Average Precision are the meaningful metrics
+
+### Threshold Tuning
+- Best model by ROC-AUC: **XGBoost**
+- Default threshold of 0.50 is suboptimal for fraud detection
+- Optimal threshold maximizing F1: **0.60**
 ### 8. Model Versioning
-- Trained models were versioned using DVC and kept in Google Drive remote storage 
+- Trained models were versioned using DVC and kept in Google Drive remote storage
 - Model metadata is present in the file models/LR_SMOTE_model_metadata.json
 
 ---

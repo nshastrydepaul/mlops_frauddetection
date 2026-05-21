@@ -148,11 +148,11 @@ Thumbs.db
 # Project specific
 config/local_settings.py
 /data
-<<<<<<< HEAD
 .claude/
 ds-venv/
-=======
->>>>>>> origin/main
+
+# Runtime logs
+logs/*.log
 mlruns/
 mlflow.db
 src/mlops_frauddetection/mlflow.db
