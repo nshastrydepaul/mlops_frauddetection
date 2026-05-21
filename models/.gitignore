@@ -8,3 +8,9 @@
 /xgboost_20260507.joblib
 /preprocessor_20260507.joblib
 >>>>>>> 5be04ff (Add trained RGhazzal models 20260507 via DVC tracking)
+/lightgbm_20260521.joblib
+/logisticregression_20260521.joblib
+/lr_balanced_20260521.joblib
+/lr_smote_20260521.joblib
+/randomforest_20260521.joblib
+/xgboost_20260521.joblib

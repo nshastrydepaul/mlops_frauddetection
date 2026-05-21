@@ -1,13 +1,31 @@
 {
-    "20260507": {
-        "filename": "xgboost_20260507.joblib",
-        "date_trained": "20260507",
-        "train_accuracy": 0.9991,
-        "accuracy": 0.9917,
-        "f1": 0.5829,
-        "precision": 0.6591,
-        "recall": 0.5225,
-        "roc_auc": 0.9614,
-        "avg_precision": 0.5779
-    }
+  "20260507": {
+    "filename": "xgboost_20260507.joblib",
+    "date_trained": "20260507",
+    "train_accuracy": 0.9991,
+    "accuracy": 0.9917,
+    "f1": 0.5829,
+    "precision": 0.6591,
+    "recall": 0.5225,
+    "roc_auc": 0.9614,
+    "avg_precision": 0.5779
+  },
+  "20260521": {
+    "dataset": "Credit Card Fraud Detection - Kaggle",
+    "training_date": "20260521",
+    "train_samples": 102846,
+    "test_samples": 20000,
+    "features": 38,
+    "smote_strategy": 0.3,
+    "seed": 42,
+    "train_acc": 0.9990665655446007,
+    "test_acc": 0.9917,
+    "f1": 0.5829145728643216,
+    "precision": 0.6590909090909091,
+    "recall": 0.5225225225225225,
+    "roc_auc": 0.9614258813368936,
+    "avg_prec": 0.5778614609158603,
+    "cv_mean_f1": 0.6753785762819445,
+    "cv_std_f1": 0.16741561051626314
+  }
 }
