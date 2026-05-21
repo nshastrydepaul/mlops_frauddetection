@@ -45,11 +45,11 @@ This phase emphasized reproducibility, modular project organization, collaborati
 ## 4. Data Handling
 
 - [x] **Data Cleaning Scripts**: Create reproducible scripts for data cleaning and preprocessing
-- [ ] **Normalization**: Implement feature normalization/standardization with proper documentation
+- [x] **Normalization**: Implement feature normalization/standardization with proper documentation
 - [ ] **Data Augmentation**: Develop and document data augmentation strategies if applicable
 - [x] **Data Documentation**: Create data dictionary with feature descriptions and data types
 - [x] **Data Splits**: Define and implement train/validation/test split strategy
-- [ ] **Data Validation**: Create scripts to validate data quality and consistency
+- [x] **Data Validation**: Create scripts to validate data quality and consistency
 - [x] **DVC Setup (Optional)**: Initialize DVC for data versioning if managing large datasets
 
 ---

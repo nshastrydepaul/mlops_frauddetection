@@ -32,8 +32,9 @@ The team established the repository structure, configured the development enviro
 - Dataset statistics analyzed
 - Fraud class imbalance identified
 - Transaction behavior patterns explored across time, location and spending
-- Key predictive features identified for downstream modeling
+- Key predictive features identified for downstream modeling    
 - Visualizations generated for all major distribution and behavioral patterns
+- For the full detailed analysis, see the [Data Exploration Report](reports/phase1-data-exploration-report.md)
 
 ### 3. Data Processing Pipeline
 - Data loading functions implemented
@@ -98,6 +99,7 @@ Four classification models were trained on the SMOTE-resampled training set and 
 
 - Strong class imbalance exists across fraud categories
 - Behavioral features improved fraud representation
+- For the full detailed analysis, see the [Data Exploration Report](reports/phase1-data-exploration-report.md)
 - Logistic Regression generalized consistently between training and testing
 - SMOTE oversampling reduced generalization performance
 - Random Forest is expected to improve performance on non-linear fraud patterns
