@@ -148,16 +148,20 @@ The following container/runtime issues were identified and resolved:
 
 ---
 
-## Logging & Monitoring
+## Monitoring & Debugging
 
-Implemented logging features include:
+Implemented monitoring and debugging features include:
 
+* psutil-based CPU and RAM monitoring
+* optional GPU monitoring using GPUtil
+* CSV-based resource usage logging during training
 * structured INFO/WARNING/ERROR logs
 * runtime diagnostics
-* preprocessing validation logs
 * dataset shape logging
-* fraud distribution logging
-* traceback visibility using Rich logging
+* fraud class distribution logging
+* assertion-based validation checks
+* pdb line-by-line debugging support
+* For detailed Monitoring and Debugging, see the [Monitoring & Debug Report](reports/phase2-monitoring-debugging.md)
 
 Validation checks include:
 
