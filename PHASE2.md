@@ -213,53 +213,24 @@ mlflow.log_artifact(report_path)                              # classification r
 
 ### 4.3 Experiment Comparison
 
+**Experiment 1 (fraud-anomaly-detection)  Baseline:**
+Our baseline run with default settings  max_iter=1000 for LR, RF=200 trees,
+LGB=500 rounds. This is what we compare everything else against.
+
+**Experiment 2 (v2-max-iter500)  LR only, fewer iterations:**
+We kept everything the same except max_iter  dropping it from 1000 to 500.
+This showed that more iterations helped, with cv_mean_f1 going from 0.641
+(iter=1000) down to 0.620 (iter=500), so the extra training time was worth it.
+
+**Experiment 3 (v3-rf100-lgb200)  Lighter ensemble:**
+We ran all models but used fewer trees for Random Forest (100) and
+LightGBM (200 rounds) to test a lighter but faster configuration.
+
+**Experiment 4 (v4-rf300-lgb100)  More RF trees:**
+We flipped it  more RF trees (300) but fewer LightGBM rounds (100)
+and more LR iterations (1500) to find the sweet spot between the two.
+
 * For detailed Experimentation comparision, see the [Experiment comparision Report](reports/phase2-experiment-comparision.md)
-
-**Experiment 3 runs (rf100-lgb200):**
-We ran all 6 models with RF=100 trees and LGB=200 rounds to see how fewer trees affect performance.
-
-![Experiment 3 Runs](reports/figures/mlflow_experiment_3_runs.png)
-
-**Experiment 4 runs (rf300-lgb100):**
-We flipped it  more RF trees (300) but fewer LGB rounds (100) to compare which setting works better.
-
-![Experiment 4 Runs](reports/figures/mlflow_experiments_4_runs.png)
-
-**Cross-experiment runs comparison (sorted by cv_mean_f1):**
-We put all runs from both experiments side by side to see which model and config scored highest.
-
-![Compare Exp3 vs Exp4 Runs](reports/figures/mlflow_compare_exp3_exp4_runs.png)
-
-**LR_balanced comparison across experiments (parallel coordinates):**
-This chart shows how the LR model performed with max_iter=500 vs max_iter=1500  higher iterations helped a little.
-
-![Compare LR Balanced 1](reports/figures/mlflow_compare_exp3_exp_4_lr_balanced_1.png)
-
-**LR_balanced metrics comparison:**
-Side by side metrics show max_iter=1500 got cv_mean_f1 of 0.646 vs 0.620 with max_iter=500  more iterations = better.
-
-![Compare LR Balanced 2](reports/figures/mlflow_compare_exp3_exp_4_lr_balanced_2.png)
-
-**LR_balanced parameters diff (max_iter: 1500 vs 500):**
-MLflow highlights the only difference between the two runs  max_iter changed from 500 to 1500.
-
-![Compare LR Balanced 3](reports/figures/mlflow_compare_exp3_exp_4_lr_balanced_3.png)
-
-**LightGBM comparison across experiments:**
-We compared LightGBM with 200 rounds vs 100 rounds  turns out 200 rounds gave better cv_mean_f1 (0.718 vs 0.696).
-
-![Compare LightGBM 1](reports/figures/mlflow_compare_exp3_exp_4_lgboost_1.png)
-
-**LightGBM metrics + classification report artifacts:**
-Both runs logged their classification reports as artifacts so we can see precision, recall and F1 per class.
-
-![Compare LightGBM 2](reports/figures/mlflow_compare_exp3_exp_4_lgboost_2.png)
-
-**LightGBM parameters diff:**
-The only difference between the two LightGBM runs was the number of estimators  everything else stayed the same.
-
-![Compare LightGBM 3](reports/figures/mlflow_compare_exp3_exp_4_lgboost_3.png)
-
 
 ---
 
@@ -273,6 +244,16 @@ The only difference between the two LightGBM runs was the number of estimators  
 | RandomForest | v4 | 0.590 | 0.514 | 0.927 |
 | LR_balanced_maxiter1500 | v4 | 0.646 | 0.643 | - |
 | LR_balanced | v3 | 0.620 | 0.633 | - |
+
+
+**Experiment 1 vs Experiment 2 (LR comparison):**
+
+| Run | Experiment | max_iter | cv_mean_f1 | test_f1 |
+|---|---|---|---|---|
+| LR_balanced | Exp 1 (default) | 1000 | 0.641 | 0.642 |
+| LR_balanced | Exp 2 (v2) | 500 | 0.620 | 0.633 |
+| LR_SMOTE | Exp 1 (default) | 1000 | 0.521 | 0.636 |
+| LR_SMOTE | Exp 2 (v2) | 500 | 0.503 | 0.626 |
 
 ---
 
