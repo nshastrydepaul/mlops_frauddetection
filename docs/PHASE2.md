@@ -16,7 +16,7 @@ This phase expanded the Phase 1 machine learning pipelines into a reproducible M
 
 - [x] Implement baseline model
 - [x] Train and evaluate initial models
-- [ ] Hyperparameter tuning
+- [x] Hyperparameter tuning
 - [x] Cross-validation and performance analysis
 - [x] Model comparison and selection
 
@@ -141,7 +141,7 @@ Validated image creation included:
 
 #### Docker Build Validation
 
-![Docker Build Success](reports/figures/docker_build_success.png)
+![Docker Build Success](../reports/figures/docker1.png)
 
 ---
 
@@ -173,7 +173,7 @@ mlops_frauddetection_app exited with code 0
 
 #### Docker Compose Runtime
 
-![Docker Compose Runtime](reports/figures/docker_compose_runtime.png)
+![Docker Compose Runtime](../reports/figures/docker2.png)
 
 ---
 
@@ -191,7 +191,9 @@ Training metrics, artifacts, and reports were successfully generated inside the 
 
 #### Docker Training Pipeline
 
-![Docker Training Pipeline](reports/figures/docker_training_pipeline.png)
+![Docker Training Pipeline](../reports/figures/docker2.png)
+![Docker Training Pipeline](../reports/figures/docker3.png)
+![Docker Training Pipeline](../reports/figures/docker4.png)
 
 ---
 
@@ -207,7 +209,7 @@ mlops_frauddetection_app exited with code 0
 
 #### Successful Docker Exit
 
-![Docker Exit Success](reports/figures/docker_exit_success.png)
+![Docker Exit Success](../reports/figures/docker5.png)
 
 ---
 
