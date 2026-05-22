@@ -112,12 +112,24 @@ Phase 2 operationalized the project using Docker and Docker Compose.
 
 ### Docker Features
 
-* Multi-stage Docker builds
-* Python 3.11 reproducible runtime
-* containerized preprocessing
-* containerized model training
-* MLflow-compatible execution
-* artifact persistence support
+The project supports:
+
+- Multi-stage Docker builds
+- Python 3.11 reproducible runtime
+- Containerized preprocessing workflows
+- Containerized model training
+- MLflow-compatible execution
+- Persistent artifact storage using mounted Docker volumes
+- Reproducible ensemble experimentation pipelines
+- Cross-platform execution consistency
+
+### Docker Build
+
+The Docker image was successfully built using:
+
+```bash
+docker compose build --no-cache
+```
 
 ### Docker Validation
 
