@@ -481,23 +481,6 @@ CRITICAL  Prediction aborted — unexpected error: X has 37 features,
 - [x] **Override Documentation**: Document how to override config values from command line
 - [x] **Config Version Control**: Version all configs alongside code
 
----
-
-## 7. Documentation & Repository Updates
-
-- [x] **README Update**: Update README to include:
-  - [x] Containerization section with Docker usage
-  - [x] Debugging and profiling guide
-  - [x] Experiment tracking setup instructions
-  - [ ] Configuration management guide
-  - [ ] Logging usage examples
-- [ ] **Architecture Documentation**: Document system architecture with diagrams
-- [x] **Setup Guide**: Update setup guide to include all Phase 2 tools
-- [x] **Examples**: Add examples of running with different configurations
-- [x] **Tool Integration**: Document how all tools work together
-- [x] **Troubleshooting**: Add troubleshooting section for common issues
-- [x] **Performance Guide**: Document how to profile and optimize
-- [x] **Version Compatibility**: Document version requirements for all tools
 ### 6.1 Hydra Setup
 
 Hydra is installed and configured via `@hydra.main` in `train_model.py`:
@@ -653,6 +636,24 @@ python src/mlops_frauddetection/train_model.py model.ensemble.n_estimators_rf=10
 # Print full resolved config without running
 python src/mlops_frauddetection/train_model.py --cfg job
 ```
+---
+
+## 7. Documentation & Repository Updates
+
+- [x] **README Update**: Update README to include:
+  - [x] Containerization section with Docker usage
+  - [x] Debugging and profiling guide
+  - [x] Experiment tracking setup instructions
+  - [ ] Configuration management guide
+  - [ ] Logging usage examples
+- [ ] **Architecture Documentation**: Document system architecture with diagrams
+- [x] **Setup Guide**: Update setup guide to include all Phase 2 tools
+- [x] **Examples**: Add examples of running with different configurations
+- [x] **Tool Integration**: Document how all tools work together
+- [x] **Troubleshooting**: Add troubleshooting section for common issues
+- [x] **Performance Guide**: Document how to profile and optimize
+- [x] **Version Compatibility**: Document version requirements for all tools
+
 ---
 
 ## Team Contributions
