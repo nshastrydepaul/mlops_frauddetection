@@ -41,6 +41,7 @@ extend-exclude = ["notebooks"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "B", "UP"]
+ignore = ["N803", "N806"]
 
 [tool.mypy]
 python_version = "3.11"
