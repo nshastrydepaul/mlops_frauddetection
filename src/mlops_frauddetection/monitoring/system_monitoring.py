@@ -69,8 +69,7 @@ class ResourceMonitor:
 
     def _run(self) -> None:
         """Write monitoring rows until stopped."""
-        file_exists = self.output_path.exists()
-
+        
         fieldnames  = [
                 "timestamp",
                 "cpu_percent",
@@ -86,11 +85,9 @@ class ResourceMonitor:
                 "gpu_memory_total_mb",
         ]
 
-        with self.output_path.open("a", newline="") as csvfile:
+        with self.output_path.open("w", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-            if not file_exists:
-                writer.writeheader()
+            writer.writeheader()
 
             while not self._stop_event.is_set():
                 memory_info = self._process.memory_info()
