@@ -72,7 +72,7 @@ from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 from sklearn.metrics import classification_report as skl_report
 
 Mlflow_track = "sqlite:///mlflow.db"
-Mlflow_name = "fraud-anomaly-detection-v4-rf300-lgb100"
+Mlflow_name = "fraud-anomaly-detection"
 
 logger = get_logger(__name__)
 

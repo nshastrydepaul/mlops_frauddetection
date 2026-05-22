@@ -190,6 +190,17 @@ mlflow.log_metrics({
 })
 ```
 
+```
+# In train_model.py (actual code - uses real variables) 
+mlflow.log_metrics({
+    "cv_mean_f1": m1_cv_mean,
+    "cv_std_f1":  m1_cv_std,
+    "train_acc":  m1_train_acc,
+    "test_acc":   m1_test_acc,
+    "test_f1":    m1_test_f1
+})
+```
+
 **Artifacts logged per run:**
 ```python
 mlflow.sklearn.log_model(model_lr, name="lr_balanced")
