@@ -16,10 +16,6 @@
     "avg_prec": 0.4953191957900345,
     "cv_mean_f1": 0.597562383151216,
     "cv_std_f1": 0.23589147894811924
-<<<<<<< HEAD
-  }
-}
-=======
   },
   "20260521": {
     "dataset": "Credit Card Fraud Detection - Kaggle",
@@ -40,4 +36,3 @@
     "cv_std_f1": 0.23589147894811924
   }
 }
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
