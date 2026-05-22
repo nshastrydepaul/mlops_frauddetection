@@ -14,3 +14,9 @@ class DataLoaderError(Exception):
     """Raised when a data loading or saving operation fails."""
 
     pass
+
+
+class VisualizationError(Exception):
+    """Raised when a visualization cannot be created or saved."""
+
+    pass

@@ -1,0 +1,18 @@
+# @package _global_
+# Pipeline B experiment: Ensemble models only
+
+training:
+  pipeline: ensemble
+  smote: true
+  cv_folds: 5
+  random_state: 42
+
+model:
+  ensemble:
+    n_estimators_rf: 200
+    n_estimators_lgb: 500
+    n_estimators_xgb: 500
+    learning_rate: 0.05
+    num_leaves: 63
+    max_depth: 6
+    smote_strategy: 0.3

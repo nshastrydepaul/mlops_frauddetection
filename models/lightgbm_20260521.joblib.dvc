@@ -1,5 +1,10 @@
 outs:
+<<<<<<< HEAD
 - md5: 63804dfe9e498f618db4f8c04370a384
   size: 3495140
+=======
+- md5: 468e6de0e09374540f3c7aa7aff42090
+  size: 3495220
+>>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
   hash: md5
   path: lightgbm_20260521.joblib
