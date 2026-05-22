@@ -2,4 +2,4 @@ outs:
 - md5: 22f3de23485a00e06da855f6824af693
   size: 3479
   hash: md5
-  path: lr_balanced_20260521.joblib
+  path: lr_balanced_20260520.joblib

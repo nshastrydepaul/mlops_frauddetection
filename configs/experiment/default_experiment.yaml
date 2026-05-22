@@ -1,0 +1,8 @@
+# @package _global_
+# Default experiment: run both training pipelines
+
+training:
+  pipeline: all
+  smote: true
+  cv_folds: 5
+  random_state: 42

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import logging
 import os
 from pathlib import Path
 
@@ -65,12 +64,11 @@ def process_data(input_dir: Path, input_file: str, output_dir: Path) -> None:
         logger.error("No input file specified for raw data processing")
         raise RawDataNotFoundError("Input file must be specified")
 
-    raw_data_exists(input_file)  # Raises RawDataNotFoundError if missing
+    raw_data_exists(input_file)
 
-    logger.info(f"Loading raw data from path:{input_dir}")
+    logger.info(f"Loading raw data from path: {input_dir}")
 
     df = load_raw(input_file)
-
     logger.info(f"Initial raw dataset load shape: {df.shape}")
 
     # DROP ONLY agreed columns
@@ -91,11 +89,8 @@ def process_data(input_dir: Path, input_file: str, output_dir: Path) -> None:
 
     # FEATURE ENGINEERING
     df = build_features(df)
-    logger.info(
-        "Built features using build_features function - see features/build_features.py"
-    )
+    logger.info("Feature engineering complete — see features/build_features.py")
     logger.info(f"Data shape after feature engineering: {df.shape}")
-    logger.info("Feature engineering complete")
 
     # DROP ID / LEAKAGE COLUMNS
     drop_id_cols = [
@@ -119,7 +114,7 @@ def process_data(input_dir: Path, input_file: str, output_dir: Path) -> None:
     categorical_cols = df.select_dtypes(include=["object"]).columns.tolist()
     categorical_cols = [col for col in categorical_cols if df[col].nunique() < 50]
     df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
-    logger.info(f"Data shape after hot-encoding:  {df.shape}")
+    logger.info(f"Data shape after hot-encoding: {df.shape}")
 
     # SPLITTING DATA INTO TRAIN/TEST
     x = df.drop("is_fraud", axis=1)
@@ -132,17 +127,17 @@ def process_data(input_dir: Path, input_file: str, output_dir: Path) -> None:
         random_state=42,
     )
     logger.info("Train/Test split completed — shapes")
-    logger.info(f" x_train: {x_train.shape}, x_test: {x_test.shape}")
-    logger.info(f" y_train: {y_train.shape}, y_test: {y_test.shape}")
+    logger.info(" x_train: %s, x_test: %s", x_train.shape, x_test.shape)
+    logger.info(" y_train: %s, y_test: %s", y_train.shape, y_test.shape)
 
     # SAVE FILE TO PROCESSED_DATA_DIR
-    logging.info(f"Saving processed datasets to output directory: {output_dir}")
+    logger.info(f"Saving processed datasets to output directory: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     save_processed(x_train, "X_train.csv")
     save_processed(x_test, "X_test.csv")
     save_processed(y_train.to_frame(), "y_train.csv")
     save_processed(y_test.to_frame(), "y_test.csv")
-    logger.info(f"Processed data saved successfully to output directory: {output_dir}")
+    logger.info(f"Processed data saved successfully to: {output_dir}")
 
 
 # CLI ENTRYPOINT
@@ -168,6 +163,6 @@ def main() -> None:
         raise SystemExit(1) from e
 
 
-# RUN THE PIPELINE FROM THE COMMAND LINE + ALLOQ IMPORT AS MODULE
+# RUN THE PIPELINE FROM THE COMMAND LINE + ALLOW IMPORT AS MODULE
 if __name__ == "__main__":
     main()

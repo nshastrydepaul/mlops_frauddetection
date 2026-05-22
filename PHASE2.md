@@ -154,8 +154,8 @@ scalene run --memory --output profile.html scripts/profile_training.py
 | _add_features_lr | 229 | 2 |
 
 **Key finding — line 342:**
-`mlflow.set_experiment()` triggered **115 memory copies** — 
-the highest in the entire pipeline. This is because we were 
+`mlflow.set_experiment()` triggered **115 memory copies** —
+the highest in the entire pipeline. This is because we were
 calling it inside the training loop instead of once at startup.
 
 **Optimization applied:**
@@ -244,7 +244,7 @@ mlflow.log_metrics({
 ```
 
 ```
-# In train_model.py (actual code - uses real variables) 
+# In train_model.py (actual code - uses real variables)
 mlflow.log_metrics({
     "cv_mean_f1": m1_cv_mean,
     "cv_std_f1":  m1_cv_std,
@@ -336,29 +336,306 @@ and more LR iterations (1500) to find the sweet spot between the two.
 
 ## 5. Application & Experiment Logging
 
-- [ ] **Logger Setup**: Configure Python logger with appropriate handlers and formatters
-  - OR **Rich Library Setup**: Use rich for enhanced console output and logging
-- [ ] **Log Levels**: Implement and use DEBUG, INFO, WARNING, ERROR appropriately
-- [ ] **Log Messages**: Add informative log messages at key points in code
-- [ ] **Training Log Example**: Document and include sample training log output
-- [ ] **Inference Log Example**: Document and include sample inference log output
-- [ ] **Error Logging**: Implement comprehensive error logging with context
-- [ ] **Performance Logging**: Log timing information for performance analysis
-- [ ] **Log Rotation**: Configure log rotation to prevent disk space issues
+- [x] **Logger Setup**: Configure Python logger with appropriate handlers and formatters
+  - [x] **Rich Library Setup**: Use rich for enhanced console output and logging
+- [x] **Log Levels**: Implement and use DEBUG, INFO, WARNING, ERROR appropriately
+- [x] **Log Messages**: Add informative log messages at key points in code
+- [x] **Training Log Example**: Document and include sample training log output
+- [x] **Inference Log Example**: Document and include sample inference log output
+- [x] **Error Logging**: Implement comprehensive error logging with context
+- [x] **Performance Logging**: Log timing information for performance analysis
+- [x] **Log Rotation**: Configure log rotation to prevent disk space issues
 
+### 5.1 Rich Logging Setup
+
+Centralized logging was implemented in `src/mlops_frauddetection/logging_config.py` using Python stdlib logging with a `RichHandler` for colorized terminal output, syntax-highlighted tracebacks, and local variable inspection.
+
+```python
+from rich.logging import RichHandler
+
+rich_handler = RichHandler(
+    rich_tracebacks=True,
+    tracebacks_show_locals=True,
+    show_path=True,
+    markup=True,
+)
+```
+
+### 5.2 Log Rotation
+
+Two rotating file handlers persist logs to disk:
+
+```python
+# logs/app.log  — all levels, 5 MB × 5 backups
+# logs/error.log — ERROR and CRITICAL only, 2 MB × 3 backups
+app_handler = RotatingFileHandler(LOGS_DIR / "app.log", maxBytes=5_000_000, backupCount=5)
+error_handler = RotatingFileHandler(LOGS_DIR / "error.log", maxBytes=2_000_000, backupCount=3)
+error_handler.setLevel(logging.ERROR)
+```
+
+### 5.3 Log Levels
+
+| Level | Usage |
+|-------|-------|
+| `INFO` | Normal pipeline progress — file found, shape logged, model saved |
+| `DEBUG` | Verbose details — full Hydra config dump, optional framework skips (torch/tensorflow) |
+| `WARNING` | Non-fatal issues — missing optional columns, skipped plots |
+| `ERROR` | Recoverable failures — file not found, parse failure, failed visualization |
+| `CRITICAL` | Pipeline aborted — `RawDataNotFoundError`, unrecoverable data issues |
+
+### 5.4 Performance Logging
+
+A `timer()` context manager logs elapsed time for every major pipeline block:
+
+```python
+with timer(logger, "LR feature engineering"):
+    x_tr = _add_features_lr(x_train)
+    x_ts = _add_features_lr(x_test)
+# Logs: LR feature engineering completed in 0.03s
+```
+
+A `get_progress()` utility wraps Rich progress bars for multi-stage pipelines:
+
+```python
+with get_progress() as progress:
+    task = progress.add_task("Pipeline A", total=len(stages_a))
+    progress.update(task, description="Load data")
+    ...
+    progress.advance(task)
+```
+
+### 5.5 Training Log Example
+
+```
+14:45:52 INFO  [START] Loading processed data from data/processed ...
+14:45:53 INFO  Processed data load completed in 0.22s
+         INFO  Data loaded — train: (80000, 42), test: (20000, 42)
+         INFO  ============================================================
+         INFO  PIPELINE A — Logistic Regression (Musaddiq)
+         INFO  ============================================================
+         INFO  LR data cleaning completed in 0.01s
+         INFO  LR feature engineering completed in 0.03s
+         INFO  Model 1 — Train: 0.6418  Test acc: 0.6362  F1: 0.6423
+         INFO  Model 1 saved and logged -> models/lr_balanced_20260521.joblib
+         INFO  Pipeline A complete
+         INFO  ============================================================
+         INFO  PIPELINE B — Ensemble Models (Israail)
+         INFO  ============================================================
+         INFO  Ensemble feature engineering completed in 0.01s
+         INFO  Preprocessing completed in 0.03s
+         INFO  SMOTE resampling completed in 0.04s
+         INFO  Training RandomForest ...
+         INFO    Done in 5.9s
+         INFO    RandomForest — Train: 1.0000  F1: 0.5028  ROC: 0.9238  AP: 0.4953
+         INFO  Training LightGBM ...
+         INFO    Done in 9.4s
+         INFO    LightGBM — Train: 1.0000  F1: 0.5608  ROC: 0.9562  AP: 0.5632
+         INFO  Training XGBoost ...
+         INFO    Done in 2.2s
+         INFO    XGBoost — Train: 0.9991  F1: 0.5829  ROC: 0.9614  AP: 0.5779
+         INFO  Pipeline B complete
+         INFO  All training complete
+```
+
+### 5.6 Inference Log Example
+
+```
+18:06:09 INFO  Loading model from models/logistic_regression_20260507.joblib
+         INFO  Model load completed in 0.22s
+         INFO  Model loaded — type: LogisticRegression
+         INFO  Loading input data from data/processed/X_test.csv
+         INFO  Input data load completed in 0.05s
+         INFO  Input shape: (20000, 42)
+         INFO  Cleaned input shape: (20000, 34)
+         INFO  Applying ensemble feature engineering ...
+         INFO  Feature engineering completed in 0.00s
+         INFO  Feature engineering complete — shape: (20000, 40)
+         INFO  Final input shape for model: (20000, 38)
+         INFO  Running inference on 20000 rows ...
+         INFO  Inference completed in 0.01s
+         INFO  Predictions complete — fraud: 2325 / 20000 (11.62%)
+         INFO  Writing predictions to predictions.csv
+         INFO  Save predictions completed in 0.01s
+         INFO  Predictions saved — 20000 rows written
+         INFO  Prediction pipeline complete
+```
+
+### 5.7 Error Logging Example
+
+```
+ERROR     [SKIP] Fraud by category failed — Column 'category' not found in DataFrame
+ERROR     Model file not found: models/model.joblib
+CRITICAL  Prediction aborted — unexpected error: X has 37 features,
+          but LogisticRegression is expecting 38 features as input.
+```
 ---
 
 ## 6. Configuration Management
 
-- [ ] **Hydra Setup**: Install and configure Hydra for config management
-- [ ] **Config Files**: Create YAML config files for train/eval/inference configurations
-- [ ] **Config Structure**: Organize configs with appropriate hierarchy (base, model, data, etc.)
-- [ ] **Config Example 1**: Create and document sample training config
-- [ ] **Config Example 2**: Create and document alternative config (different hyperparameters)
-- [ ] **Config Validation**: Implement config validation and schema checking
-- [ ] **Override Documentation**: Document how to override config values from command line
-- [ ] **Config Version Control**: Version all configs alongside code
+- [x] **Hydra Setup**: Install and configure Hydra for config management
+- [x] **Config Files**: Create YAML config files for train/eval/inference configurations
+- [x] **Config Structure**: Organize configs with appropriate hierarchy (base, model, data, etc.)
+- [x] **Config Example 1**: Create and document sample training config
+- [x] **Config Example 2**: Create and document alternative config (different hyperparameters)
+- [x] **Config Validation**: Implement config validation and schema checking
+- [x] **Override Documentation**: Document how to override config values from command line
+- [x] **Config Version Control**: Version all configs alongside code
 
+### 6.1 Hydra Setup
+
+Hydra is installed and configured via `@hydra.main` in `train_model.py`:
+
+```bash
+pip install hydra-core>=1.3
+```
+
+```python
+from hydra.core.hydra_config import HydraConfig
+import hydra
+from omegaconf import DictConfig, OmegaConf
+
+_CONFIGS_DIR = Path(__file__).resolve().parent.parent.parent / "configs"
+
+@hydra.main(version_base=None, config_path=str(_CONFIGS_DIR), config_name="config")
+def main(cfg: DictConfig) -> None:
+    setup_logging()
+    _validate_config(cfg)
+    set_seed(cfg.project.seed)
+    ...
+```
+
+At startup, the selected config is logged:
+
+```
+INFO  ========================================================================
+INFO  Starting fraud detection training run
+INFO  Hydra config loaded from: configs/config.yaml
+INFO  Hydra experiment loaded: default_experiment
+INFO  Project: mlops_frauddetection
+INFO  Training pipeline selected: all
+INFO  SMOTE enabled: True
+INFO  Random seed: 42
+DEBUG Full Hydra config:
+      project:
+        name: mlops_frauddetection
+        seed: 42
+      training:
+        pipeline: all
+        smote: true
+INFO  ========================================================================
+```
+
+### 6.2 Config Structure
+
+```
+configs/
+├── config.yaml                      # base config
+└── experiment/
+    ├── default_experiment.yaml      # both pipelines (default)
+    ├── lr_only.yaml                 # Pipeline A only
+    └── ensemble_only.yaml           # Pipeline B only
+```
+
+### 6.3 Config Example 1 — Base Config (`configs/config.yaml`)
+
+```yaml
+defaults:
+  - _self_
+  - experiment: default_experiment
+
+project:
+  name: mlops_frauddetection
+  seed: 42
+
+data:
+  raw_path: data/raw
+  raw_file: data_100k.csv
+  processed_path: data/processed
+  test_size: 0.2
+
+model:
+  lr:
+    max_iter: 1000
+    class_weight: balanced
+  ensemble:
+    n_estimators_rf: 200
+    n_estimators_lgb: 500
+    n_estimators_xgb: 500
+    learning_rate: 0.05
+    smote_strategy: 0.3
+
+training:
+  pipeline: all
+  smote: true
+  cv_folds: 5
+```
+
+### 6.4 Config Example 2 — LR Only (`configs/experiment/lr_only.yaml`)
+
+```yaml
+# @package _global_
+# Pipeline A experiment: Logistic Regression + SMOTE only
+
+training:
+  pipeline: lr
+  smote: true
+  cv_folds: 5
+
+model:
+  lr:
+    max_iter: 1000
+    class_weight: balanced
+```
+
+### 6.5 Config Validation
+
+A `_validate_config()` function runs before training begins and raises an error if any value is invalid:
+
+```python
+def _validate_config(cfg: DictConfig) -> None:
+    errors = []
+    if cfg.project.seed < 0:
+        errors.append("project.seed must be non-negative")
+    if not Path(cfg.data.processed_path).exists():
+        errors.append(f"data.processed_path not found: {cfg.data.processed_path}")
+    if cfg.training.pipeline not in ("all", "lr", "ensemble"):
+        errors.append(
+            f"training.pipeline must be all/lr/ensemble, got: {cfg.training.pipeline}"
+        )
+    if cfg.model.lr.max_iter < 100:
+        errors.append("model.lr.max_iter must be >= 100")
+    if cfg.model.ensemble.n_estimators_rf < 10:
+        errors.append("model.ensemble.n_estimators_rf must be >= 10")
+    if not (0 < cfg.model.ensemble.smote_strategy <= 1):
+        errors.append("model.ensemble.smote_strategy must be between 0 and 1")
+    if errors:
+        for err in errors:
+            logger.error("Config validation error: %s", err)
+        raise ValueError(f"Config validation failed with {len(errors)} error(s).")
+    logger.info("Config validation passed")
+```
+
+### 6.6 CLI Override Examples
+
+```bash
+# Run with defaults — both pipelines
+python src/mlops_frauddetection/train_model.py
+
+# Run LR only
+python src/mlops_frauddetection/train_model.py experiment=lr_only
+
+# Run ensemble only
+python src/mlops_frauddetection/train_model.py experiment=ensemble_only
+
+# Override individual values from command line
+python src/mlops_frauddetection/train_model.py model.lr.max_iter=2000
+python src/mlops_frauddetection/train_model.py training.smote=false
+python src/mlops_frauddetection/train_model.py project.seed=123
+python src/mlops_frauddetection/train_model.py model.ensemble.n_estimators_rf=100
+
+# Print full resolved config without running
+python src/mlops_frauddetection/train_model.py --cfg job
+```
 ---
 
 ## 7. Documentation & Repository Updates
@@ -379,7 +656,7 @@ and more LR iterations (1500) to find the sweet spot between the two.
 
 ---
 
-## Team Contributions 
+## Team Contributions
 
 | Team Member | Responsibilities |
 |---|---|

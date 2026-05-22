@@ -16,6 +16,21 @@ PROCESSED_DATA_DIR: Path = DATA_DIR / "processed"
 MODELS_DIR: Path = PROJECT_ROOT / "models"
 REPORTS_DIR: Path = PROJECT_ROOT / "reports"
 FIGURES_DIR: Path = REPORTS_DIR / "figures"
+LOGS_DIR: Path = PROJECT_ROOT / "logs"
+CONFIG_DIR: Path = PROJECT_ROOT / "configs"
+
+# Create directories if they don't exist
+_dirs = [
+    RAW_DATA_DIR,
+    PROCESSED_DATA_DIR,
+    MODELS_DIR,
+    REPORTS_DIR,
+    FIGURES_DIR,
+    LOGS_DIR,
+    CONFIG_DIR,
+]
+for _dir in _dirs:
+    _dir.mkdir(parents=True, exist_ok=True)
 
 
 @dataclass(frozen=True)

@@ -2,4 +2,4 @@ outs:
 - md5: 21e12bd853dffec1cda84d282802f3c7
   size: 1622880
   hash: md5
-  path: xgboost_20260521.joblib
+  path: xgboost_20260520.joblib
