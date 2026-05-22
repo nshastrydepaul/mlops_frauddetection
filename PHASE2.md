@@ -326,4 +326,13 @@ and more LR iterations (1500) to find the sweet spot between the two.
 
 ---
 
+## Team Contributions 
+
+| Team Member | Responsibilities |
+|---|---|
+| Nishanth Shastry | Docker containerization, Dockerfile, Docker Compose, Section 1,7|
+| Israail Ghazzal | Monitoring (psutil/MLflow system metrics), Logging with Rich, Section 5, 6.1, 7|
+| Musaddiq Vavartar | MLflow experiment tracking (4 experiments), profiling with cProfile, modular ML pipeline refactoring, Section 3.2 & 4,7|
+| Lohith Poola | cProfile profiling, Hydra configuration management, Section 2 & 3.1, 7  |
+
 > **Checklist:** Use this as a guide for documenting your Phase 2 deliverables.
