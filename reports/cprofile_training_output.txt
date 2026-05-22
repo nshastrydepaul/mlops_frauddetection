@@ -1,0 +1,38 @@
+         17820161 function calls (17356182 primitive calls) in 102.799 seconds
+
+   Ordered by: cumulative time
+   List reduced from 13540 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      2/1    0.000    0.000  102.069  102.069 main.py:80(decorated_main)
+      2/1    0.000    0.000  102.069  102.069 utils.py:306(_run_hydra)
+      4/3    0.000    0.000  102.059   34.020 utils.py:218(run_and_report)
+      2/1    0.000    0.000  102.059  102.059 utils.py:430(_run_app)
+      2/1    0.000    0.000  102.059  102.059 utils.py:458(<lambda>)
+      2/1    0.000    0.000  102.059  102.059 hydra.py:98(run)
+      2/1    0.000    0.000  102.050  102.050 utils.py:99(run_job)
+      2/1    0.011    0.005  102.049  102.049 train_model.py:911(main)
+     1867    0.001    0.000   88.205    0.047 __init__.py:1510(info)
+       99    0.000    0.000   88.204    0.891 __init__.py:1641(_log)
+       99    0.000    0.000   88.187    0.891 __init__.py:1667(handle)
+       99    0.000    0.000   88.186    0.891 __init__.py:1721(callHandlers)
+      198    0.001    0.000   88.184    0.445 __init__.py:1011(handle)
+       99    0.005    0.000   88.045    0.889 handlers.py:71(emit)
+ 1037/884    0.008    0.000   67.386    0.076 threading.py:641(wait)
+       12    0.002    0.000   60.577    5.048 parallel.py:54(__call__)
+   174/48    0.001    0.000   56.706    1.181 _param_validation.py:187(wrapper)
+      7/6    0.000    0.000   56.588    9.431 _validation.py:493(cross_val_score)
+      7/6    0.000    0.000   56.475    9.412 _validation.py:75(cross_validate)
+       36    0.006    0.000   55.834    1.551 process_executor.py:671(wait_result_broken_or_wakeup)
+     4966   52.894    0.011   53.305    0.011 {built-in method time.sleep}
+        1    0.000    0.000   48.429   48.429 train_model.py:642(train_ensemble_pipeline)
+      2/1    0.000    0.000   39.872   39.872 train_model.py:323(train_lr_pipeline)
+      3/2    0.000    0.000   27.103   13.551 train_model.py:296(_run_stratified_cv)
+     14/7    0.003    0.000   26.112    3.730 base.py:1319(wrapper)
+     2196    0.006    0.000   21.841    0.010 _differentiable_functions.py:409(fun_and_grad)
+     2199    0.003    0.000   21.790    0.010 _differentiable_functions.py:360(_update_fun)
+     2196    0.068    0.000   21.787    0.010 _util.py:600(__call__)
+        3    0.001    0.000   21.622    7.207 _logistic.py:1086(fit)
+        3    0.001    0.000   21.552    7.184 _logistic.py:86(_logistic_regression_path)
+
+
