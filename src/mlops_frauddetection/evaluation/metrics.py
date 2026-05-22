@@ -187,7 +187,11 @@ def classification_report(y_true: Any, y_pred: Any) -> dict[str, float]:
     Returns:
         Dict with keys: accuracy, precision, recall, f1.
     """
+<<<<<<< HEAD
     return {
+=======
+    result = {
+>>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
         "accuracy": float(sk_metrics.accuracy_score(y_true, y_pred)),
         "precision": float(
             sk_metrics.precision_score(
@@ -201,6 +205,14 @@ def classification_report(y_true: Any, y_pred: Any) -> dict[str, float]:
             sk_metrics.f1_score(y_true, y_pred, average="weighted", zero_division=0)
         ),
     }
+    logger.info(
+        "Classification — acc: %.4f  prec: %.4f  rec: %.4f  f1: %.4f",
+        result["accuracy"],
+        result["precision"],
+        result["recall"],
+        result["f1"],
+    )
+    return result
 
 
 def regression_report(y_true: Any, y_pred: Any) -> dict[str, float]:
@@ -216,9 +228,21 @@ def regression_report(y_true: Any, y_pred: Any) -> dict[str, float]:
         Dict with keys: mae, mse, rmse, r2.
     """
     mse = float(sk_metrics.mean_squared_error(y_true, y_pred))
+<<<<<<< HEAD
     return {
+=======
+    result = {
+>>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
         "mae": float(sk_metrics.mean_absolute_error(y_true, y_pred)),
         "mse": mse,
         "rmse": float(np.sqrt(mse)),
         "r2": float(sk_metrics.r2_score(y_true, y_pred)),
     }
+    logger.info(
+        "Regression — mae: %.4f  mse: %.4f  rmse: %.4f  r2: %.4f",
+        result["mae"],
+        result["mse"],
+        result["rmse"],
+        result["r2"],
+    )
+    return result
