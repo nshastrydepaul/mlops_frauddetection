@@ -213,6 +213,8 @@ mlflow.log_artifact(report_path)                              # classification r
 
 ### 4.3 Experiment Comparison
 
+* For detailed Experimentation comparision, see the [Experiment comparision Report](reports/phase2-experiment-comparision.md)
+
 **Experiment 3 runs (rf100-lgb200):**
 We ran all 6 models with RF=100 trees and LGB=200 rounds to see how fewer trees affect performance.
 
@@ -257,6 +259,7 @@ Both runs logged their classification reports as artifacts so we can see precisi
 The only difference between the two LightGBM runs was the number of estimators  everything else stayed the same.
 
 ![Compare LightGBM 3](reports/figures/mlflow_compare_exp3_exp_4_lgboost_3.png)
+
 
 ---
 
