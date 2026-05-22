@@ -14,8 +14,8 @@ to identify the best hyperparameter configuration for fraud detection.
 
 ## Comparisons in this Report
 
-- **Section 1:** Experiment 1 vs Experiment 2  Effect of max_iter on LR performance
-- **Section 2:** Experiment 3 vs Experiment 4  Effect of RF/LGB estimators on ensemble performance
+- **Section 1:** Experiment 3 vs Experiment 4  Effect of RF/LGB estimators on ensemble performance
+- **Section 2:** Experiment 1 vs Experiment 2  Effect of max_iter on LR performance
 
 ---
 
