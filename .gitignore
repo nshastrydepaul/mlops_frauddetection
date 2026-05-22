@@ -154,5 +154,6 @@ ds-venv/
 # Runtime logs
 logs/*.log
 mlruns/
-requirements.txt
+mlflow.db
+src/mlops_frauddetection/mlflow.db
 outputs/

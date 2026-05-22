@@ -8,11 +8,11 @@ without Jupyter:
 
 Usage
 -----
-    python -m mlops_frauddetection.train_model  # train all
-    python -m mlops_frauddetection.train_model.py \\
-        experiment=lr_only		    # Runs logistic Regression + SMOTE Only
-    python -m mlops_frauddetection.train_model.py \\
-        experiment=ensemble_only		# Runs ensemble models only
+    python -m mlops_frauddetection.train_model              # train all
+    python -m mlops_frauddetection.train_model \\
+        experiment=lr_only          # Runs Logistic Regression + SMOTE only
+    python -m mlops_frauddetection.train_model \\
+        experiment=ensemble_only    # Runs ensemble models only
     python -m mlops_frauddetection.train_model --pipeline lr
     python -m mlops_frauddetection.train_model --pipeline ensemble
     python -m mlops_frauddetection.train_model --no-smote
@@ -23,19 +23,19 @@ from __future__ import annotations
 
 import json
 import logging
+import pdb
 import time
 import warnings
-
-# Imports and logging setup
-# import argparse - replaced by hydra
 from datetime import datetime
 from pathlib import Path
 
-# Enable logging
+# import argparse - replaced by Hydra
 import hydra
 import joblib
 import lightgbm as lgb
 import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
@@ -59,6 +59,7 @@ from sklearn.metrics import (
     recall_score,
     roc_auc_score,
 )
+from sklearn.metrics import classification_report as skl_report
 from sklearn.model_selection import StratifiedKFold, TimeSeriesSplit, cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -70,6 +71,7 @@ from mlops_frauddetection.logging_config import (
     setup_logging,
     timer,
 )
+from mlops_frauddetection.monitoring.system_monitoring import ResourceMonitor
 from mlops_frauddetection.utils.seed import set_seed
 
 # Suppress MLflow deprecation warnings
@@ -80,8 +82,6 @@ warnings.filterwarnings("ignore", category=UserWarning)
 logging.getLogger("mlflow").setLevel(logging.ERROR)
 logging.getLogger("mlflow.tracking").setLevel(logging.ERROR)
 logging.getLogger("mlflow.sklearn").setLevel(logging.ERROR)
-
-matplotlib.use("Agg")
 
 Mlflow_track = "sqlite:///mlflow.db"
 Mlflow_name = "fraud-anomaly-detection"
@@ -156,7 +156,9 @@ num_features = [
 ]
 
 
+# ---------------------------------------------------------------------------
 # data loading
+# ---------------------------------------------------------------------------
 
 
 def load_data(
@@ -187,7 +189,9 @@ def load_data(
     return x_train, y_train, x_test, y_test
 
 
+# ---------------------------------------------------------------------------
 # cleaning
+# ---------------------------------------------------------------------------
 
 
 def _clean_data_lr(
@@ -244,8 +248,8 @@ def _create_4class_labels(features: pd.DataFrame, y: pd.Series) -> pd.Series:
     3 — FF: Fraud High Risk   (fraud at merchant with risk_30 >= 17)
 
     Args:
-        X: Cleaned feature matrix.
-        y: Binary fraud series (0=legit, 1=fraud).
+        features: Cleaned feature matrix.
+        y:        Binary fraud series (0=legit, 1=fraud).
 
     Returns:
         pd.Series of integer labels 0-3.
@@ -275,10 +279,10 @@ def _add_features_lr(df: pd.DataFrame) -> pd.DataFrame:
                  is_high_spend, night_high_amt.
 
     Args:
-        X: Cleaned feature matrix.
+        df: Cleaned feature matrix.
 
     Returns:
-        Copy of X with 5 additional columns.
+        Copy of df with 5 additional columns.
     """
     df = df.copy()
     df["amt_ratio"] = df["amt"] / (df["avg_amt_per_customer"] + 1)
@@ -303,7 +307,7 @@ def _run_stratified_cv(
 
     Args:
         model:    Unfitted estimator.
-        X:        Feature matrix.
+        features: Feature matrix.
         y:        Label series.
         n_splits: Number of folds.
 
@@ -320,12 +324,60 @@ def _run_stratified_cv(
     return float(scores.mean()), float(scores.std())
 
 
+def run_debug_checks(
+    x_train: pd.DataFrame,
+    y_train: pd.Series,
+    x_test: pd.DataFrame,
+    y_test: pd.Series,
+    enable_breakpoint: bool = True,
+) -> None:
+    """Run debug checks on the data and optionally set a breakpoint.
+
+    This function is used only when --debug is passed from CLI.
+    Verifies that training and testing data are loaded correctly
+    and are valid before model training starts.
+    """
+    logger.debug("Debugging mode enabled......")
+
+    assert not x_train.empty, "x_train is empty"
+    assert not y_train.empty, "y_train is empty"
+    assert not x_test.empty, "x_test is empty"
+    assert not y_test.empty, "y_test is empty"
+
+    assert len(x_train) == len(y_train), (
+        f"Training feature/label mismatch: x_train={len(x_train)}, "
+        f"y_train={len(y_train)}"
+    )
+    assert len(x_test) == len(y_test), (
+        f"Testing feature/label mismatch: x_test={len(x_test)}, "
+        f"y_test={len(y_test)}"
+    )
+
+    logger.info("DEBUG x_train shape: %s", x_train.shape)
+    logger.info("DEBUG x_test shape: %s", x_test.shape)
+    logger.info("DEBUG y_train shape: %s", y_train.shape)
+    logger.info("DEBUG y_test shape: %s", y_test.shape)
+
+    logger.info("DEBUG y_train class distribution:\n%s", y_train.value_counts())
+    logger.info("DEBUG y_test class distribution:\n%s", y_test.value_counts())
+
+    if enable_breakpoint:
+        logger.debug("Entering debugger. Use commands like: p x_train.shape, n, c, q")
+        pdb.set_trace()
+
+
+# ---------------------------------------------------------------------------
+# Pipeline A
+# ---------------------------------------------------------------------------
+
+
 def train_lr_pipeline(
     data_path: Path,
     model_dir: Path,
     max_iter: int = 1000,
     seed: int = 42,
     run_smote: bool = True,
+    debug: bool = False,
 ) -> None:
     """Pipeline A — LR + SMOTE, 4-class labels (Musaddiq).
 
@@ -338,6 +390,7 @@ def train_lr_pipeline(
         max_iter:  Max iterations for LogisticRegression solver.
         seed:      Random seed.
         run_smote: If True also train the SMOTE variant.
+        debug:     If True run debug checks and set a pdb breakpoint.
     """
     logger.info("=" * 60)
     logger.info("PIPELINE A — Logistic Regression (Musaddiq)")
@@ -347,6 +400,12 @@ def train_lr_pipeline(
     timestamp = datetime.now().strftime("%Y%m%d")
     mlflow.set_tracking_uri(Mlflow_track)
     mlflow.set_experiment(Mlflow_name)
+
+    monitor_path = Path("reports/monitoring/lr_pipeline_resource_usage.csv")
+    monitor = ResourceMonitor(monitor_path)
+    monitor.start()
+
+    pipeline_start_time = time.time()
 
     stages_a = [
         "Load data",
@@ -358,222 +417,306 @@ def train_lr_pipeline(
         "Save metadata",
     ]
 
-    with get_progress() as progress:
-        task = progress.add_task("Pipeline A", total=len(stages_a))
+    try:
+        with get_progress() as progress:
+            task = progress.add_task("Pipeline A", total=len(stages_a))
 
-        # Stage 1 — Load data
-        progress.update(task, description=stages_a[0])
-        x_train, y_train, x_test, y_test = load_data(data_path)
-        progress.advance(task)
+            # Stage 1 — Load data
+            progress.update(task, description=stages_a[0])
+            x_train, y_train, x_test, y_test = load_data(data_path)
+            if debug:
+                run_debug_checks(x_train, y_train, x_test, y_test)
+            progress.advance(task)
 
-        # Stage 2 — Clean data
-        progress.update(task, description=stages_a[1])
-        with timer(logger, "LR data cleaning"):
-            x_train, x_test = _clean_data_lr(x_train.copy(), x_test.copy())
-        progress.advance(task)
+            # Stage 2 — Clean data
+            progress.update(task, description=stages_a[1])
+            with timer(logger, "LR data cleaning"):
+                x_train, x_test = _clean_data_lr(x_train.copy(), x_test.copy())
+            progress.advance(task)
 
-        # Stage 3 — 4-class labels
-        progress.update(task, description=stages_a[2])
-        logger.info("Building 4-class labels ...")
-        with timer(logger, "4-class label creation"):
-            y_train_4 = _create_4class_labels(x_train, y_train)
-            y_test_4 = _create_4class_labels(x_test, y_test)
-        for cls, name in lr_label_names_m.items():
-            cnt = int((y_train_4 == cls).sum())
-            logger.info(
-                "  Class %d (%s): %d rows (%.2f%%)",
-                cls,
-                name,
-                cnt,
-                cnt / len(y_train_4) * 100,
-            )
-        progress.advance(task)
+            # Stage 3 — 4-class labels
+            progress.update(task, description=stages_a[2])
+            logger.info("Building 4-class labels ...")
+            with timer(logger, "4-class label creation"):
+                y_train_4 = _create_4class_labels(x_train, y_train)
+                y_test_4 = _create_4class_labels(x_test, y_test)
+            for cls, name in lr_label_names_m.items():
+                cnt = int((y_train_4 == cls).sum())
+                logger.info(
+                    "  Class %d (%s): %d rows (%.2f%%)",
+                    cls,
+                    name,
+                    cnt,
+                    cnt / len(y_train_4) * 100,
+                )
+            progress.advance(task)
 
-        # Stage 4 — Feature engineering
-        progress.update(task, description=stages_a[3])
-        logger.info("Feature engineering ...")
-        with timer(logger, "LR feature engineering"):
-            x_tr = _add_features_lr(x_train)
-            x_ts = _add_features_lr(x_test)
-        logger.info("Shape: %s -> %s", x_train.shape, x_tr.shape)
-        progress.advance(task)
+            # Stage 4 — Feature engineering
+            progress.update(task, description=stages_a[3])
+            logger.info("Feature engineering ...")
+            with timer(logger, "LR feature engineering"):
+                x_tr = _add_features_lr(x_train)
+                x_ts = _add_features_lr(x_test)
+            logger.info("Shape: %s -> %s", x_train.shape, x_tr.shape)
+            progress.advance(task)
 
-        # Stage 5 — Model 1: LR balanced
-        progress.update(task, description=stages_a[4])
-        logger.info("Model 1: LR balanced")
-        model_lr = LogisticRegression(
-            max_iter=max_iter, class_weight="balanced", random_state=seed, n_jobs=-1
-        )
-        t0 = time.time()
-        m1_cv_mean, m1_cv_std = _run_stratified_cv(model_lr, x_tr, y_train_4)
-        logger.info("CV in %.1fs", time.time() - t0)
-        model_lr.fit(x_tr, y_train_4)
-        y_pred_m1 = model_lr.predict(x_ts)
-        m1_train_acc = accuracy_score(y_train_4, model_lr.predict(x_tr))
-        m1_test_acc = accuracy_score(y_test_4, y_pred_m1)
-        m1_test_f1 = f1_score(y_test_4, y_pred_m1, average="weighted")
-        logger.info(
-            "Model 1 — Train: %.4f  Test acc: %.4f  F1: %.4f",
-            m1_train_acc,
-            m1_test_acc,
-            m1_test_f1,
-        )
-        logger.info(
-            "\n%s",
-            classification_report(
-                y_test_4, y_pred_m1, target_names=list(lr_label_names_m.values())
-            ),
-        )
-        m1_path = model_dir / f"lr_balanced_{timestamp}.joblib"
-        joblib.dump(model_lr, m1_path)
-        with mlflow.start_run(run_name=f"LR_balanced_4class_{timestamp}"):
-            mlflow.log_params(
-                {
-                    "model": "LR_balanced",
-                    "class_weight": "balanced",
-                    "max_iter": max_iter,
-                    "seed": seed,
-                    "smote": False,
-                    "cv_folds": 5,
-                    "pipeline": "A",
-                }
-            )
-            mlflow.log_metrics(
-                {
-                    "cv_mean_f1": m1_cv_mean,
-                    "cv_std_f1": m1_cv_std,
-                    "train_acc": m1_train_acc,
-                    "test_acc": m1_test_acc,
-                    "test_f1": m1_test_f1,
-                }
-            )
-            mlflow.sklearn.log_model(model_lr, "lr_balanced")
-            mlflow.log_artifact(str(m1_path))
-            cm = confusion_matrix(y_test_4, y_pred_m1)
-            fig, ax = plt.subplots(figsize=(8, 6))
-            ConfusionMatrixDisplay(
-                cm, display_labels=list(lr_label_names_m.values())
-            ).plot(ax=ax)
-            plt.tight_layout()
-            plt.savefig("reports/figures/mlflow_cm_lr_balanced.png")
-            mlflow.log_artifact("reports/figures/mlflow_cm_lr_balanced.png")
-            plt.close(fig)
-        logger.info("Model 1 saved and logged -> %s", m1_path)
-        progress.advance(task)
-
-        # Stage 6 — Model 2: SMOTE + LR
-        m2_cv_mean = m2_cv_std = m2_train_acc = m2_test_acc = m2_test_f1 = None
-        m2_path = None
-        progress.update(task, description=stages_a[5])
-        if run_smote:
-            logger.info("Model 2: SMOTE + LR")
-            smote = SMOTE(random_state=seed, k_neighbors=5)
-            t0 = time.time()
-            x_smote, y_smote = smote.fit_resample(x_tr, y_train_4)
-            logger.info("SMOTE in %.1fs — size: %s", time.time() - t0, x_smote.shape)
-            model_smote = LogisticRegression(
-                max_iter=max_iter, class_weight="balanced", random_state=seed, n_jobs=-1
+            # Stage 5 — Model 1: LR balanced
+            progress.update(task, description=stages_a[4])
+            logger.info("Model 1: LR balanced")
+            model_lr = LogisticRegression(
+                max_iter=max_iter,
+                class_weight="balanced",
+                random_state=seed,
+                n_jobs=-1,
             )
             t0 = time.time()
-            m2_cv_mean, m2_cv_std = _run_stratified_cv(model_smote, x_smote, y_smote)
+            m1_cv_mean, m1_cv_std = _run_stratified_cv(model_lr, x_tr, y_train_4)
             logger.info("CV in %.1fs", time.time() - t0)
-            model_smote.fit(x_smote, y_smote)
-            y_pred_m2 = model_smote.predict(x_ts)
-            m2_train_acc = accuracy_score(y_smote, model_smote.predict(x_smote))
-            m2_test_acc = accuracy_score(y_test_4, y_pred_m2)
-            m2_test_f1 = f1_score(y_test_4, y_pred_m2, average="weighted")
+
+            model_lr.fit(x_tr, y_train_4)
+            y_pred_m1 = model_lr.predict(x_ts)
+            m1_train_acc = accuracy_score(y_train_4, model_lr.predict(x_tr))
+            m1_test_acc = accuracy_score(y_test_4, y_pred_m1)
+            m1_test_f1 = f1_score(y_test_4, y_pred_m1, average="weighted")
             logger.info(
-                "Model 2 — Train: %.4f  Test acc: %.4f  F1: %.4f",
-                m2_train_acc,
-                m2_test_acc,
-                m2_test_f1,
+                "Model 1 — Train: %.4f  Test acc: %.4f  F1: %.4f",
+                m1_train_acc,
+                m1_test_acc,
+                m1_test_f1,
             )
             logger.info(
                 "\n%s",
                 classification_report(
-                    y_test_4, y_pred_m2, target_names=list(lr_label_names_m.values())
+                    y_test_4, y_pred_m1, target_names=list(lr_label_names_m.values())
                 ),
             )
-            m2_path = model_dir / f"lr_smote_{timestamp}.joblib"
-            joblib.dump(model_smote, m2_path)
-            with mlflow.start_run(run_name=f"LR_SMOTE_4class_{timestamp}"):
+
+            m1_path = model_dir / f"lr_balanced_{timestamp}.joblib"
+            joblib.dump(model_lr, m1_path)
+
+            with mlflow.start_run(run_name=f"LR_balanced_4class_{timestamp}"):
                 mlflow.log_params(
                     {
-                        "model": "LR_SMOTE",
+                        "model": "LR_balanced",
                         "class_weight": "balanced",
                         "max_iter": max_iter,
                         "seed": seed,
-                        "smote": True,
-                        "smote_strategy": "auto",
+                        "smote": False,
                         "cv_folds": 5,
                         "pipeline": "A",
                     }
                 )
                 mlflow.log_metrics(
                     {
-                        "cv_mean_f1": m2_cv_mean,
-                        "cv_std_f1": m2_cv_std,
-                        "train_acc": m2_train_acc,
-                        "test_acc": m2_test_acc,
-                        "test_f1": m2_test_f1,
+                        "cv_mean_f1": m1_cv_mean,
+                        "cv_std_f1": m1_cv_std,
+                        "train_acc": m1_train_acc,
+                        "test_acc": m1_test_acc,
+                        "test_f1": m1_test_f1,
                     }
                 )
-                mlflow.sklearn.log_model(model_smote, "lr_smote")
-                mlflow.log_artifact(str(m2_path))
-            logger.info("Model 2 saved and logged -> %s", m2_path)
-        progress.advance(task)
+                mlflow.sklearn.log_model(model_lr, "lr_balanced")
+                mlflow.log_artifact(str(m1_path))
+                mlflow.log_artifact(str(monitor_path))
 
-        # Stage 7 — Save metadata
-        progress.update(task, description=stages_a[6])
-        meta: dict = {
-            "dataset": "Credit Card Fraud Detection - Kaggle",
-            "dataset_version": "DVC tracked - data/processed/",
-            "training_date": timestamp,
-            "train_samples": int(x_tr.shape[0]),
-            "test_samples": int(x_ts.shape[0]),
-            "features": int(x_tr.shape[1]),
-            "classes": lr_label_names_m,
-            "reproducibility": {
-                "random_seed": seed,
-                "cv_strategy": "StratifiedKFold(n_splits=5)",
-            },
-            "model_1": {
-                "name": "LR_balanced",
-                "max_iter": max_iter,
-                "cv_f1_mean": round(m1_cv_mean, 4),
-                "cv_f1_std": round(m1_cv_std, 4),
-                "train_acc": round(m1_train_acc, 4),
-                "test_acc": round(m1_test_acc, 4),
-                "test_f1": round(m1_test_f1, 4),
-                "file": str(m1_path),
-            },
-        }
-        if (
-            run_smote
-            and m2_path
-            and all(
-                v is not None
-                for v in [m2_cv_mean, m2_cv_std, m2_train_acc, m2_test_acc, m2_test_f1]
-            )
-        ):
-            meta["model_2"] = {
-                "name": "LR_SMOTE",
-                "max_iter": max_iter,
-                "cv_f1_mean": round(m2_cv_mean, 4),  # type: ignore[arg-type]
-                "cv_f1_std": round(m2_cv_std, 4),  # type: ignore[arg-type]
-                "train_acc": round(m2_train_acc, 4),  # type: ignore[arg-type]
-                "test_acc": round(m2_test_acc, 4),  # type: ignore[arg-type]
-                "test_f1": round(m2_test_f1, 4),  # type: ignore[arg-type]
-                "file": str(m2_path),
+                cm = confusion_matrix(y_test_4, y_pred_m1)
+                fig, ax = plt.subplots(figsize=(10, 8))
+                disp = ConfusionMatrixDisplay(
+                    cm, display_labels=list(lr_label_names_m.values())
+                )
+                disp.plot(ax=ax, colorbar=True)
+                ax.set_xticklabels(
+                    ax.get_xticklabels(), rotation=15, ha="right", fontsize=9
+                )
+                ax.set_yticklabels(ax.get_yticklabels(), fontsize=9)
+                for text in ax.texts:
+                    try:
+                        val = float(text.get_text())
+                        if val >= 1000:
+                            text.set_text(f"{int(val):,}")
+                        text.set_fontsize(9)
+                    except ValueError:
+                        pass
+                plt.tight_layout()
+                plt.savefig(
+                    "reports/figures/mlflow_cm_lr_balanced.png",
+                    dpi=150,
+                    bbox_inches="tight",
+                )
+                mlflow.log_artifact("reports/figures/mlflow_cm_lr_balanced.png")
+                plt.close(fig)
+            logger.info("Model 1 saved and logged -> %s", m1_path)
+            progress.advance(task)
+
+            # Stage 6 — Model 2: SMOTE + LR
+            m2_cv_mean = m2_cv_std = m2_train_acc = m2_test_acc = m2_test_f1 = None
+            m2_path = None
+            progress.update(task, description=stages_a[5])
+
+            if run_smote:
+                logger.info("Model 2: SMOTE + LR")
+                smote = SMOTE(random_state=seed, k_neighbors=5)
+                t0 = time.time()
+                x_smote, y_smote = smote.fit_resample(x_tr, y_train_4)
+                logger.info(
+                    "SMOTE in %.1fs — size: %s", time.time() - t0, x_smote.shape
+                )
+
+                model_smote = LogisticRegression(
+                    max_iter=max_iter,
+                    class_weight="balanced",
+                    random_state=seed,
+                    n_jobs=-1,
+                )
+                t0 = time.time()
+                m2_cv_mean, m2_cv_std = _run_stratified_cv(
+                    model_smote, x_smote, y_smote
+                )
+                logger.info("CV in %.1fs", time.time() - t0)
+
+                model_smote.fit(x_smote, y_smote)
+                y_pred_m2 = model_smote.predict(x_ts)
+                m2_train_acc = accuracy_score(y_smote, model_smote.predict(x_smote))
+                m2_test_acc = accuracy_score(y_test_4, y_pred_m2)
+                m2_test_f1 = f1_score(y_test_4, y_pred_m2, average="weighted")
+                logger.info(
+                    "Model 2 — Train: %.4f  Test acc: %.4f  F1: %.4f",
+                    m2_train_acc,
+                    m2_test_acc,
+                    m2_test_f1,
+                )
+                logger.info(
+                    "\n%s",
+                    classification_report(
+                        y_test_4,
+                        y_pred_m2,
+                        target_names=list(lr_label_names_m.values()),
+                    ),
+                )
+
+                m2_path = model_dir / f"lr_smote_{timestamp}.joblib"
+                joblib.dump(model_smote, m2_path)
+
+                with mlflow.start_run(run_name=f"LR_SMOTE_4class_{timestamp}"):
+                    mlflow.log_params(
+                        {
+                            "model": "LR_SMOTE",
+                            "class_weight": "balanced",
+                            "max_iter": max_iter,
+                            "seed": seed,
+                            "smote": True,
+                            "smote_strategy": "auto",
+                            "cv_folds": 5,
+                            "pipeline": "A",
+                        }
+                    )
+                    mlflow.log_metrics(
+                        {
+                            "cv_mean_f1": m2_cv_mean,
+                            "cv_std_f1": m2_cv_std,
+                            "train_acc": m2_train_acc,
+                            "test_acc": m2_test_acc,
+                            "test_f1": m2_test_f1,
+                        }
+                    )
+                    mlflow.sklearn.log_model(model_smote, "lr_smote")
+                    mlflow.log_artifact(str(m2_path))
+                    mlflow.log_artifact(str(monitor_path))
+
+                    cm2 = confusion_matrix(y_test_4, y_pred_m2)
+                    fig2, ax2 = plt.subplots(figsize=(10, 8))
+                    disp2 = ConfusionMatrixDisplay(
+                        cm2, display_labels=list(lr_label_names_m.values())
+                    )
+                    disp2.plot(ax=ax2, colorbar=True)
+                    ax2.set_xticklabels(
+                        ax2.get_xticklabels(), rotation=15, ha="right", fontsize=9
+                    )
+                    ax2.set_yticklabels(ax2.get_yticklabels(), fontsize=9)
+                    for text in ax2.texts:
+                        try:
+                            val = float(text.get_text())
+                            if val >= 1000:
+                                text.set_text(f"{int(val):,}")
+                            text.set_fontsize(9)
+                        except ValueError:
+                            pass
+                    plt.tight_layout()
+                    plt.savefig(
+                        "reports/figures/mlflow_cm_lr_smote.png",
+                        dpi=150,
+                        bbox_inches="tight",
+                    )
+                    mlflow.log_artifact("reports/figures/mlflow_cm_lr_smote.png")
+                    plt.close(fig2)
+                logger.info("Model 2 saved and logged -> %s", m2_path)
+            progress.advance(task)
+
+            # Stage 7 — Save metadata
+            progress.update(task, description=stages_a[6])
+            meta: dict = {
+                "dataset": "Credit Card Fraud Detection - Kaggle",
+                "dataset_version": "DVC tracked - data/processed/",
+                "training_date": timestamp,
+                "train_samples": int(x_tr.shape[0]),
+                "test_samples": int(x_ts.shape[0]),
+                "features": int(x_tr.shape[1]),
+                "classes": lr_label_names_m,
+                "reproducibility": {
+                    "random_seed": seed,
+                    "cv_strategy": "StratifiedKFold(n_splits=5)",
+                },
+                "model_1": {
+                    "name": "LR_balanced",
+                    "max_iter": max_iter,
+                    "cv_f1_mean": round(m1_cv_mean, 4),
+                    "cv_f1_std": round(m1_cv_std, 4),
+                    "train_acc": round(m1_train_acc, 4),
+                    "test_acc": round(m1_test_acc, 4),
+                    "test_f1": round(m1_test_f1, 4),
+                    "file": str(m1_path),
+                },
             }
-        with open(model_dir / "LR_SMOTE_model_metadata.json", "w") as fh:
-            json.dump(meta, fh, indent=2)
-        progress.advance(task)
+            if (
+                run_smote
+                and m2_path
+                and all(
+                    v is not None
+                    for v in [
+                        m2_cv_mean,
+                        m2_cv_std,
+                        m2_train_acc,
+                        m2_test_acc,
+                        m2_test_f1,
+                    ]
+                )
+            ):
+                meta["model_2"] = {
+                    "name": "LR_SMOTE",
+                    "max_iter": max_iter,
+                    "cv_f1_mean": round(m2_cv_mean, 4),  # type: ignore[arg-type]
+                    "cv_f1_std": round(m2_cv_std, 4),  # type: ignore[arg-type]
+                    "train_acc": round(m2_train_acc, 4),  # type: ignore[arg-type]
+                    "test_acc": round(m2_test_acc, 4),  # type: ignore[arg-type]
+                    "test_f1": round(m2_test_f1, 4),  # type: ignore[arg-type]
+                    "file": str(m2_path),
+                }
+
+            with open(model_dir / "LR_SMOTE_model_metadata.json", "w") as fh:
+                json.dump(meta, fh, indent=2)
+            progress.advance(task)
+
+    finally:
+        monitor.stop()
+        logger.info("Pipeline A resource monitoring saved to %s", monitor_path)
+        logger.info("Pipeline A total time: %.1fs", time.time() - pipeline_start_time)
 
     logger.info("Pipeline A complete")
 
 
+# ---------------------------------------------------------------------------
 # feature engineering
+# ---------------------------------------------------------------------------
 
 
 def _engineer_features_ensemble(df: pd.DataFrame) -> pd.DataFrame:
@@ -639,6 +782,11 @@ def _build_preprocessor(
     return preprocessor, numeric_features, categorical_features
 
 
+# ---------------------------------------------------------------------------
+# Pipeline B
+# ---------------------------------------------------------------------------
+
+
 def train_ensemble_pipeline(
     data_path: Path,
     model_dir: Path,
@@ -646,6 +794,7 @@ def train_ensemble_pipeline(
     n_estimators_rf: int = 200,
     n_estimators_lgb: int = 500,
     n_estimators_xgb: int = 500,
+    debug: bool = False,
 ) -> None:
     """Pipeline B — RF / LightGBM / XGBoost binary fraud detection (Israail).
 
@@ -659,6 +808,7 @@ def train_ensemble_pipeline(
         n_estimators_rf:  Trees for Random Forest.
         n_estimators_lgb: Estimators for LightGBM.
         n_estimators_xgb: Estimators for XGBoost.
+        debug:            If True run debug checks and set a pdb breakpoint.
     """
     logger.info("=" * 60)
     logger.info("PIPELINE B — Ensemble Models (Israail)")
@@ -669,6 +819,12 @@ def train_ensemble_pipeline(
     mlflow.set_tracking_uri(Mlflow_track)
     mlflow.set_experiment(Mlflow_name)
 
+    monitor_path = Path("reports/monitoring/ensemble_pipeline_resource_usage.csv")
+    monitor = ResourceMonitor(monitor_path)
+    monitor.start()
+
+    pipeline_start_time = time.time()
+
     stages_b = [
         "Load data",
         "Ensemble feature engineering",
@@ -678,184 +834,216 @@ def train_ensemble_pipeline(
         "Save metadata",
     ]
 
-    with get_progress() as progress:
-        task = progress.add_task("Pipeline B", total=len(stages_b))
+    try:
+        with get_progress() as progress:
+            task = progress.add_task("Pipeline B", total=len(stages_b))
 
-        # Stage 1 — Load data
-        progress.update(task, description=stages_b[0])
-        x_train, y_train, x_test, y_test = load_data(data_path)
-        if isinstance(y_train, pd.DataFrame):
-            y_train = y_train["is_fraud"]
-        if isinstance(y_test, pd.DataFrame):
-            y_test = y_test["is_fraud"]
-        progress.advance(task)
+            # Stage 1 — Load data
+            progress.update(task, description=stages_b[0])
+            x_train, y_train, x_test, y_test = load_data(data_path)
+            if debug:
+                run_debug_checks(x_train, y_train, x_test, y_test)
+            if isinstance(y_train, pd.DataFrame):
+                y_train = y_train["is_fraud"]
+            if isinstance(y_test, pd.DataFrame):
+                y_test = y_test["is_fraud"]
+            progress.advance(task)
 
-        # Stage 2 — Feature engineering
-        progress.update(task, description=stages_b[1])
-        logger.info("Feature engineering ...")
-        with timer(logger, "Ensemble feature engineering"):
-            x_train = _engineer_features_ensemble(x_train)
-            x_test = _engineer_features_ensemble(x_test)
-        preprocessor, num_feats, cat_feats = _build_preprocessor(x_train)
-        all_feats = num_feats + cat_feats
-        x_train = x_train[all_feats].copy()
-        x_test = x_test[all_feats].copy()
-        progress.advance(task)
+            # Stage 2 — Feature engineering
+            progress.update(task, description=stages_b[1])
+            logger.info("Feature engineering ...")
+            with timer(logger, "Ensemble feature engineering"):
+                x_train = _engineer_features_ensemble(x_train)
+                x_test = _engineer_features_ensemble(x_test)
+            preprocessor, num_feats, cat_feats = _build_preprocessor(x_train)
+            all_feats = num_feats + cat_feats
+            x_train = x_train[all_feats].copy()
+            x_test = x_test[all_feats].copy()
+            progress.advance(task)
 
-        # Stage 3 — Preprocessing
-        progress.update(task, description=stages_b[2])
-        logger.info("Preprocessing %d features ...", len(all_feats))
-        with timer(logger, "Preprocessing"):
-            x_train_prep = preprocessor.fit_transform(x_train)
-            x_test_prep = preprocessor.transform(x_test)
-        progress.advance(task)
+            # Stage 3 — Preprocessing
+            progress.update(task, description=stages_b[2])
+            logger.info("Preprocessing %d features ...", len(all_feats))
+            with timer(logger, "Preprocessing"):
+                x_train_prep = preprocessor.fit_transform(x_train)
+                x_test_prep = preprocessor.transform(x_test)
+            progress.advance(task)
 
-        # Stage 4 — SMOTE
-        progress.update(task, description=stages_b[3])
-        logger.info("Applying SMOTE (sampling_strategy=0.3) ...")
-        class_counts_before = {
-            int(k): int(v)
-            for k, v in pd.Series(y_train).value_counts().sort_index().items()
-        }
-        logger.info("Before SMOTE class counts: %s", class_counts_before)
-        with timer(logger, "SMOTE resampling"):
-            smote = SMOTE(random_state=seed, sampling_strategy=0.3)
-            x_train_res, y_train_res = smote.fit_resample(x_train_prep, y_train)
-        class_counts_after = {
-            int(k): int(v)
-            for k, v in pd.Series(y_train_res).value_counts().sort_index().items()
-        }
-        logger.info("After SMOTE class counts: %s", class_counts_after)
-        scale_pos = int((y_train_res == 0).sum() / (y_train_res == 1).sum())
-        progress.advance(task)
-
-        # Stage 5 — Train ensemble models
-        progress.update(task, description=stages_b[4])
-        ensemble_models = {
-            "LogisticRegression": LogisticRegression(
-                class_weight="balanced", max_iter=1000, random_state=seed
-            ),
-            "RandomForest": RandomForestClassifier(
-                n_estimators=n_estimators_rf,
-                class_weight="balanced",
-                random_state=seed,
-                n_jobs=-1,
-            ),
-            "LightGBM": lgb.LGBMClassifier(
-                n_estimators=n_estimators_lgb,
-                class_weight="balanced",
-                learning_rate=0.05,
-                num_leaves=63,
-                random_state=seed,
-                verbose=-1,
-            ),
-            "XGBoost": xgb.XGBClassifier(
-                n_estimators=n_estimators_xgb,
-                scale_pos_weight=scale_pos,
-                learning_rate=0.05,
-                max_depth=6,
-                random_state=seed,
-                eval_metric="logloss",
-                verbosity=0,
-            ),
-        }
-        tscv = TimeSeriesSplit(n_splits=5)
-        all_results: dict = {}
-        model_task = progress.add_task("Training models", total=len(ensemble_models))
-        for name, model in ensemble_models.items():
-            progress.update(model_task, description=f"Training {name}")
-            logger.info("Training %s ...", name)
-            t0 = time.time()
-            model.fit(x_train_res, y_train_res)
-            logger.info("  Done in %.1fs", time.time() - t0)
-            y_pred = model.predict(x_test_prep)
-            y_pred_prob = model.predict_proba(x_test_prep)[:, 1]
-            train_acc = accuracy_score(y_train_res, model.predict(x_train_res))
-            test_acc = accuracy_score(y_test, y_pred)
-            test_f1 = f1_score(y_test, y_pred)
-            prec = precision_score(y_test, y_pred)
-            rec = recall_score(y_test, y_pred)
-            roc_auc = roc_auc_score(y_test, y_pred_prob)
-            avg_prec = average_precision_score(y_test, y_pred_prob)
-            logger.info(
-                "  %s — Train: %.4f  F1: %.4f  ROC: %.4f  AP: %.4f",
-                name,
-                train_acc,
-                test_f1,
-                roc_auc,
-                avg_prec,
-            )
-            cv_scores = cross_val_score(
-                model, x_train_res, y_train_res, cv=tscv, scoring="f1", n_jobs=-1
-            )
-            logger.info(
-                "  CV F1 mean=%.4f  std=%.4f", cv_scores.mean(), cv_scores.std()
-            )
-            all_results[name] = {
-                "train_acc": train_acc,
-                "test_acc": test_acc,
-                "f1": test_f1,
-                "precision": prec,
-                "recall": rec,
-                "roc_auc": roc_auc,
-                "avg_prec": avg_prec,
-                "cv_mean_f1": float(cv_scores.mean()),
-                "cv_std_f1": float(cv_scores.std()),
+            # Stage 4 — SMOTE
+            progress.update(task, description=stages_b[3])
+            logger.info("Applying SMOTE (sampling_strategy=0.3) ...")
+            class_counts_before = {
+                int(k): int(v)
+                for k, v in pd.Series(y_train).value_counts().sort_index().items()
             }
-            fname = name.lower() + f"_{timestamp}.joblib"
-            mpath = model_dir / fname
-            joblib.dump(model, mpath)
-            with mlflow.start_run(run_name=f"{name}_{timestamp}"):
-                mlflow.log_params(
-                    {
-                        "model": name,
-                        "seed": seed,
-                        "smote_strategy": 0.3,
-                        "cv_folds": 5,
-                        "pipeline": "B",
-                    }
-                )
-                mlflow.log_metrics(
-                    {
-                        "train_acc": train_acc,
-                        "test_acc": test_acc,
-                        "f1": test_f1,
-                        "precision": prec,
-                        "recall": rec,
-                        "roc_auc": roc_auc,
-                        "avg_prec": avg_prec,
-                        "cv_mean_f1": float(cv_scores.mean()),
-                        "cv_std_f1": float(cv_scores.std()),
-                    }
-                )
-                mlflow.sklearn.log_model(model, name.lower())
-                mlflow.log_artifact(str(mpath))
-            logger.info("  %s saved and logged -> %s", name, mpath)
-            progress.advance(model_task)
-        progress.advance(task)
-
-        # Stage 6 — Save metadata
-        progress.update(task, description=stages_b[5])
-        for name, res in all_results.items():
-            model_key = name.lower()
-            meta_path = model_dir / f"RGhazzal_{model_key}_metadata.json"
-            existing: dict = {}
-            if meta_path.exists():
-                with open(meta_path) as fh:
-                    existing = json.load(fh)
-            existing[timestamp] = {
-                "dataset": "Credit Card Fraud Detection - Kaggle",
-                "training_date": timestamp,
-                "train_samples": int(x_train_res.shape[0]),
-                "test_samples": int(x_test_prep.shape[0]),
-                "features": int(x_train_res.shape[1]),
-                "smote_strategy": 0.3,
-                "seed": seed,
-                **res,
+            logger.info("Before SMOTE: %s", class_counts_before)
+            with timer(logger, "SMOTE resampling"):
+                smote = SMOTE(random_state=seed, sampling_strategy=0.3)
+                x_train_res, y_train_res = smote.fit_resample(x_train_prep, y_train)
+            class_counts_after = {
+                int(k): int(v)
+                for k, v in pd.Series(y_train_res).value_counts().sort_index().items()
             }
-            with open(meta_path, "w") as fh:
-                json.dump(existing, fh, indent=2)
-        progress.advance(task)
+            logger.info("After SMOTE: %s", class_counts_after)
+            scale_pos = int((y_train_res == 0).sum() / (y_train_res == 1).sum())
+            progress.advance(task)
+
+            # Stage 5 — Train ensemble models
+            progress.update(task, description=stages_b[4])
+            ensemble_models = {
+                "LogisticRegression": LogisticRegression(
+                    class_weight="balanced", max_iter=1000, random_state=seed
+                ),
+                "RandomForest": RandomForestClassifier(
+                    n_estimators=n_estimators_rf,
+                    class_weight="balanced",
+                    random_state=seed,
+                    n_jobs=-1,
+                ),
+                "LightGBM": lgb.LGBMClassifier(
+                    n_estimators=n_estimators_lgb,
+                    class_weight="balanced",
+                    learning_rate=0.05,
+                    num_leaves=63,
+                    random_state=seed,
+                    verbose=-1,
+                ),
+                "XGBoost": xgb.XGBClassifier(
+                    n_estimators=n_estimators_xgb,
+                    scale_pos_weight=scale_pos,
+                    learning_rate=0.05,
+                    max_depth=6,
+                    random_state=seed,
+                    eval_metric="logloss",
+                    verbosity=0,
+                ),
+            }
+
+            tscv = TimeSeriesSplit(n_splits=5)
+            all_results: dict = {}
+            model_task = progress.add_task(
+                "Training models", total=len(ensemble_models)
+            )
+
+            for name, model in ensemble_models.items():
+                progress.update(model_task, description=f"Training {name}")
+                logger.info("Training %s ...", name)
+                t0 = time.time()
+                model.fit(x_train_res, y_train_res)
+                logger.info("  Done in %.1fs", time.time() - t0)
+
+                y_pred = model.predict(x_test_prep)
+                y_pred_prob = model.predict_proba(x_test_prep)[:, 1]
+
+                train_acc = accuracy_score(y_train_res, model.predict(x_train_res))
+                test_acc = accuracy_score(y_test, y_pred)
+                test_f1 = f1_score(y_test, y_pred)
+                prec = precision_score(y_test, y_pred)
+                rec = recall_score(y_test, y_pred)
+                roc_auc = roc_auc_score(y_test, y_pred_prob)
+                avg_prec = average_precision_score(y_test, y_pred_prob)
+
+                logger.info(
+                    "  %s — Train: %.4f  F1: %.4f  ROC: %.4f  AP: %.4f",
+                    name,
+                    train_acc,
+                    test_f1,
+                    roc_auc,
+                    avg_prec,
+                )
+
+                cv_scores = cross_val_score(
+                    model, x_train_res, y_train_res, cv=tscv, scoring="f1", n_jobs=-1
+                )
+                logger.info(
+                    "  CV F1 mean=%.4f  std=%.4f", cv_scores.mean(), cv_scores.std()
+                )
+
+                all_results[name] = {
+                    "train_acc": train_acc,
+                    "test_acc": test_acc,
+                    "f1": test_f1,
+                    "precision": prec,
+                    "recall": rec,
+                    "roc_auc": roc_auc,
+                    "avg_prec": avg_prec,
+                    "cv_mean_f1": float(cv_scores.mean()),
+                    "cv_std_f1": float(cv_scores.std()),
+                }
+
+                fname = name.lower() + f"_{timestamp}.joblib"
+                mpath = model_dir / fname
+                joblib.dump(model, mpath)
+
+                with mlflow.start_run(
+                    run_name=f"{name}_rf{n_estimators_rf}_{timestamp}"
+                ):
+                    mlflow.log_params(
+                        {
+                            "model": name,
+                            "seed": seed,
+                            "smote_strategy": 0.3,
+                            "cv_folds": 5,
+                            "pipeline": "B",
+                        }
+                    )
+                    mlflow.log_metrics(
+                        {
+                            "train_acc": train_acc,
+                            "test_acc": test_acc,
+                            "f1": test_f1,
+                            "precision": prec,
+                            "recall": rec,
+                            "roc_auc": roc_auc,
+                            "avg_prec": avg_prec,
+                            "cv_mean_f1": float(cv_scores.mean()),
+                            "cv_std_f1": float(cv_scores.std()),
+                        }
+                    )
+                    mlflow.sklearn.log_model(model, name.lower())
+                    mlflow.log_artifact(str(mpath))
+                    mlflow.log_artifact(str(monitor_path))
+
+                    # Classification report saved as artifact
+                    report = skl_report(y_test, y_pred)
+                    report_path = (
+                        f"reports/figures/{name.lower()}_classification_report.txt"
+                    )
+                    with open(report_path, "w") as f:
+                        f.write(report)
+                    mlflow.log_artifact(report_path)
+
+                logger.info("  %s saved and logged -> %s", name, mpath)
+                progress.advance(model_task)
+            progress.advance(task)
+
+            # Stage 6 — Save metadata
+            progress.update(task, description=stages_b[5])
+            for name, res in all_results.items():
+                model_key = name.lower()
+                meta_path = model_dir / f"RGhazzal_{model_key}_metadata.json"
+                existing: dict = {}
+                if meta_path.exists():
+                    with open(meta_path) as fh:
+                        existing = json.load(fh)
+                existing[timestamp] = {
+                    "dataset": "Credit Card Fraud Detection - Kaggle",
+                    "training_date": timestamp,
+                    "train_samples": int(x_train_res.shape[0]),
+                    "test_samples": int(x_test_prep.shape[0]),
+                    "features": int(x_train_res.shape[1]),
+                    "smote_strategy": 0.3,
+                    "seed": seed,
+                    **res,
+                }
+                with open(meta_path, "w") as fh:
+                    json.dump(existing, fh, indent=2)
+            progress.advance(task)
+
+    finally:
+        monitor.stop()
+        logger.info("Pipeline B resource monitoring saved to %s", monitor_path)
+        logger.info("Pipeline B total time: %.1fs", time.time() - pipeline_start_time)
 
     logger.info("Pipeline B results:")
     logger.info("  %-22s  F1      ROC-AUC  AvgPrec", "Model")
@@ -868,6 +1056,11 @@ def train_ensemble_pipeline(
             res["avg_prec"],
         )
     logger.info("Pipeline B complete")
+
+
+# ---------------------------------------------------------------------------
+# config validation
+# ---------------------------------------------------------------------------
 
 
 def _validate_config(cfg: DictConfig) -> None:
@@ -905,7 +1098,9 @@ def _validate_config(cfg: DictConfig) -> None:
     logger.info("Config validation passed")
 
 
+# ---------------------------------------------------------------------------
 # CLI
+# ---------------------------------------------------------------------------
 
 
 @hydra.main(version_base=None, config_path=str(CONFIG_DIR), config_name="config")
@@ -936,6 +1131,7 @@ def main(cfg: DictConfig) -> None:
             max_iter=cfg.model.lr.max_iter,
             seed=cfg.project.seed,
             run_smote=cfg.training.smote,
+            debug=cfg.training.get("debug", False),
         )
 
     if cfg.training.pipeline in ("all", "ensemble"):
@@ -946,6 +1142,7 @@ def main(cfg: DictConfig) -> None:
             n_estimators_rf=cfg.model.ensemble.n_estimators_rf,
             n_estimators_lgb=cfg.model.ensemble.n_estimators_lgb,
             n_estimators_xgb=cfg.model.ensemble.n_estimators_xgb,
+            debug=cfg.training.get("debug", False),
         )
 
     logger.info("=" * 72)
@@ -956,6 +1153,5 @@ def main(cfg: DictConfig) -> None:
     logger.info("=" * 72)
 
 
-# Run the CLI
 if __name__ == "__main__":
     main()

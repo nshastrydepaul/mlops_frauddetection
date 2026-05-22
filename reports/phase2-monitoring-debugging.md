@@ -129,7 +129,9 @@ src/mlops_frauddetection/train_model.py
 
 # Debug Mode
 
-A command-line debugging flag was added:
+The project now uses Hydra configuration management. Debugging is enabled using Hydra override parameters instead of argparse flags.
+
+A debug mode was added to enable validation checks and pdb debugging during training.
 
 ```bash
 --debug
@@ -140,13 +142,13 @@ This enables additional validation and debugger support during training.
 Usage:
 
 ```bash
-python -m mlops_frauddetection.train_model --pipeline lr --debug
+PYTHONPATH=src python -m mlops_frauddetection.train_model training.pipeline=lr training.debug=true
 ```
 
 or:
 
 ```bash
-python -m mlops_frauddetection.train_model --pipeline ensemble --debug
+PYTHONPATH=src python -m mlops_frauddetection.train_model training.pipeline=ensemble training.debug=true
 ```
 
 ---
@@ -254,4 +256,4 @@ Inspect preprocessing logic, SMOTE configuration, and target labels.
 
 ### Conclusion
 
-This monitoring and debugging setup keeps the training pipelines running smoothly. while `psutil` watches the system's health, the `--debug` mode catches data errors before they can ruin a training run. Together this simple tools make the fraud detection system reliable, transparent and easy to fix if somehting goes wrong.
+This monitoring and debugging setup keeps the training pipelines running smoothly. while `psutil` watches the system's health, the `--debug` mode catches data errors before they can ruin a training run. Together, these tools make the fraud detection system reliable, transparent, and easier to fix when something goes wrong.
