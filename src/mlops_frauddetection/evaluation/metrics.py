@@ -56,24 +56,31 @@ def evaluate_multiclass(
         gap (if provided).
     """
     test_acc = float(sk_metrics.accuracy_score(y_true, y_pred))
-    test_f1  = float(sk_metrics.f1_score(y_true, y_pred, average="weighted"))
+    test_f1 = float(sk_metrics.f1_score(y_true, y_pred, average="weighted"))
 
     logger.info("%s — Test acc: %.4f  Test F1: %.4f", model_name, test_acc, test_f1)
-    logger.info("\n%s", sk_metrics.classification_report(
-        y_true, y_pred, target_names=list(LABEL_NAMES.values())
-    ))
+    logger.info(
+        "\n%s",
+        sk_metrics.classification_report(
+            y_true, y_pred, target_names=list(LABEL_NAMES.values())
+        ),
+    )
 
     result: dict[str, float] = {"test_acc": test_acc, "test_f1": test_f1}
 
     if y_train_true is not None and y_train_pred is not None:
         train_acc = float(sk_metrics.accuracy_score(y_train_true, y_train_pred))
-        gap       = abs(train_acc - test_acc) * 100
+        gap = abs(train_acc - test_acc) * 100
         result["train_acc"] = train_acc
-        result["gap"]       = gap
+        result["gap"] = gap
         status = "No overfitting" if gap < 5 else "Possible overfitting"
         logger.info(
             "%s — Train: %.2f%%  Test: %.2f%%  Gap: %.1f%%  %s",
-            model_name, train_acc * 100, test_acc * 100, gap, status,
+            model_name,
+            train_acc * 100,
+            test_acc * 100,
+            gap,
+            status,
         )
 
     return result
@@ -102,31 +109,35 @@ def evaluate_binary(
         roc_auc, avg_prec, and optionally train_acc, gap.
     """
     test_acc = float(sk_metrics.accuracy_score(y_true, y_pred))
-    test_f1  = float(sk_metrics.f1_score(y_true, y_pred))
-    prec     = float(sk_metrics.precision_score(y_true, y_pred))
-    rec      = float(sk_metrics.recall_score(y_true, y_pred))
-    roc_auc  = float(sk_metrics.roc_auc_score(y_true, y_pred_prob))
+    test_f1 = float(sk_metrics.f1_score(y_true, y_pred))
+    prec = float(sk_metrics.precision_score(y_true, y_pred))
+    rec = float(sk_metrics.recall_score(y_true, y_pred))
+    roc_auc = float(sk_metrics.roc_auc_score(y_true, y_pred_prob))
     avg_prec = float(sk_metrics.average_precision_score(y_true, y_pred_prob))
 
     logger.info(
         "%s — Acc: %.4f  F1: %.4f  ROC-AUC: %.4f  AvgPrec: %.4f",
-        model_name, test_acc, test_f1, roc_auc, avg_prec,
+        model_name,
+        test_acc,
+        test_f1,
+        roc_auc,
+        avg_prec,
     )
 
     result: dict[str, float] = {
-        "test_acc":  test_acc,
-        "f1":        test_f1,
+        "test_acc": test_acc,
+        "f1": test_f1,
         "precision": prec,
-        "recall":    rec,
-        "roc_auc":   roc_auc,
-        "avg_prec":  avg_prec,
+        "recall": rec,
+        "roc_auc": roc_auc,
+        "avg_prec": avg_prec,
     }
 
     if y_train_true is not None and y_train_pred is not None:
         train_acc = float(sk_metrics.accuracy_score(y_train_true, y_train_pred))
-        gap       = abs(train_acc - test_acc) * 100
+        gap = abs(train_acc - test_acc) * 100
         result["train_acc"] = train_acc
-        result["gap"]       = gap
+        result["gap"] = gap
 
     return result
 
@@ -148,16 +159,21 @@ def overfitting_check(
     Returns:
         Status string: 'No overfitting' or 'Possible overfitting'.
     """
-    gap    = abs(train_acc - test_acc) * 100
+    gap = abs(train_acc - test_acc) * 100
     status = "No overfitting" if gap < threshold else "Possible overfitting"
     logger.info(
         "%s — Train: %.1f%%  Test: %.1f%%  Gap: %.1f%%  %s",
-        model_name, train_acc * 100, test_acc * 100, gap, status,
+        model_name,
+        train_acc * 100,
+        test_acc * 100,
+        gap,
+        status,
     )
     return status
 
 
 # wrapping
+
 
 def classification_report(y_true: Any, y_pred: Any) -> dict[str, float]:
     """Return accuracy, precision, recall, and F1 as a plain dict.
@@ -172,13 +188,18 @@ def classification_report(y_true: Any, y_pred: Any) -> dict[str, float]:
         Dict with keys: accuracy, precision, recall, f1.
     """
     return {
-        "accuracy":  float(sk_metrics.accuracy_score(y_true, y_pred)),
-        "precision": float(sk_metrics.precision_score(
-            y_true, y_pred, average="weighted", zero_division=0)),
-        "recall":    float(sk_metrics.recall_score(
-            y_true, y_pred, average="weighted", zero_division=0)),
-        "f1":        float(sk_metrics.f1_score(
-            y_true, y_pred, average="weighted", zero_division=0)),
+        "accuracy": float(sk_metrics.accuracy_score(y_true, y_pred)),
+        "precision": float(
+            sk_metrics.precision_score(
+                y_true, y_pred, average="weighted", zero_division=0
+            )
+        ),
+        "recall": float(
+            sk_metrics.recall_score(y_true, y_pred, average="weighted", zero_division=0)
+        ),
+        "f1": float(
+            sk_metrics.f1_score(y_true, y_pred, average="weighted", zero_division=0)
+        ),
     }
 
 
@@ -196,8 +217,8 @@ def regression_report(y_true: Any, y_pred: Any) -> dict[str, float]:
     """
     mse = float(sk_metrics.mean_squared_error(y_true, y_pred))
     return {
-        "mae":  float(sk_metrics.mean_absolute_error(y_true, y_pred)),
-        "mse":  mse,
+        "mae": float(sk_metrics.mean_absolute_error(y_true, y_pred)),
+        "mse": mse,
         "rmse": float(np.sqrt(mse)),
-        "r2":   float(sk_metrics.r2_score(y_true, y_pred)),
+        "r2": float(sk_metrics.r2_score(y_true, y_pred)),
     }

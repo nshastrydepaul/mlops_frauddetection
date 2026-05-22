@@ -5,6 +5,7 @@ import threading
 import time
 from datetime import datetime
 from pathlib import Path
+
 import psutil
 
 try:
@@ -12,10 +13,11 @@ try:
 except ImportError:
     GPUtil = None  # GPU monitoring will be disabled if GPUtil is not available
 
+
 class ResourceMonitor:
     """Logs CPU, RAM, disk, process memory, and GPU metrics to CSV."""
 
-    def __init__(self, output_path: Path, interval : float = 2.0) -> None:
+    def __init__(self, output_path: Path, interval: float = 2.0) -> None:
         self.output_path = output_path
         self.interval = interval
         self._stop_event = threading.Event()
@@ -54,35 +56,37 @@ class ResourceMonitor:
             gpus = GPUtil.getGPUs()
         except Exception:
             return gpu_metrics
-        if not gpus:            
+        if not gpus:
             return gpu_metrics
-        
+
         gpu = gpus[0]  # Monitor the first GPU
-        gpu_metrics.update({
-            "gpu_available": True,
-            "gpu_name": gpu.name,
-            "gpu_load_percent": round(gpu.load * 100,2),
-            "gpu_memory_used_mb": gpu.memoryUsed,
-            "gpu_memory_total_mb": gpu.memoryTotal,
-        })
+        gpu_metrics.update(
+            {
+                "gpu_available": True,
+                "gpu_name": gpu.name,
+                "gpu_load_percent": round(gpu.load * 100, 2),
+                "gpu_memory_used_mb": gpu.memoryUsed,
+                "gpu_memory_total_mb": gpu.memoryTotal,
+            }
+        )
         return gpu_metrics
 
     def _run(self) -> None:
         """Write monitoring rows until stopped."""
-        
-        fieldnames  = [
-                "timestamp",
-                "cpu_percent",
-                "memory_percent",
-                "memory_used_mb",
-                "memory_available_mb",
-                "process_memory_mb",
-                "disk_usage_percent",
-                "gpu_available",
-                "gpu_name",
-                "gpu_load_percent",
-                "gpu_memory_used_mb",
-                "gpu_memory_total_mb",
+
+        fieldnames = [
+            "timestamp",
+            "cpu_percent",
+            "memory_percent",
+            "memory_used_mb",
+            "memory_available_mb",
+            "process_memory_mb",
+            "disk_usage_percent",
+            "gpu_available",
+            "gpu_name",
+            "gpu_load_percent",
+            "gpu_memory_used_mb",
+            "gpu_memory_total_mb",
         ]
 
         with self.output_path.open("w", newline="") as csvfile:
@@ -94,14 +98,18 @@ class ResourceMonitor:
                 gpu_metrics = self._get_gpu_metrics()
 
                 row = {
-                        "timestamp": datetime.now().isoformat(timespec="seconds"),
-                        "cpu_percent": psutil.cpu_percent(interval=None),
-                        "memory_percent": psutil.virtual_memory().percent,
-                        "memory_used_mb": round(psutil.virtual_memory().used / (1024 * 1024), 2),
-                        "memory_available_mb": round(psutil.virtual_memory().available / (1024 * 1024), 2),
-                        "process_memory_mb": round(memory_info.rss / (1024 * 1024), 2),
-                        "disk_usage_percent": psutil.disk_usage("/").percent,
-                    }
+                    "timestamp": datetime.now().isoformat(timespec="seconds"),
+                    "cpu_percent": psutil.cpu_percent(interval=None),
+                    "memory_percent": psutil.virtual_memory().percent,
+                    "memory_used_mb": round(
+                        psutil.virtual_memory().used / (1024 * 1024), 2
+                    ),
+                    "memory_available_mb": round(
+                        psutil.virtual_memory().available / (1024 * 1024), 2
+                    ),
+                    "process_memory_mb": round(memory_info.rss / (1024 * 1024), 2),
+                    "disk_usage_percent": psutil.disk_usage("/").percent,
+                }
 
                 row.update(gpu_metrics)
                 writer.writerow(row)
