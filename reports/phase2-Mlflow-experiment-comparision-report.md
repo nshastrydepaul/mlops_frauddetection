@@ -1,3 +1,24 @@
+# Fraud Anomaly Detection  MLflow Experiment Comparison Report
+
+This report documents the comparison of 4 MLflow experiments run during Phase 2
+to identify the best hyperparameter configuration for fraud detection.
+
+## Experiments Overview
+
+| Experiment | Key Parameters | Total Runs |
+|---|---|---|
+| Exp 1: fraud-anomaly-detection | max_iter=1000, RF=200, LGB=500 (baseline) | 6 |
+| Exp 2: fraud-anomaly-detection-v2-max-iter500 | max_iter=500, LR only | 2 |
+| Exp 3: fraud-anomaly-detection-v3-rf100-lgb200 | max_iter=500, RF=100, LGB=200 | 6 |
+| Exp 4: fraud-anomaly-detection-v4-rf300-lgb100 | max_iter=1500, RF=300, LGB=100 | 6 |
+
+## Comparisons in this Report
+
+- **Section 1:** Experiment 1 vs Experiment 2  Effect of max_iter on LR performance
+- **Section 2:** Experiment 3 vs Experiment 4  Effect of RF/LGB estimators on ensemble performance
+
+---
+
 ##  Experiment 3 vs Experiment 4
 
 * Experiment 3 (v3-rf100-lgb200):
