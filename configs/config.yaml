@@ -36,6 +36,7 @@ training:
   smote: true
   cv_folds: 5
   random_state: 42
+  debug: false
 
 evaluation:
   metrics:
