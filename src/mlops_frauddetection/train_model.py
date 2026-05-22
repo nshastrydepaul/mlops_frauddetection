@@ -35,6 +35,8 @@ from pathlib import Path
 import hydra
 import joblib
 import lightgbm as lgb
+import matplotlib
+import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
 import numpy as np
@@ -47,9 +49,11 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
+    ConfusionMatrixDisplay,
     accuracy_score,
     average_precision_score,
     classification_report,
+    confusion_matrix,
     f1_score,
     precision_score,
     recall_score,
@@ -77,11 +81,7 @@ logging.getLogger("mlflow").setLevel(logging.ERROR)
 logging.getLogger("mlflow.tracking").setLevel(logging.ERROR)
 logging.getLogger("mlflow.sklearn").setLevel(logging.ERROR)
 
-import matplotlib
-
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix  # noqa: E402
 
 Mlflow_track = "sqlite:///mlflow.db"
 Mlflow_name = "fraud-anomaly-detection"
