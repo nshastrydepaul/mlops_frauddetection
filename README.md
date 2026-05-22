@@ -255,6 +255,35 @@ For additional operational details, see:
 
 * [PHASE2.md](PHASE2.md)
 
+### MLflow Experiment Tracking (Phase 2)
+
+MLflow is integrated into the training pipeline for experiment tracking.
+
+**Start MLflow UI:**
+```bash
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+# Open: http://127.0.0.1:5000
+```
+
+**Run experiments:**
+```bash
+# Default experiment
+python -m mlops_frauddetection.train_model
+
+# Custom hyperparameters
+python -m mlops_frauddetection.train_model --pipeline lr --max-iter 500
+python -m mlops_frauddetection.train_model --n-estimators-rf 100 --n-estimators-lgb 200
+```
+
+**4 experiments tracked:**
+
+| Experiment | Key Parameters |
+|---|---|
+| fraud-anomaly-detection | max_iter=1000, RF=200, LGB=500 |
+| fraud-anomaly-detection-v2-max-iter500 | max_iter=500, LR only |
+| fraud-anomaly-detection-v3-rf100-lgb200 | RF=100, LGB=200 |
+| fraud-anomaly-detection-v4-rf300-lgb100 | RF=300, LGB=100 |
+
 ## Technology Stack
 
 ### Core Dependencies
@@ -409,6 +438,9 @@ Phase 2 introduced operational MLOps improvements including:
 | Persistent Artifact Mounting      | Completed |
 | Logging Validation                | Completed |
 | MLflow Runtime Compatibility      | Completed |
+| MLflow Experiment Tracking        | Completed |
+| Framework profilers               | Completed |
+| Modular ML Pipeline               | Completed |
 
 ### Related Documentation
 
@@ -459,6 +491,15 @@ reports/figures/
 | Raail | Logistic Regression, Random Forest, LightGBM, XGBoost implementation & evaluation, project documentation  |
 | Musaddiq | Logistic Regression baseline model, feature engineering, project documentation, code review |
 | Lohith | Exploratory Data Analysis, visualization, project documentation, document review |
+
+## Team Contributions - Phase 2
+
+| Team Member | Responsibilities |
+|---|---|
+| Nishanth Shastry | Docker containerization, Dockerfile, Docker Compose, Section 1,7|
+| Israail Ghazzal | Monitoring (psutil/MLflow system metrics), Logging with Rich, Section 5, 6.1, 7|
+| Musaddiq Vavartar | MLflow experiment tracking (4 experiments), profiling with cProfile, modular ML pipeline refactoring, Section 3.2 & 4,7|
+| Lohith Poola | cProfile profiling, Hydra configuration management, Section 2 & 3.1, 7  |
 
 
 ## References
