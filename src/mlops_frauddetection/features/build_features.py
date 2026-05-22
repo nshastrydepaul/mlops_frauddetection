@@ -59,10 +59,6 @@ num_feat = [
 
 
 # Pipeline A
-<<<<<<< HEAD
-
-=======
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
 
 
 def create_4class_labels(features: pd.DataFrame, y: pd.Series) -> pd.Series:
@@ -82,12 +78,6 @@ def create_4class_labels(features: pd.DataFrame, y: pd.Series) -> pd.Series:
     Returns:
         pd.Series of integer labels 0-3 with name 'risk_label'.
     """
-<<<<<<< HEAD
-    amt = X["amt"]
-    cus_avg_amt = X["avg_amt_per_customer"]
-    risk_lvl30 = X["merchant_risk_30_day"]
-    is_night = X["trans_time_is_night"]
-=======
     logger.info("Creating 4-class labels for %d rows", len(features))
 
     required_cols = [
@@ -104,7 +94,6 @@ def create_4class_labels(features: pd.DataFrame, y: pd.Series) -> pd.Series:
     cus_avg_amt = features["avg_amt_per_customer"]
     risk_lvl30 = features["merchant_risk_30_day"]
     is_night = features["trans_time_is_night"]
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
     is_fraud = y.values
 
     suspicious = (
@@ -112,11 +101,7 @@ def create_4class_labels(features: pd.DataFrame, y: pd.Series) -> pd.Series:
     )
     high_risk_merchant = risk_lvl30 >= 17
 
-<<<<<<< HEAD
-    labels = pd.Series(0, index=X.index, name="risk_label")
-=======
     labels = pd.Series(0, index=features.index, name="risk_label")
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
     labels[(is_fraud == 0) & suspicious] = 1
     labels[(is_fraud == 1) & ~high_risk_merchant] = 2
     labels[(is_fraud == 1) & high_risk_merchant] = 3
@@ -125,10 +110,6 @@ def create_4class_labels(features: pd.DataFrame, y: pd.Series) -> pd.Series:
     for cls, name in lbls.items():
         cnt = int((labels == cls).sum())
         logger.info(
-<<<<<<< HEAD
-            "  Class %d (%s): %d rows (%.2f%%)", cls, name, cnt, cnt / len(labels) * 100
-        )
-=======
             "  Class %d (%s): %d rows (%.2f%%)",
             cls,
             name,
@@ -137,7 +118,6 @@ def create_4class_labels(features: pd.DataFrame, y: pd.Series) -> pd.Series:
         )
 
     logger.info("4-class label creation complete — output shape: %s", labels.shape)
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
     return labels
 
 
@@ -157,21 +137,6 @@ def add_features_lr(x_features: pd.DataFrame) -> pd.DataFrame:
     Returns:
         Copy of x_features with 5 additional columns.
     """
-<<<<<<< HEAD
-    X = X.copy()
-    X["amt_ratio"] = X["amt"] / (X["avg_amt_per_customer"] + 1)
-    X["combined_risk"] = (
-        X["merchant_risk_30_day"] * 0.6 + X["merchant_risk_7_day"] * 0.4
-    )
-    X["amt_risk_score"] = X["amt_ratio"] * X["merchant_risk_30_day"]
-    X["is_high_spend"] = (X["amt"] > X["avg_amt_per_customer"] * 1.5).astype(int)
-    X["night_high_amt"] = ((X["trans_time_is_night"] == 1) & (X["amt"] > 100)).astype(
-        int
-    )
-
-    logger.info("Added 5 LR features — new shape: %s", X.shape)
-    return X
-=======
     logger.info("Adding LR ratio features — input shape: %s", x_features.shape)
 
     df = x_features.copy()
@@ -191,7 +156,6 @@ def add_features_lr(x_features: pd.DataFrame) -> pd.DataFrame:
     )
     logger.info("Added 5 LR features — output shape: %s", df.shape)
     return df
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
 
 
 # Pipeline B
@@ -238,16 +202,10 @@ def engineer_features_ensemble(df: pd.DataFrame) -> pd.DataFrame:
             df[col] = df[col].str.strip().map({"True": 1, "False": 0})
 
     df["category_is_online"] = df[online_cols].any(axis=1).astype(int)
-<<<<<<< HEAD
-    df["online_x_log_amt"] = df["category_is_online"] * df["log_amt"]
-    df["velocity_ratio"] = df["customer_num_trans_1_day"] / (
-        df["customer_num_trans_30_day"] + 1
-=======
     logger.info(
         "Online transactions: %d (%.2f%%)",
         df["category_is_online"].sum(),
         df["category_is_online"].mean() * 100,
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
     )
 
     df["online_x_log_amt"] = df["category_is_online"] * df["log_amt"]
@@ -281,16 +239,6 @@ def build_preprocessor(
     Returns:
         Tuple of (preprocessor, numeric_features, categorical_features).
     """
-<<<<<<< HEAD
-    numeric_features = [f for f in num_feat if f in X_train.columns]
-    categorical_features = [
-        col
-        for col in X_train.columns
-        if (col.startswith("category_") or col.startswith("gender_"))
-        and col not in numeric_features
-    ]
-    # removing dups
-=======
     logger.info("Building preprocessor — input shape: %s", x_train.shape)
 
     numeric_features = [f for f in num_feat if f in x_train.columns]
@@ -302,32 +250,12 @@ def build_preprocessor(
     ]
 
     # Remove duplicates
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
     numeric_features = list(dict.fromkeys(numeric_features))
     categorical_features = list(dict.fromkeys(categorical_features))
     categorical_features = [
         c for c in categorical_features if c not in numeric_features
     ]
 
-<<<<<<< HEAD
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ("num", Pipeline([("scaler", StandardScaler())]), numeric_features),
-            ("cat", "passthrough", categorical_features),
-        ]
-    )
-
-    logger.info(
-        "Preprocessor built — %d numeric, %d categorical",
-        len(numeric_features),
-        len(categorical_features),
-    )
-    return preprocessor, numeric_features, categorical_features
-
-
-def build_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Derive model-ready features from a processed dataframe."""
-=======
     missing_num = [f for f in num_feat if f not in x_train.columns]
     if missing_num:
         logger.warning(
@@ -350,7 +278,6 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Categorical features: %s", categorical_features)
     return preprocessor, numeric_features, categorical_features
 
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
 
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
     """Derive model-ready features from a processed dataframe.

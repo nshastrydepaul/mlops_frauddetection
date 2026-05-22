@@ -187,11 +187,7 @@ def classification_report(y_true: Any, y_pred: Any) -> dict[str, float]:
     Returns:
         Dict with keys: accuracy, precision, recall, f1.
     """
-<<<<<<< HEAD
-    return {
-=======
     result = {
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
         "accuracy": float(sk_metrics.accuracy_score(y_true, y_pred)),
         "precision": float(
             sk_metrics.precision_score(
@@ -228,11 +224,7 @@ def regression_report(y_true: Any, y_pred: Any) -> dict[str, float]:
         Dict with keys: mae, mse, rmse, r2.
     """
     mse = float(sk_metrics.mean_squared_error(y_true, y_pred))
-<<<<<<< HEAD
-    return {
-=======
     result = {
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
         "mae": float(sk_metrics.mean_absolute_error(y_true, y_pred)),
         "mse": mse,
         "rmse": float(np.sqrt(mse)),
