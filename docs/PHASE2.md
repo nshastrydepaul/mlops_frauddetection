@@ -108,7 +108,7 @@ Artifacts are persisted through:
 
 ## Containerization & Runtime Validation
 
-Phase 2 operationalized the project using Docker and Docker Compose.
+Phase 2 operationalized the project using Docker and Docker Compose to ensure reproducible machine learning workflows, environment consistency, and scalable execution.
 
 ### Docker Features
 
@@ -131,32 +131,121 @@ The Docker image was successfully built using:
 docker compose build --no-cache
 ```
 
-### Docker Validation
+Validated image creation included:
 
-The following workflows were successfully validated inside Docker:
+- dependency installation
+- LightGBM runtime validation
+- Python environment setup
+- MLflow initialization
+- artifact persistence support
 
-* preprocessing pipeline
-* feature engineering
-* Logistic Regression training
-* Random Forest training
-* LightGBM training
-* XGBoost training
-* SMOTE workflows
+#### Docker Build Validation
 
-Docker execution completed successfully with:
+![Docker Build Success](reports/figures/docker_build_success.png)
 
-```text
-exited with code 0
+---
+
+### Docker Runtime Validation
+
+Containerized execution was validated using:
+
+```bash
+docker compose up
 ```
 
-### Runtime Dependency Debugging
+The following workflows were successfully executed inside Docker:
 
-The following container/runtime issues were identified and resolved:
+- preprocessing pipeline
+- feature engineering
+- Logistic Regression training
+- SMOTE + Logistic Regression
+- Random Forest training
+- LightGBM training
+- XGBoost training
+- MLflow experiment tracking
+- artifact generation and persistence
 
-* missing make dependency
-* missing curl dependency
-* missing git dependency
-* missing libgomp1 dependency for LightGBM
+Successful runtime completion:
+
+```text
+mlops_frauddetection_app exited with code 0
+```
+
+#### Docker Compose Runtime
+
+![Docker Compose Runtime](reports/figures/docker_compose_runtime.png)
+
+---
+
+### Containerized Training Execution
+
+The Dockerized environment successfully executed:
+
+- Pipeline A — Logistic Regression
+- Pipeline A — SMOTE + Logistic Regression
+- Pipeline B — Random Forest
+- Pipeline B — LightGBM
+- Pipeline B — XGBoost
+
+Training metrics, artifacts, and reports were successfully generated inside the containerized environment.
+
+#### Docker Training Pipeline
+
+![Docker Training Pipeline](reports/figures/docker_training_pipeline.png)
+
+---
+
+### Successful Pipeline Completion
+
+The full containerized workflow completed successfully with:
+
+```text
+Pipeline B complete
+Training run complete
+mlops_frauddetection_app exited with code 0
+```
+
+#### Successful Docker Exit
+
+![Docker Exit Success](reports/figures/docker_exit_success.png)
+
+---
+
+### Persistent Volume Mounting
+
+Docker volumes were configured to persist:
+
+- trained models
+- MLflow tracking artifacts
+- reports and figures
+- monitoring outputs
+- processed datasets
+
+Mounted directories include:
+
+```text
+/models
+/reports
+/mlruns
+/data
+```
+
+This ensured artifacts remained available even after container shutdown.
+
+---
+
+### Runtime Dependency Issues Resolved
+
+The following container/runtime issues were identified and resolved during Phase 2:
+
+| Issue | Resolution |
+|---|---|
+| missing `make` dependency | installed build-essential tools |
+| missing `curl` dependency | added curl package |
+| missing `git` dependency | installed git runtime |
+| LightGBM runtime failure | installed `libgomp1` |
+| matplotlib headless rendering | configured `Agg` backend |
+| artifact persistence issues | configured mounted Docker volumes |
 
 ---
 

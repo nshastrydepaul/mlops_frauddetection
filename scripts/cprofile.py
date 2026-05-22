@@ -8,7 +8,6 @@ from pathlib import Path
 
 from mlops_frauddetection.train_model import main
 
-
 OUTPUT_DIR = Path("reports")
 OUTPUT_DIR.mkdir(exist_ok=True)
 

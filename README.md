@@ -377,6 +377,245 @@ mlops_frauddetection/                  # Repository root
 └── README.md
 ```
 
+### Our Current Project stucture
+
+```
+.
+├── LICENSE
+├── Makefile
+├── PHASE1.md
+├── PHASE2.md
+├── PHASE3.md
+├── README.md
+├── configs
+│   ├── README.md
+│   ├── config.yaml
+│   └── experiment
+│       ├── default_experiment.yaml
+│       ├── ensemble_only.yaml
+│       └── lr_only.yaml
+├── data
+│   ├── README.md
+│   ├── processed
+│   │   ├── X_test.csv
+│   │   ├── X_train.csv
+│   │   ├── y_test.csv
+│   │   └── y_train.csv
+│   └── raw
+│       ├── data_100k.csv
+│       └── data_1M.csv
+├── data.dvc
+├── docker-compose.yaml
+├── dockerfiles
+│   ├── Dockerfile
+│   └── README.md
+├── docs
+│   ├── PHASE1.md
+│   ├── PHASE2.md
+│   ├── PHASE3.md
+│   ├── README.md
+│   ├── api.md
+│   ├── getting_started.md
+│   ├── index.md
+│   ├── mkdocs.yml
+│   └── source
+├── mlflow.db
+├── models
+│   ├── LR_SMOTE_model_metadata.json
+│   ├── README.md
+│   ├── RGhazzal_lightgbm_metadata.json
+│   ├── RGhazzal_logisticregression_metadata.json
+│   ├── RGhazzal_randomforest_metadata.json
+│   ├── RGhazzal_xgboost_metadata.json
+│   ├── lightgbm_20260507.joblib
+│   ├── lightgbm_20260507.joblib.dvc
+│   ├── lightgbm_20260520.joblib
+│   ├── lightgbm_20260520.joblib.dvc
+│   ├── lightgbm_20260521.joblib
+│   ├── lightgbm_20260521.joblib.dvc
+│   ├── lightgbm_20260522.joblib
+│   ├── logistic_regression_20260507.joblib
+│   ├── logistic_regression_20260507.joblib.dvc
+│   ├── logisticregression_20260520.joblib
+│   ├── logisticregression_20260520.joblib.dvc
+│   ├── logisticregression_20260521.joblib
+│   ├── logisticregression_20260521.joblib.dvc
+│   ├── logisticregression_20260522.joblib
+│   ├── lr_balanced_20260520.joblib
+│   ├── lr_balanced_20260520.joblib.dvc
+│   ├── lr_balanced_20260521.joblib
+│   ├── lr_balanced_20260521.joblib.dvc
+│   ├── lr_balanced_20260522.joblib
+│   ├── lr_smote_20260520.joblib
+│   ├── lr_smote_20260520.joblib.dvc
+│   ├── lr_smote_20260521.joblib
+│   ├── lr_smote_20260521.joblib.dvc
+│   ├── lr_smote_20260522.joblib
+│   ├── preprocessor_20260507.joblib
+│   ├── preprocessor_20260507.joblib.dvc
+│   ├── random_forest_20260507.joblib
+│   ├── random_forest_20260507.joblib.dvc
+│   ├── randomforest_20260520.joblib
+│   ├── randomforest_20260520.joblib.dvc
+│   ├── randomforest_20260521.joblib
+│   ├── randomforest_20260521.joblib.dvc
+│   ├── randomforest_20260522.joblib
+│   ├── xgboost_20260507.joblib
+│   ├── xgboost_20260507.joblib.dvc
+│   ├── xgboost_20260520.joblib
+│   ├── xgboost_20260520.joblib.dvc
+│   ├── xgboost_20260521.joblib
+│   ├── xgboost_20260521.joblib.dvc
+│   └── xgboost_20260522.joblib
+├── notebooks
+│   ├── 1.0-Musaddiq-logistic-regression.ipynb
+│   ├── 1.0-lohith-data-exploration.ipynb
+│   ├── 1.0-nishanthshastry-data-sample.ipynb
+│   ├── 1.0-rghazzal-exploratory-data-analysis.ipynb
+│   ├── 1.0-rghazzal-machine-learning-models.ipynb
+│   └── README.md
+├── predictions.csv
+├── profile.html
+├── profile.json
+├── pyproject.toml
+├── reports
+│   ├── README.md
+│   ├── cprofile_training.prof
+│   ├── cprofile_training_output.txt
+│   ├── figures
+│   │   ├── RGazzal_eda_01_target_variable_is_fraud.svg
+│   │   ├── RGazzal_eda_02_univariate_transaction_amount.svg
+│   │   ├── RGazzal_eda_03_univariate_categorical_features_All.svg
+│   │   ├── RGazzal_eda_04_top_15_states_transaction_volume.png
+│   │   ├── RGazzal_eda_04_top_15_states_transaction_volume.svg
+│   │   ├── RGazzal_eda_05_univariate_temporal_features.svg
+│   │   ├── RGazzal_eda_06_univariate_numeric_feature_distributions.svg
+│   │   ├── RGazzal_eda_07_bivariate_transaction_amount_vs_is_fraud.svg
+│   │   ├── RGazzal_eda_08_bivariate_category_vs_is_fraud_All.svg
+│   │   ├── RGazzal_eda_09_bivariate_temporal_features_vs_is_fraud_All.svg
+│   │   ├── RGazzal_eda_10_demographic_velocity_features_vs_is_fraud.svg
+│   │   ├── RGazzal_eda_11_correlation_matrix_key_numeric_features.svg
+│   │   ├── RGazzal_eda_12_bivariate_category_time_of_day_vs_is_fraud_All.svg
+│   │   ├── RGazzal_eda_13_median_transaction_amount_legitimate_vs_fraud_by_category.svg
+│   │   ├── RGazzal_eda_14_amount_vs_merchant_risk_fraud_vs_legitimate_All.svg
+│   │   ├── RGazzal_eda_15_pair_plot_key_features_by_fraud_class_All.svg
+│   │   ├── RGazzal_eda_16_fraud_rate_category_weekday_weekend.svg
+│   │   ├── Scalene-scripts_profile_training.py-1.png
+│   │   ├── Scalene-scripts_profile_training.py-2.png
+│   │   ├── amount_distribution.png
+│   │   ├── avg_spend_per_category.png
+│   │   ├── class_balance.png
+│   │   ├── correlation_heatmap.png
+│   │   ├── customer_average_spend_window.png
+│   │   ├── customer_location_scatter.png
+│   │   ├── customer_transaction_count.png
+│   │   ├── cutomer_age_distribution_by_class.png
+│   │   ├── docker1.png
+│   │   ├── docker2.png
+│   │   ├── docker3.png
+│   │   ├── docker4.png
+│   │   ├── docker5.png
+│   │   ├── fraud_rate_by_day_of_week.png
+│   │   ├── fraud_rate_by_merchant_category.png
+│   │   ├── fraud_risk_across_age_groups.png
+│   │   ├── heatmap_days_of_week_vs_hour.png
+│   │   ├── label_distribution.png
+│   │   ├── lightgbm_classification_report.txt
+│   │   ├── logisticregression_classification_report.txt
+│   │   ├── m1_confusion_matrix.png
+│   │   ├── mlflow_all_experiments.png
+│   │   ├── mlflow_artifact_2.png
+│   │   ├── mlflow_cm_lr_balanced.png
+│   │   ├── mlflow_cm_lr_smote.png
+│   │   ├── mlflow_compare_1.png
+│   │   ├── mlflow_compare_2.png
+│   │   ├── mlflow_compare_exp3_exp4_runs.png
+│   │   ├── mlflow_compare_exp3_exp_4_lgboost_1.png
+│   │   ├── mlflow_compare_exp3_exp_4_lgboost_2.png
+│   │   ├── mlflow_compare_exp3_exp_4_lgboost_3.png
+│   │   ├── mlflow_compare_exp3_exp_4_lr_balanced_1.png
+│   │   ├── mlflow_compare_exp3_exp_4_lr_balanced_2.png
+│   │   ├── mlflow_compare_exp3_exp_4_lr_balanced_3.png
+│   │   ├── mlflow_exp1_exp_2_compare1.png
+│   │   ├── mlflow_exp1_exp_2_compare2.png
+│   │   ├── mlflow_exp1_exp_2_smote.png
+│   │   ├── mlflow_exp1_exp_2_smote_2.png
+│   │   ├── mlflow_exp_1_exp_2.png
+│   │   ├── mlflow_experiment.png
+│   │   ├── mlflow_experiment_3_runs.png
+│   │   ├── mlflow_experiments_4_runs.png
+│   │   ├── mlflow_run_detail_1.png
+│   │   ├── mlflow_run_metrices.png
+│   │   ├── mlflow_runs.png
+│   │   ├── mlflow_runs_artifact_1.png
+│   │   ├── model_comparison_confusion.png
+│   │   ├── pipeline_architecture.png
+│   │   ├── randomforest_classification_report.txt
+│   │   ├── test_state.png
+│   │   ├── total_fraud_volume_by_state.png
+│   │   ├── transactions_by_hour_of_day.png
+│   │   └── xgboost_classification_report.txt
+│   ├── monitoring
+│   │   ├── ensemble_pipeline_resource_usage.csv
+│   │   └── lr_pipeline_resource_usage.csv
+│   ├── phase1-data-exploration-report.md
+│   ├── phase2-Mlflow-experiment-comparision-report.md
+│   ├── phase2-monitoring-debugging.md
+│   ├── profiling_output.html
+│   ├── profiling_output.json
+│   └── profiling_output.txt
+├── requirements.txt
+├── requirements_dev.txt
+├── scripts
+│   ├── cprofile.py
+│   └── profile_training.py
+├── src
+│   ├── mlops_frauddetection
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── data
+│   │   │   ├── __init__.py
+│   │   │   ├── exceptions.py
+│   │   │   ├── loaders.py
+│   │   │   └── make_dataset.py
+│   │   ├── evaluation
+│   │   │   ├── __init__.py
+│   │   │   └── metrics.py
+│   │   ├── features
+│   │   │   ├── __init__.py
+│   │   │   └── build_features.py
+│   │   ├── logging_config.py
+│   │   ├── models
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── fraud_models.py
+│   │   │   └── model.py
+│   │   ├── monitoring
+│   │   │   ├── __init__.py
+│   │   │   └── system_monitoring.py
+│   │   ├── predict_model.py
+│   │   ├── train_model.py
+│   │   ├── utils
+│   │   │   ├── __init__.py
+│   │   │   ├── io.py
+│   │   │   └── seed.py
+│   │   └── visualization
+│   │       ├── __init__.py
+│   │       ├── eda_generated_report.py
+│   │       └── visualize.py
+│   └── mlops_frauddetection.egg-info
+│       ├── PKG-INFO
+│       ├── SOURCES.txt
+│       ├── dependency_links.txt
+│       ├── requires.txt
+│       └── top_level.txt
+└── tests
+    ├── README.md
+    ├── __init__.py
+    ├── conftest.py
+    └── test_model.py
+```
+
 ### Why `src/` layout?
 
 | | `src/` layout (this template) | Flat layout |
