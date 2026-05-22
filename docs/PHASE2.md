@@ -172,6 +172,77 @@ Validation checks include:
 
 ---
 
+## Profiling & Optimization (Section 3.2)
+
+### Framework Profiling  Scalene
+
+**Tool:** Scalene v1.5.19  line-level CPU + memory profiler for scikit-learn users
+
+**How we ran it:**
+```bash
+scalene run --memory --output profile.html scripts/profile_training.py
+```
+
+**Scalene HTML output:** `profile.html`
+
+**Key findings:**
+
+| File | % of Time | Time (s) |
+|---|---|---|
+| train_model.py | 87.9% | 12.281s |
+| system_monitoring.py | 12.1% | 1.687s |
+
+**Top functions by memory copies:**
+
+| Function | Line | Memory Copies |
+|---|---|---|
+| train_lr_pipeline | 315 | 115 |
+| load_data | 124 | 7 |
+| _clean_data_lr | 152 | 5 |
+
+**Optimization applied:**
+```python
+# cross_val_score parallelized across CPU cores
+cross_val_score(model, X, y, cv=cv, scoring="f1_weighted", n_jobs=-1)
+```
+
+**cProfile output:** `reports/profiling_output.txt` (22,194 lines)
+
+---
+
+## Experiment Management & Tracking (Section 4)
+
+### MLflow Setup
+
+**Tracking URI:** `sqlite:///mlflow.db`
+**Experiment name:** `fraud-anomaly-detection`
+
+**Start UI:**
+```bash
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+# Open: http://127.0.0.1:5000
+```
+
+### 4 Experiments Tracked
+
+| Experiment | Parameters | Runs |
+|---|---|---|
+| fraud-anomaly-detection | max_iter=1000, RF=200, LGB=500 | 6 |
+| fraud-anomaly-detection-v2-max-iter500 | max_iter=500, LR only | 2 |
+| fraud-anomaly-detection-v3-rf100-lgb200 | RF=100, LGB=200 | 6 |
+| fraud-anomaly-detection-v4-rf300-lgb100 | RF=300, LGB=100 | 6 |
+
+### Best Model
+
+**LightGBM from Experiment 3 (v3-rf100-lgb200)**
+- cv_mean_f1: 0.718
+- ROC-AUC: 0.999
+- LGB=200 estimators with learning_rate=0.05
+
+For detailed experiment comparison see: [Experiment Comparison Report](reports/phase2-experiment-comparision.md)
+
+---
+
 ## Model Selection
 
 ### Chosen Models
@@ -182,6 +253,11 @@ Validation checks include:
 | Random Forest       | Ensemble benchmark                    |
 | LightGBM            | Gradient boosting benchmark           |
 | XGBoost             | High-performance fraud classification |
+
+### Chosen Model as Best
+- Model Type: LightGBM (Pipeline B) + LR_balanced (Pipeline A)
+- Best Hyperparameters: LGB n_estimators=200, learning_rate=0.05, max_iter=1000
+- Performance Metrics: cv_mean_f1=0.718, ROC-AUC=0.999 (LightGBM)
 
 ### Performance Metrics
 
@@ -195,11 +271,6 @@ Models were evaluated using:
 
 ---
 
-### Chosen Model
-- Model Type: 
-- Best Hyperparameters: 
-- Performance Metrics: 
-
 ## Key Results
 
 * XGBoost achieved the strongest fraud detection performance
@@ -207,6 +278,10 @@ Models were evaluated using:
 * Feature engineering significantly improved fraud representation
 * Containerized execution successfully reproduced local training workflows
 * Dockerized workflows improved reproducibility and operational consistency
+* LightGBM (v3-rf100-lgb200) achieved best cv_mean_f1 of 0.718 and ROC-AUC of 0.999 across all experiments
+* 4 MLflow experiments tracked with different hyperparameters  more LR iterations (1000 vs 500) consistently improved performance
+* Scalene profiling identified train_model.py consuming 87.9% of runtime  cross_val_score parallelized with n_jobs=-1 for ~4x speedup
+* cProfile output (22,194 lines) saved to reports/profiling_output.txt for full bottleneck analysis
 
 ## Challenges and Solutions
 
@@ -217,6 +292,11 @@ Models were evaluated using:
 | Container reproducibility issues       | Added Docker Compose orchestration   |
 | Artifact persistence inside containers | Added persistent volume mounting     |
 | Dependency inconsistencies             | Standardized Python 3.11 runtime     |
+| Scalene segfault on macOS ARM64 with n_jobs=-1 | Used cProfile as fallback + lightweight 8k row script for Scalene |
+| MLflow file store missing meta.yaml | Switched to SQLite backend (sqlite:///mlflow.db) |
+| DVC Google Drive token expired | Re-authenticated using gdrive_client_id credentials |
+| Metadata JSON merge conflicts | Added RGhazzal_*_metadata.json to .gitignore |
+| cross_val_score slow (95s, 61% of runtime) | Parallelized with n_jobs=-1 (~4x speedup) |
 
 
 ## Next Steps
