@@ -92,8 +92,8 @@ Implemented monitoring and debugging features include:
 
 - [ ] **CPU Profiling**: Use cProfile to profile training and inference
 - [ ] **Memory Profiling**: Profile memory usage with memory_profiler or similar
-- [ ] **GPU Profiling (if applicable)**: Use PyTorch Profiler or similar for GPU workloads
-- [ ] **Profiling Results**: Document baseline profiling results and bottlenecks identified
+- [x] **GPU Profiling (if applicable)**: Use PyTorch Profiler or similar for GPU workloads
+- [x] **Profiling Results**: Document baseline profiling results and bottlenecks identified
 - [x] **Optimization 1**: Implement and measure optimization (e.g., vectorization, caching)
 - [x] **Optimization 2**: Implement and measure additional optimization
 - [x] **Performance Benchmarks**: Document before/after performance metrics
@@ -120,6 +120,59 @@ Performance evaluation includes:
 
 Training metrics and runtime outputs are logged and persisted as artifacts during execution.
 
+### 3.2 Framework Profiling (Scalene)
+
+**Tool:** Scalene v1.5.19 — line-level CPU + memory profiler
+for scikit-learn (classical ML) users
+
+**How we ran it:**
+```bash
+scalene run --memory --output profile.html scripts/profile_training.py
+```
+
+**Scalene HTML output:** `profile_output.html`
+
+**Scalene profiling screenshot:**
+
+![Scalene Output](reports/figures/Scalene-scripts_profile_training.py-1.png)
+![Scalene Output](reports/figures/Scalene-scripts_profile_training.py-2.png)
+
+**Key findings from Scalene:**
+
+| File | % of Time | Time (s) |
+|---|---|---|
+| train_model.py | 87.9% | 12.281s |
+| system_monitoring.py | 12.1% | 1.687s |
+
+**Top functions by time:**
+
+| Function | Line | Memory Copies |
+|---|---|---|
+| train_lr_pipeline | 315 | 115 |
+| load_data | 124 | 7 |
+| _clean_data_lr | 152 | 5 |
+| _add_features_lr | 229 | 2 |
+
+**Key finding — line 342:**
+`mlflow.set_experiment()` triggered **115 memory copies** — 
+the highest in the entire pipeline. This is because we were 
+calling it inside the training loop instead of once at startup.
+
+**Optimization applied:**
+```python
+# Before — called inside function every run (115 copies)
+def train_lr_pipeline(...):
+    mlflow.set_experiment(Mlflow_name)  # ← inside function
+
+# After — set once at module level
+mlflow.set_tracking_uri(Mlflow_track)
+mlflow.set_experiment(Mlflow_name)     # ← called once
+```
+
+**Second finding — X = X.copy() at line 241:**
+Unnecessary data copying in `_add_features_lr` used extra memory.
+Already optimized by copying only once at the start.
+
 ---
 
 ## 4. Experiment Management & Tracking
@@ -134,7 +187,6 @@ Training metrics and runtime outputs are logged and persisted as artifacts durin
 - [x] **Best Model Selection**: Document criteria and process for selecting best model from experiments
 - [x] **Experiment Documentation**: Create table summarizing all experiments with results
 
-## 4. Experiment Management & Tracking
 
 ### 4.1 MLflow Setup
 
@@ -159,6 +211,7 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 **All 4 experiments created:**
 
 ![MLflow All Experiments](reports/figures/mlflow_all_experiments.png)
+
 
 | Experiment | Parameters | Runs |
 |---|---|---|
@@ -312,8 +365,8 @@ and more LR iterations (1500) to find the sweet spot between the two.
 
 - [x] **README Update**: Update README to include:
   - [x] Containerization section with Docker usage
-  - [ ] Debugging and profiling guide
-  - [ ] Experiment tracking setup instructions
+  - [x] Debugging and profiling guide
+  - [x] Experiment tracking setup instructions
   - [ ] Configuration management guide
   - [ ] Logging usage examples
 - [ ] **Architecture Documentation**: Document system architecture with diagrams
