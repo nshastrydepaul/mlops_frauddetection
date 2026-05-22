@@ -77,10 +77,10 @@ logging.getLogger("mlflow").setLevel(logging.ERROR)
 logging.getLogger("mlflow.tracking").setLevel(logging.ERROR)
 logging.getLogger("mlflow.sklearn").setLevel(logging.ERROR)
 
-import matplotlib  # noqa: E402
+import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix  # noqa: E402
 
 Mlflow_track = "sqlite:///mlflow.db"

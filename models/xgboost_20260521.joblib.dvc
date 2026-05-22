@@ -1,9 +1,5 @@
 outs:
-<<<<<<< HEAD
-- md5: 375c9424d81a6fbef129e78185f65563
-=======
 - md5: 21e12bd853dffec1cda84d282802f3c7
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
   size: 1622880
   hash: md5
   path: xgboost_20260521.joblib

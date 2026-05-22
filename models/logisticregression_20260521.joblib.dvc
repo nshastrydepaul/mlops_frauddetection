@@ -1,9 +1,5 @@
 outs:
-<<<<<<< HEAD
-- md5: 833f5fe50fdf12f27643847254e73df5
-=======
 - md5: be192051e5202e43310beff4c09d0f55
->>>>>>> d315eec (RGhazzal — Phase 2: Logging & Configuration Management)
   size: 1167
   hash: md5
   path: logisticregression_20260521.joblib
