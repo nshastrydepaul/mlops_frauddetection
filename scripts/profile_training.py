@@ -17,5 +17,5 @@ if __name__ == "__main__":
         model_dir=Path("models"),
         max_iter=1000,
         seed=42,
-        run_smote=True,   # faster for profiling
+        run_smote=False,   # faster for profiling
     )
