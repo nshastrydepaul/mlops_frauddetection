@@ -45,7 +45,22 @@ docker_build:
 	docker build -t mlops_frauddetection -f dockerfiles/Dockerfile .
 
 docker_run:
-	docker run --rm mlops_frauddetection
+	docker run --rm \
+		-v $(PWD)/models:/app/models \
+		-v $(PWD)/reports:/app/reports \
+		-v $(PWD)/mlruns:/app/mlruns \
+		-v $(PWD)/data:/app/data \
+		-e PYTHONPATH=/app/src \
+		mlops_frauddetection
+
+docker_compose_build:
+	docker compose build --no-cache
+
+docker_compose_up:
+	docker compose up
+
+docker_compose_down:
+	docker compose down
 
 docs:
 	mkdocs serve

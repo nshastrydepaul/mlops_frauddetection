@@ -220,6 +220,32 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 | fraud-anomaly-detection-v3-rf100-lgb200 | max_iter=500, RF=100, LGB=200 | 6 |
 | fraud-anomaly-detection-v4-rf300-lgb100 | max_iter=1500, RF=300, LGB=100 | 6 |
 
+Run Experiments commands
+
+# Experiment 1 — default baseline (already done)
+python -m mlops_frauddetection.train_model --pipeline all
+
+# Experiment 2 — LR only, fewer iterations
+python -m mlops_frauddetection.train_model --pipeline lr --max-iter 500
+
+# Experiment 3 — lighter ensemble
+python -m mlops_frauddetection.train_model --pipeline all --n-estimators-rf 100 --n-estimators-lgb 200 --n-estimators-xgb 200
+
+# Experiment 4 — more RF trees
+python -m mlops_frauddetection.train_model --pipeline all --n-estimators-rf 300 --n-estimators-lgb 100 --n-estimators-xgb 100 --max-iter 1500
+
+
+For Hydra Version:
+
+bash# Default config
+python -m mlops_frauddetection.train_model
+
+# Override from CLI
+python -m mlops_frauddetection.train_model model.lr.max_iter=500 training.pipeline=lr
+
+# With experiment config
+python -m mlops_frauddetection.train_model +experiment=lr_only
+
 ---
 
 ### 4.2 Metric & Parameter Logging
