@@ -283,7 +283,7 @@ LightGBM (200 rounds) to test a lighter but faster configuration.
 We flipped it  more RF trees (300) but fewer LightGBM rounds (100)
 and more LR iterations (1500) to find the sweet spot between the two.
 
-* For detailed Experimentation comparision, see the [Experiment comparision Report](reports/phase2-experiment-comparision.md)
+* For detailed Experimentation comparision, see the [Experiment comparision Report](reports/phase2-Mlflow-experiment-comparision-report.md)
 
 ---
 
