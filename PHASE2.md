@@ -90,8 +90,8 @@ Implemented monitoring and debugging features include:
 
 ## 3. Profiling & Optimization
 
-- [ ] **CPU Profiling**: Use cProfile to profile training and inference
-- [ ] **Memory Profiling**: Profile memory usage with memory_profiler or similar
+- [x] **CPU Profiling**: Use cProfile to profile training and inference
+- [x] **Memory Profiling**: Profile memory usage with memory_profiler or similar
 - [x] **GPU Profiling (if applicable)**: Use PyTorch Profiler or similar for GPU workloads
 - [x] **Profiling Results**: Document baseline profiling results and bottlenecks identified
 - [x] **Optimization 1**: Implement and measure optimization (e.g., vectorization, caching)
@@ -670,9 +670,9 @@ python src/mlops_frauddetection/train_model.py --cfg job
   - [x] Containerization section with Docker usage
   - [x] Debugging and profiling guide
   - [x] Experiment tracking setup instructions
-  - [ ] Configuration management guide
-  - [ ] Logging usage examples
-- [ ] **Architecture Documentation**: Document system architecture with diagrams
+  - [x] Configuration management guide
+  - [x] Logging usage examples
+- [x] **Architecture Documentation**: Document system architecture with diagrams
 - [x] **Setup Guide**: Update setup guide to include all Phase 2 tools
 - [x] **Examples**: Add examples of running with different configurations
 - [x] **Tool Integration**: Document how all tools work together
