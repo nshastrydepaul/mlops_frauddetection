@@ -32,21 +32,103 @@ Phase 3 implements continuous integration/continuous deployment (CI/CD) pipeline
 
 ## 2. Continuous Docker Building & CML
 
-- [ ] **Automated Docker Builds**: Configure Docker build pipeline triggered by:
-  - [ ] Commits to main branch
-  - [ ] Version tags
-  - [ ] Manual workflow dispatch
-- [ ] **Docker Push**: Implement push to container registry (Docker Hub, GitHub Container Registry, or GCP)
-- [ ] **CML Initialization**: Initialize CML in repository
-- [ ] **CML Workflow**: Create GitHub Actions workflow for CML that:
-  - [ ] Trains model on workflow runner
-  - [ ] Generates performance metrics
-  - [ ] Creates visualizations/plots
-  - [ ] Comments results on PR
-- [ ] **CML Metrics Output**: Document format and sample output of CML metrics
-- [ ] **CML Plots**: Generate sample plots and document in CML workflow
-- [ ] **Model Comparison**: Create CML output showing comparison of current vs. baseline model
-- [ ] **Workflow Documentation**: Document CML workflow setup and customization
+- [x] **Automated Docker Builds**: Configure Docker build pipeline triggered by:
+  - [x] Commits to main branch
+  - [x] Version tags
+  - [x] Manual workflow dispatch
+- [x] **Docker Push**: Implement push to container registry (Docker Hub, GitHub Container Registry, or GCP)
+- [x] **CML Initialization**: Initialize CML in repository
+- [x] **CML Workflow**: Create GitHub Actions workflow for CML that:
+  - [x] Trains model on workflow runner
+  - [x] Generates performance metrics
+  - [x] Creates visualizations/plots
+  - [x] Comments results on PR
+- [x] **CML Metrics Output**: Document format and sample output of CML metrics
+- [x] **CML Plots**: Generate sample plots and document in CML workflow
+- [x] **Model Comparison**: Create CML output showing comparison of current vs. baseline model
+- [x] **Workflow Documentation**: Document CML workflow setup and customization
+
+---
+
+### Implemented Workflows
+
+| Workflow File | Description |
+|---|---|
+| `.github/workflows/docker-build.yml` | Builds and pushes Docker images automatically |
+| `.github/workflows/cml.yml` | Runs model training and posts PR evaluation reports |
+| `.github/workflows/ci.yml` | Linting, formatting, testing, and type checking |
+
+---
+
+### Docker CI/CD Features
+
+Implemented automated Docker workflows with:
+
+- Docker Buildx
+- Docker Hub authentication
+- SHA-based image tagging
+- latest image tagging
+- pull request image validation
+- workflow_dispatch support
+- version tag build support
+
+Docker images are automatically published to:
+
+```bash
+nshastry00/fraud-detection-mlops
+```
+
+### Continuous Machine Learning (CML)
+
+Implemented a GitHub Actions based CML workflow that:
+
+- Runs fraud detection model training automatically
+- Generates classification reports
+- Produces evaluation metrics
+- Uploads generated artifacts
+- Generates monitoring outputs
+- Posts automated evaluation summaries on pull requests
+
+### Model Evaluation Outputs
+
+#### The automated CML workflow evaluates and compares:
+
+- Logistic Regression
+- Random Forest
+- LightGBM
+- XGBoost
+
+#### Generated outputs include:
+
+- Precision
+- Recall
+- F1-score
+- Confusion matrices
+- MLflow comparison visualizations
+- Resource usage monitoring
+
+### Generated Artifacts
+
+Artifacts uploaded from GitHub Actions include:
+
+- report.md
+- reports/figures/
+- reports/monitoring/
+
+### Evidence
+
+#### Docker Workflow
+
+- GitHub Actions successful workflow runs
+- Docker Hub image repository screenshots
+- Docker SHA tag generation
+- Automated Docker push logs
+
+#### CML Workflow
+- Pull request evaluation comments
+- Generated classification reports
+- Monitoring outputs
+- Uploaded workflow artifacts
 
 ---
 
