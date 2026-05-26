@@ -30,9 +30,6 @@ jobs:
           pip install -r requirements_dev.txt
           pip install -e .
 
-      - name: Install CML
-        uses: iterative/setup-cml@v2
-
       - name: Run Training Pipeline
         run: |
           python -m mlops_frauddetection.train_model
@@ -46,8 +43,9 @@ jobs:
           echo "## Generated Figures" >> report.md
           ls reports/figures >> report.md
 
-      - name: Comment PR
+      - name: Comment PR with Report
         env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cml comment create report.md
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file report.md
