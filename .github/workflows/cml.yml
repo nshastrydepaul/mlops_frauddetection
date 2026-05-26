@@ -90,6 +90,15 @@ jobs:
           echo "| Feature Engineering Visualizations | Generated |" >> report.md
           echo "" >> report.md
 
+          echo "## Visualization Previews" >> report.md
+          echo "" >> report.md
+
+          for image in $(find reports/figures -name "*.png" | head -6); do
+            echo "### $(basename $image)" >> report.md
+            echo "![]($image)" >> report.md
+            echo "" >> report.md
+          done
+
           echo "## Key Figure Files" >> report.md
           echo "" >> report.md
 
