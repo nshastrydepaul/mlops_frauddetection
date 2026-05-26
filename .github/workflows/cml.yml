@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Training Pipeline
         run: |
-          python -m mlops_frauddetection.train_model experiment=ensemble_only
+          python -m mlops_frauddetection.train_model
 
       - name: List Generated Artifacts
         run: |
@@ -89,15 +89,6 @@ jobs:
           echo "| Fraud Distribution Plots | Generated |" >> report.md
           echo "| Feature Engineering Visualizations | Generated |" >> report.md
           echo "" >> report.md
-
-          echo "## Visualization Previews" >> report.md
-          echo "" >> report.md
-
-          for image in $(find reports/figures -name "*.png" | head -6); do
-            echo "### $(basename $image)" >> report.md
-            echo "![]($image)" >> report.md
-            echo "" >> report.md
-          done
 
           echo "## Key Figure Files" >> report.md
           echo "" >> report.md
