@@ -709,6 +709,107 @@ Generated figures are stored in:
 reports/figures/
 ```
 
+## Phase 3 — Continuous Integration, Docker CI/CD & CML
+
+Phase 3 introduced automated CI/CD workflows using GitHub Actions, continuous Docker image delivery, and Continuous Machine Learning (CML) reporting workflows for fraud anomaly classification experiments.
+
+### Continuous Integration Workflows
+
+The repository now includes automated GitHub Actions workflows for:
+
+- Ruff linting
+- Ruff formatting validation
+- mypy static type checking
+- pytest execution with coverage reporting
+- Docker image building and validation
+- Continuous Machine Learning (CML) experiment reporting
+
+### Automated Docker CI/CD
+
+Docker workflows were implemented using GitHub Actions to automatically:
+
+- Build Docker images on pull requests and pushes
+- Push Docker images to Docker Hub
+- Generate immutable SHA-tagged Docker images
+- Support manual workflow dispatch
+- Support version-tag-triggered builds
+
+### Docker Hub Repository
+
+Docker images are published to:
+
+```bash
+nshastry00/fraud-detection-mlops
+```
+
+### Continuous Machine Learning (CML)
+
+A GitHub Actions based CML workflow was implemented to:
+
+- Execute the fraud detection training pipeline automatically
+- Generate model evaluation metrics
+- Produce classification reports
+- Generate monitoring outputs and visualizations
+- Upload generated artifacts
+- Automatically comment model evaluation summaries on pull requests
+
+### Model Comparison
+
+The CML workflow compares multiple fraud detection models including:
+
+- Logistic Regression
+- Random Forest
+- LightGBM
+- XGBoost
+
+### Evaluation outputs include:
+
+- Precision
+- Recall
+- F1-score
+- Confusion matrices
+- Comparative experiment visualizations
+
+### Implemented GitHub Actions Workflows
+
+| Workflow                         | Purpose    |
+| --------------------------------- | --------- |
+| ```.github/workflows/ci.yml```           | Linting, testing, formatting, coverage |
+| ```.github/workflows/docker-build.yml``` | Docker build and Docker Hub push |
+| ```.github/workflows/cml.yml```       | Continuous ML evaluation and PR reporting |
+
+### Example Workflow Triggers
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+```
+
+### Generated Outputs
+
+Phase 3 workflows automatically generate:
+
+- Classification reports
+- Monitoring CSV outputs
+- MLflow comparison plots
+- Confusion matrices
+- Resource usage metrics
+- Pull request evaluation comments
+
+### Related Documentation
+
+- [Phase 3 — CI/CD & Deployment](PHASE3.md)
+- [docs/PHASE3.md](docs/PHASE3.md)
+
 ## Contribution Summary
 
 - [x] Team members assigned
@@ -740,6 +841,14 @@ reports/figures/
 | Musaddiq Vavartar | MLflow experiment tracking (4 experiments), profiling with cProfile, modular ML pipeline refactoring, Section 3.2 & 4,7|
 | Lohith Poola | cProfile profiling, Hydra configuration management, Section 2 & 3.1, 7  |
 
+## Team Contributions - Phase 3
+
+| Team Member | Responsibilities |
+|---|---|
+| Nishanth Shastry | Docker CI/CD workflows, Docker Hub integration, GitHub Actions automation, Continuous Machine Learning (CML) workflows, PR evaluation reporting, Section 2, 6|
+| Israail Ghazzal | , Section 6|
+| Musaddiq Vavartar | , Section 6|
+| Lohith Poola | , Section 6|
 
 ## References
 

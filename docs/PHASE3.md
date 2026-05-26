@@ -58,6 +58,65 @@ This phase covers final evaluation, testing, and deployment preparation of the m
 - Expected Latency:
 - Resource Requirements:
 
+## Phase 3 CI/CD & CML Updates
+
+### Automated Docker CI/CD
+
+Implemented automated Docker workflows using GitHub Actions.
+
+Features include:
+
+- Docker image builds on push and pull requests
+- Docker Hub integration
+- SHA-tagged Docker image versioning
+- latest image tagging
+- manual workflow dispatch support
+- version tag build triggers
+
+Docker images are automatically pushed to:
+
+```bash
+nshastry00/fraud-detection-mlops
+```
+
+### Continuous Machine Learning (CML)
+
+Implemented a Continuous Machine Learning workflow using GitHub Actions.
+
+The workflow automatically:
+- Executes the fraud detection training pipeline
+- Generates classification reports
+- Produces monitoring outputs
+- Uploads generated artifacts
+- Posts automated model evaluation summaries on pull requests
+
+### Implemented Workflows
+
+| Workflow                         | Purpose    |
+| --------- | ---------------------------------|
+| ```ci.yml```           | Testing, linting, formatting, type checking |
+| ```docker-build.yml``` | Automated Docker build and push |
+| ```cml.yml```       | Automated ML training and PR reporting |
+
+### Evaluated Models
+
+The CML workflow evaluates and compares:
+- Logistic Regression
+- Random Forest
+- LightGBM
+- XGBoost
+
+### Generated Outputs
+
+Generated outputs include:
+- Classification reports
+- Confusion matrices
+- MLflow comparison visualizations
+- Monitoring CSV outputs
+- Resource usage metrics
+
+---
+
 ## Known Limitations
 
 *To be filled in during Phase 3*
