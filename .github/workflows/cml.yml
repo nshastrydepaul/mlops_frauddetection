@@ -6,6 +6,11 @@ on:
       - main
       - feature/**
 
+  push:
+    branches:
+      - main
+      - feature/**
+
   workflow_dispatch:
 
 jobs:
@@ -106,6 +111,7 @@ jobs:
             reports/monitoring
 
       - name: Comment PR with Report
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
