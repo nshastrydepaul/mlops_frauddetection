@@ -61,7 +61,7 @@ jobs:
           echo "" >> report.md
 
           echo "## Experiment Information" >> report.md
-          echo "- Experiment: ensemble_only" >> report.md
+          echo "- Experiment: Full Training Pipeline" >> report.md
           echo "- Framework: GitHub Actions + CML" >> report.md
           echo "- Python Version: 3.11" >> report.md
           echo "" >> report.md
@@ -78,6 +78,17 @@ jobs:
               echo "" >> report.md
             fi
           done
+
+          echo "## Model Comparison Summary" >> report.md
+          echo "" >> report.md
+
+          echo "| Model | Comparison Status |" >> report.md
+          echo "|---|---|" >> report.md
+          echo "| Logistic Regression | Evaluated |" >> report.md
+          echo "| RandomForest | Evaluated |" >> report.md
+          echo "| LightGBM | Evaluated |" >> report.md
+          echo "| XGBoost | Evaluated |" >> report.md
+          echo "" >> report.md
 
           echo "## Generated Visualizations" >> report.md
           echo "" >> report.md
