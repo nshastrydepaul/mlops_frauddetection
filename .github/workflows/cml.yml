@@ -4,13 +4,16 @@ on:
   pull_request:
     branches:
       - main
+      - feature/**
+
+  workflow_dispatch:
 
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
 
     steps:
@@ -29,24 +32,82 @@ jobs:
           pip install -r requirements_dev.txt
           pip install -e .
 
-      - name: Install CML
-        uses: iterative/setup-cml@v2
+      - name: Verify Reports Directory
+        run: |
+          mkdir -p reports/figures
+          mkdir -p reports/monitoring
 
       - name: Run Training Pipeline
         run: |
-          python -m mlops_frauddetection.train_model
+          python -m mlops_frauddetection.train_model experiment=ensemble_only
 
-      - name: Create Report
+      - name: List Generated Artifacts
         run: |
-          echo "# Model Training Results" > report.md
+          echo "Generated report files:"
+          find reports -type f
+
+      - name: Create CML Report
+        run: |
+          echo "# Fraud Detection Model Report" > report.md
           echo "" >> report.md
+
+          echo "## Training Status" >> report.md
           echo "Training pipeline completed successfully." >> report.md
           echo "" >> report.md
-          echo "## Generated Figures" >> report.md
-          ls reports/figures >> report.md
 
-      - name: Comment PR
+          echo "## Experiment Information" >> report.md
+          echo "- Experiment: ensemble_only" >> report.md
+          echo "- Framework: GitHub Actions + CML" >> report.md
+          echo "- Python Version: 3.11" >> report.md
+          echo "" >> report.md
+
+          echo "## Model Classification Reports" >> report.md
+          echo "" >> report.md
+
+          for report in reports/figures/*classification_report.txt; do
+            if [ -f "$report" ]; then
+              echo "### $(basename $report)" >> report.md
+              echo '```' >> report.md
+              cat "$report" >> report.md
+              echo '```' >> report.md
+              echo "" >> report.md
+            fi
+          done
+
+          echo "## Generated Visualizations" >> report.md
+          echo "" >> report.md
+
+          echo "| Visualization Type | Status |" >> report.md
+          echo "|---|---|" >> report.md
+          echo "| Confusion Matrices | Generated |" >> report.md
+          echo "| MLflow Comparison Plots | Generated |" >> report.md
+          echo "| Fraud Distribution Plots | Generated |" >> report.md
+          echo "| Feature Engineering Visualizations | Generated |" >> report.md
+          echo "" >> report.md
+
+          echo "## Key Figure Files" >> report.md
+          echo "" >> report.md
+
+          find reports/figures -name "*.png" | head -10 >> report.md
+          echo "" >> report.md
+
+          echo "## Monitoring Outputs" >> report.md
+          echo "" >> report.md
+
+          find reports/monitoring -type f >> report.md || true
+
+      - name: Upload CML Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cml-report-artifacts
+          path: |
+            report.md
+            reports/figures
+            reports/monitoring
+
+      - name: Comment PR with Report
         env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cml comment create report.md
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file report.md

@@ -55,16 +55,16 @@ def load_data(
     """Load preprocessed train/test CSVs from data_path.
 
     Args:
-        data_path: Directory containing X_train.csv, y_train.csv,
-                   X_test.csv, y_test.csv.
+        data_path: Directory containing x_train.csv, y_train.csv,
+                   x_test.csv, y_test.csv.
 
     Returns:
         Tuple of (X_train, y_train, X_test, y_test).
     """
     logger.info("Loading data from %s", data_path)
-    X_train = pd.read_csv(data_path / "X_train.csv")
+    X_train = pd.read_csv(data_path / "x_train.csv")
     y_train = pd.read_csv(data_path / "y_train.csv").squeeze()
-    X_test = pd.read_csv(data_path / "X_test.csv")
+    X_test = pd.read_csv(data_path / "x_test.csv")
     y_test = pd.read_csv(data_path / "y_test.csv").squeeze()
     logger.info("X_train %s  X_test %s", X_train.shape, X_test.shape)
     logger.info(
