@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - main
-      - develop
-      - feature/**
+    tags:
+      - "v*"
+
   pull_request:
     branches:
       - main
+      - feature/**
+
   workflow_dispatch:
 
 jobs:
@@ -33,5 +36,7 @@ jobs:
         with:
           context: .
           file: dockerfiles/Dockerfile
-          push: true
-          tags: nshastry00/fraud-detection-mlops:latest
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            nshastry00/fraud-detection-mlops:latest
+            nshastry00/fraud-detection-mlops:${{ github.sha }}

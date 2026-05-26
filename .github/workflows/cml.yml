@@ -32,16 +32,49 @@ jobs:
 
       - name: Run Training Pipeline
         run: |
-          python -m mlops_frauddetection.train_model
+          python -m mlops_frauddetection.train_model experiment=ensemble_only
 
-      - name: Create Report
+      - name: Create CML Report
         run: |
-          echo "# Model Training Results" > report.md
+          echo "# Fraud Detection Model Report" > report.md
           echo "" >> report.md
+          echo "## Training Status" >> report.md
           echo "Training pipeline completed successfully." >> report.md
           echo "" >> report.md
-          echo "## Generated Figures" >> report.md
-          ls reports/figures >> report.md
+
+          echo "## Available Model Reports" >> report.md
+          echo "" >> report.md
+
+          for report in reports/figures/*classification_report.txt; do
+            echo "### $(basename $report)" >> report.md
+            echo '```' >> report.md
+            cat $report >> report.md
+            echo '```' >> report.md
+            echo "" >> report.md
+          done
+
+          echo "## Generated Visualizations" >> report.md
+          echo "" >> report.md
+
+          echo "- Confusion matrices generated" >> report.md
+          echo "- MLflow comparison plots generated" >> report.md
+          echo "- Fraud distribution plots generated" >> report.md
+          echo "- Feature engineering visualizations generated" >> report.md
+          echo "" >> report.md
+
+          echo "## Key Figures" >> report.md
+          echo "" >> report.md
+
+          find reports/figures -name "*.png" | head -10 >> report.md
+      
+      - name: Upload CML Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cml-report-artifacts
+          path: |
+            report.md
+            reports/figures
+            reports/monitoring
 
       - name: Comment PR with Report
         env:
