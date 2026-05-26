@@ -133,8 +133,8 @@ def process_data(input_dir: Path, input_file: str, output_dir: Path) -> None:
     # SAVE FILE TO PROCESSED_DATA_DIR
     logger.info(f"Saving processed datasets to output directory: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
-    save_processed(x_train, "X_train.csv")
-    save_processed(x_test, "X_test.csv")
+    save_processed(x_train, "x_train.csv")
+    save_processed(x_test, "x_test.csv")
     save_processed(y_train.to_frame(), "y_train.csv")
     save_processed(y_test.to_frame(), "y_test.csv")
     logger.info(f"Processed data saved successfully to: {output_dir}")
