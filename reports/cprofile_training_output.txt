@@ -34,5 +34,3 @@
      2196    0.068    0.000   21.787    0.010 _util.py:600(__call__)
         3    0.001    0.000   21.622    7.207 _logistic.py:1086(fit)
         3    0.001    0.000   21.552    7.184 _logistic.py:86(_logistic_regression_path)
-
-

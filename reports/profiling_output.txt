@@ -22189,5 +22189,3 @@
       8/0    0.000    0.000    0.000          artist.py:350(get_tightbbox)
       2/0    0.000    0.000    0.000          artist.py:1397(_get_tightbbox_for_layout_only)
       3/0    0.000    0.000    0.000          threading.py:1025(_bootstrap_inner)
-
-

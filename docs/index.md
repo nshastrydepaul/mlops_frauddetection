@@ -11,12 +11,12 @@ Welcome to Fraud Anomaly Classification & Behavioral Analytics! This project is 
 ### Installation
 
 ```bash
-cd mlops_frauddetection 
+cd mlops_frauddetection
 
 # Create virtual environment
-python -m venv .venv 
-source .venv/bin/activate    # macOS/Linux 
-# .venv\Scripts\activate     # Windows 
+python -m venv .venv
+source .venv/bin/activate    # macOS/Linux
+# .venv\Scripts\activate     # Windows
 
 # Using pip
 
