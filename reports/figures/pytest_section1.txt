@@ -97,4 +97,4 @@ tests/test_pipeline.py::test_all_model_factories_auc_above_random[lightgbm]
     warnings.warn(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================== 75 passed, 7 warnings in 9.83s ========================
+======================= 75 passed, 7 warnings in 11.12s ========================
