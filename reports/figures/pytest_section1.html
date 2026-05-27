@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>pytest — Section 1 — 2026-05-26 19:55:53</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Menlo','Consolas','Monaco',monospace;
+      background: #1e1e1e; color: #d4d4d4;
+      padding: 28px 32px; font-size: 13px; line-height: 1.65;
+    }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px; padding-bottom: 12px;
+      border-bottom: 1px solid #333;
+    }
+    h1   { font-size: 14px; color: #9cdcfe; font-weight: 600; }
+    .badge {
+      font-size: 12px; font-weight: 700; padding: 3px 12px;
+      border-radius: 4px; color: #fff; background: #2d9e4f;
+    }
+    .meta  { font-size: 11px; color: #666; margin-bottom: 16px; }
+    .output { background: #141414; border-radius: 6px;
+               padding: 16px 20px; overflow-x: auto; }
+    .line   { white-space: pre; min-height: 1.65em; }
+    .passed  { color: #2d9e4f; font-weight: 600; }
+    .failed  { color: #d93025; font-weight: 600; }
+    .error   { color: #e37400; font-weight: 600; }
+    .skipped { color: #888;    font-weight: 600; }
+    .warning { color: #e37400; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>pytest tests/ -v &nbsp;·&nbsp; Section 1 CI Evidence</h1>
+    <span class="badge">PASSED</span>
+  </header>
+  <p class="meta">
+    Generated: 2026-05-26 19:55:53 &nbsp;·&nbsp;
+    mlops_frauddetection &nbsp;·&nbsp;
+    Python 3.11.15
+  </p>
+  <div class="output"><div class="line">============================= test session starts ==============================</div>
+<div class="line">platform darwin -- Python 3.12.6, pytest-9.0.3, pluggy-1.6.0 -- /Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12</div>
+<div class="line">cachedir: .pytest_cache</div>
+<div class="line">rootdir: /Users/raail/Documents/Development/mlops_frauddetection</div>
+<div class="line">configfile: pyproject.toml</div>
+<div class="line">plugins: cov-7.1.0, hydra-core-1.3.2, anyio-4.13.0</div>
+<div class="line">collecting ... collected 75 items</div>
+<div class="line"></div>
+<div class="line">tests/test_model.py::TestModel::test_is_base_model <span class="<span class="passed">passed</span>">PASSED</span>                [  1%]</div>
+<div class="line">tests/test_model.py::TestModel::test_default_config_is_empty_dict <span class="<span class="passed">passed</span>">PASSED</span> [  2%]</div>
+<div class="line">tests/test_model.py::TestModel::test_custom_config_is_stored <span class="<span class="passed">passed</span>">PASSED</span>      [  4%]</div>
+<div class="line">tests/test_model.py::TestModel::test_fit_not_implemented <span class="<span class="passed">passed</span>">PASSED</span>          [  5%]</div>
+<div class="line">tests/test_model.py::TestModel::test_predict_not_implemented <span class="<span class="passed">passed</span>">PASSED</span>      [  6%]</div>
+<div class="line">tests/test_model.py::TestModel::test_save_load_roundtrip <span class="<span class="passed">passed</span>">PASSED</span>          [  8%]</div>
+<div class="line">tests/test_model.py::TestModel::test_load_rejects_wrong_type <span class="<span class="passed">passed</span>">PASSED</span>      [  9%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_project_root_exists <span class="<span class="passed">passed</span>">PASSED</span>      [ 10%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_path_constants_are_path_instances <span class="<span class="passed">passed</span>">PASSED</span> [ 12%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_training_config_seed_is_42 <span class="<span class="passed">passed</span>">PASSED</span> [ 13%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_training_config_batch_size_is_32 <span class="<span class="passed">passed</span>">PASSED</span> [ 14%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_training_config_is_frozen <span class="<span class="passed">passed</span>">PASSED</span> [ 16%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_data_config_train_split_in_range <span class="<span class="passed">passed</span>">PASSED</span> [ 17%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_data_config_splits_sum_to_one_or_less <span class="<span class="passed">passed</span>">PASSED</span> [ 18%]</div>
+<div class="line">tests/test_pipeline.py::TestConfig::test_config_has_training_subconfig <span class="<span class="passed">passed</span>">PASSED</span> [ 20%]</div>
+<div class="line">tests/test_pipeline.py::TestDataExceptions::test_raw_data_not_found_is_raiseable <span class="<span class="passed">passed</span>">PASSED</span> [ 21%]</div>
+<div class="line">tests/test_pipeline.py::TestDataExceptions::test_data_loader_error_is_raiseable <span class="<span class="passed">passed</span>">PASSED</span> [ 22%]</div>
+<div class="line">tests/test_pipeline.py::TestDataExceptions::test_visualization_error_is_raiseable <span class="<span class="passed">passed</span>">PASSED</span> [ 24%]</div>
+<div class="line">tests/test_pipeline.py::TestDataExceptions::test_all_inherit_from_exception <span class="<span class="passed">passed</span>">PASSED</span> [ 25%]</div>
+<div class="line">tests/test_pipeline.py::TestDataExceptions::test_raw_data_exists_raises_on_missing_directory <span class="<span class="passed">passed</span>">PASSED</span> [ 26%]</div>
+<div class="line">tests/test_pipeline.py::TestDataExceptions::test_raw_data_exists_raises_when_file_absent <span class="<span class="passed">passed</span>">PASSED</span> [ 28%]</div>
+<div class="line">tests/test_pipeline.py::TestDataExceptions::test_raw_data_exists_returns_true_when_present <span class="<span class="passed">passed</span>">PASSED</span> [ 29%]</div>
+<div class="line">tests/test_pipeline.py::TestModelScaffold::test_model_is_subclass_of_base_model <span class="<span class="passed">passed</span>">PASSED</span> [ 30%]</div>
+<div class="line">tests/test_pipeline.py::TestModelScaffold::test_default_config_is_empty_dict <span class="<span class="passed">passed</span>">PASSED</span> [ 32%]</div>
+<div class="line">tests/test_pipeline.py::TestModelScaffold::test_custom_config_stored <span class="<span class="passed">passed</span>">PASSED</span> [ 33%]</div>
+<div class="line">tests/test_pipeline.py::TestModelScaffold::test_fit_raises_not_implemented <span class="<span class="passed">passed</span>">PASSED</span> [ 34%]</div>
+<div class="line">tests/test_pipeline.py::TestModelScaffold::test_predict_raises_not_implemented <span class="<span class="passed">passed</span>">PASSED</span> [ 36%]</div>
+<div class="line">tests/test_pipeline.py::TestModelScaffold::test_save_load_roundtrip <span class="<span class="passed">passed</span>">PASSED</span> [ 37%]</div>
+<div class="line">tests/test_pipeline.py::TestModelScaffold::test_load_rejects_wrong_type <span class="<span class="passed">passed</span>">PASSED</span> [ 38%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_num_feat_is_non_empty_list <span class="<span class="passed">passed</span>">PASSED</span> [ 40%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_num_feat_contains_log_amt <span class="<span class="passed">passed</span>">PASSED</span> [ 41%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_num_feat_contains_cyclic_hour_features <span class="<span class="passed">passed</span>">PASSED</span> [ 42%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_num_feat_contains_velocity_ratio <span class="<span class="passed">passed</span>">PASSED</span> [ 44%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_feature_matrix_is_2d <span class="<span class="passed">passed</span>">PASSED</span> [ 45%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_feature_matrix_has_no_nans <span class="<span class="passed">passed</span>">PASSED</span> [ 46%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_feature_matrix_has_no_infs <span class="<span class="passed">passed</span>">PASSED</span> [ 48%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_target_is_binary <span class="<span class="passed">passed</span>">PASSED</span> [ 49%]</div>
+<div class="line">tests/test_pipeline.py::TestFeatureEngineering::test_fraud_rate_is_realistic <span class="<span class="passed">passed</span>">PASSED</span> [ 50%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_lr_balanced_returns_logistic_regression <span class="<span class="passed">passed</span>">PASSED</span> [ 52%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_lr_balanced_uses_balanced_class_weight <span class="<span class="passed">passed</span>">PASSED</span> [ 53%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_lr_balanced_respects_seed_kwarg <span class="<span class="passed">passed</span>">PASSED</span> [ 54%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_lr_balanced_respects_max_iter_kwarg <span class="<span class="passed">passed</span>">PASSED</span> [ 56%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_lr_smote_returns_logistic_regression <span class="<span class="passed">passed</span>">PASSED</span> [ 57%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_rf_model_returns_random_forest <span class="<span class="passed">passed</span>">PASSED</span> [ 58%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_lgb_model_returns_lgbm_classifier <span class="<span class="passed">passed</span>">PASSED</span> [ 60%]</div>
+<div class="line">tests/test_pipeline.py::TestModelFactories::test_get_xgb_model_returns_xgb_classifier <span class="<span class="passed">passed</span>">PASSED</span> [ 61%]</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_lr_balanced_pipeline_fits <span class="<span class="passed">passed</span>">PASSED</span> [ 62%]</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_predict_shape_matches_test_set <span class="<span class="passed">passed</span>">PASSED</span> [ 64%]</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_predict_returns_only_binary_labels <span class="<span class="passed">passed</span>">PASSED</span> [ 65%]</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_predict_proba_rows_sum_to_one <span class="<span class="passed">passed</span>">PASSED</span> [ 66%]</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_joblib_roundtrip_predictions_identical <span class="<span class="passed">passed</span>">PASSED</span> [ 68%]</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_saved_model_file_exists <span class="<span class="passed">passed</span>">PASSED</span> [ 69%]</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_roc_auc_above_random_baseline <span class="<span class="passed">passed</span>">PASSED</span> [ 70%]</div>
+<div class="line">tests/test_pipeline.py::TestEvaluationMetrics::test_returns_dict <span class="<span class="passed">passed</span>">PASSED</span>  [ 72%]</div>
+<div class="line">tests/test_pipeline.py::TestEvaluationMetrics::test_has_test_acc_key <span class="<span class="passed">passed</span>">PASSED</span> [ 73%]</div>
+<div class="line">tests/test_pipeline.py::TestEvaluationMetrics::test_has_test_f1_key <span class="<span class="passed">passed</span>">PASSED</span> [ 74%]</div>
+<div class="line">tests/test_pipeline.py::TestEvaluationMetrics::test_test_acc_in_valid_range <span class="<span class="passed">passed</span>">PASSED</span> [ 76%]</div>
+<div class="line">tests/test_pipeline.py::TestEvaluationMetrics::test_test_f1_in_valid_range <span class="<span class="passed">passed</span>">PASSED</span> [ 77%]</div>
+<div class="line">tests/test_pipeline.py::TestEvaluationMetrics::test_with_overfitting_check_args <span class="<span class="passed">passed</span>">PASSED</span> [ 78%]</div>
+<div class="line">tests/test_pipeline.py::TestEvaluationMetrics::test_perfect_predictions_give_acc_one <span class="<span class="passed">passed</span>">PASSED</span> [ 80%]</div>
+<div class="line">tests/test_pipeline.py::TestUtilities::test_set_seed_runs_without_error <span class="<span class="passed">passed</span>">PASSED</span> [ 81%]</div>
+<div class="line">tests/test_pipeline.py::TestUtilities::test_set_seed_makes_numpy_deterministic <span class="<span class="passed">passed</span>">PASSED</span> [ 82%]</div>
+<div class="line">tests/test_pipeline.py::TestUtilities::test_save_load_json_roundtrip <span class="<span class="passed">passed</span>">PASSED</span> [ 84%]</div>
+<div class="line">tests/test_pipeline.py::TestUtilities::test_save_json_creates_parent_directories <span class="<span class="passed">passed</span>">PASSED</span> [ 85%]</div>
+<div class="line">tests/test_pipeline.py::TestUtilities::test_load_json_raises_on_missing_file <span class="<span class="passed">passed</span>">PASSED</span> [ 86%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[lr_balanced] <span class="<span class="passed">passed</span>">PASSED</span> [ 88%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[lr_smote] <span class="<span class="passed">passed</span>">PASSED</span> [ 89%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[random_forest] <span class="<span class="passed">passed</span>">PASSED</span> [ 90%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[lightgbm] <span class="<span class="passed">passed</span>">PASSED</span> [ 92%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[xgboost] <span class="<span class="passed">passed</span>">PASSED</span> [ 93%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[lr_balanced] <span class="<span class="passed">passed</span>">PASSED</span> [ 94%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[lr_smote] <span class="<span class="passed">passed</span>">PASSED</span> [ 96%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[random_forest] <span class="<span class="passed">passed</span>">PASSED</span> [ 97%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[lightgbm] <span class="<span class="passed">passed</span>">PASSED</span> [ 98%]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[xgboost] <span class="<span class="passed">passed</span>">PASSED</span> [100%]</div>
+<div class="line"></div>
+<div class="line">=============================== <span class="warning">warning</span>s summary ===============================</div>
+<div class="line">tests/test_pipeline.py::TestModelTraining::test_lr_balanced_pipeline_fits</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[lr_balanced]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[lr_smote]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[lr_balanced]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[lr_smote]</div>
+<div class="line">  /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:1184: FutureWarning: &#x27;n_jobs&#x27; has no effect since 1.8 and will be removed in 1.10. You provided &#x27;n_jobs=-1&#x27;, please leave it unspecified.</div>
+<div class="line">    <span class="warning">warning</span>s.warn(msg, category=FutureWarning)</div>
+<div class="line"></div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_fit_and_predict[lightgbm]</div>
+<div class="line">tests/test_pipeline.py::test_all_model_factories_auc_above_random[lightgbm]</div>
+<div class="line">  /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names</div>
+<div class="line">    <span class="warning">warning</span>s.warn(</div>
+<div class="line"></div>
+<div class="line">-- Docs: https://docs.pytest.org/en/stable/how-to/capture-<span class="warning">warning</span>s.html</div>
+<div class="line">======================= 75 <span class="passed">passed</span>, 7 <span class="warning">warning</span>s in 11.12s ========================</div>
+<div class="line"></div></div>
+</body>
+</html>
