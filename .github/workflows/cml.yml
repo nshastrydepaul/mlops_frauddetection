@@ -33,9 +33,23 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install "dvc[gdrive]"
           pip install -r requirements.txt
           pip install -r requirements_dev.txt
           pip install -e .
+
+      - name: Configure Google Drive Credentials
+        run: |
+          echo '${{ secrets.GDRIVE_CREDENTIALS }}' > gdrive-creds.json
+
+      - name: Configure DVC Remote
+        run: |
+          dvc remote modify storage \
+          gdrive_service_account_json_file_path gdrive-creds.json
+
+      - name: Pull DVC Data
+        run: |
+          dvc pull
 
       - name: Verify Reports Directory
         run: |
@@ -62,7 +76,7 @@ jobs:
 
           echo "## Experiment Information" >> report.md
           echo "- Experiment: Full Training Pipeline" >> report.md
-          echo "- Framework: GitHub Actions + CML" >> report.md
+          echo "- Framework: GitHub Actions + CML + DVC" >> report.md
           echo "- Python Version: 3.11" >> report.md
           echo "" >> report.md
 
