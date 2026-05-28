@@ -189,6 +189,46 @@ Generated outputs include:
 - Monitoring CSV outputs
 - Resource usage metrics
 
+### DVC Integration with GitHub Actions
+
+The Phase 3 workflows were extended to support external dataset versioning and secure dataset retrieval through DVC.
+
+Processed datasets are maintained outside the Git repository using DVC with Google Drive remote storage. GitHub Actions workflows dynamically authenticate and retrieve datasets during CI/CD execution.
+
+#### Implemented Features
+
+* Secure Google Drive authentication using GitHub Secrets
+* Automated `dvc pull` execution inside CI workflows
+* Reproducible dataset versioning
+* Cloud-authenticated dataset retrieval
+* CI-compatible DVC remote configuration
+
+#### Workflow Enhancements
+
+The following workflows were updated:
+
+| Workflow           | DVC Integration                               |
+| ------------------ | --------------------------------------------- |
+| `ci.yml`           | Automated dataset retrieval before tests      |
+| `cml.yml`          | Dataset retrieval before model training       |
+| `docker-build.yml` | Compatible with DVC-managed project structure |
+
+#### Security Architecture
+
+Sensitive authentication credentials are stored using GitHub Secrets and injected dynamically into workflow runners during execution.
+
+No Google Drive credentials or datasets are stored directly inside the repository.
+
+#### Benefits
+
+This implementation provides:
+
+* reproducible ML pipelines
+* scalable external dataset storage
+* secure CI/CD dataset retrieval
+* enterprise-style MLOps architecture
+* separation of code and large datasets
+
 ---
 
 ## Known Limitations
