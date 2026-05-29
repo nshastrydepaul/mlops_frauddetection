@@ -58,6 +58,179 @@ This phase covers final evaluation, testing, and deployment preparation of the m
 - Expected Latency: 
 - Resource Requirements: 
 
+## Phase 3 CI/CD & CML Updates
+
+### Pull request Workflow
+
+This section documents the implementation of the pull request workflow for Continuous Integration/Continuous Deployment (CI/CD) and Continuous Machine Learning (CML). The workflow automates model training, evaluation, Docker image builds, and PR reporting using GitHub Actions.
+
+The following screenshot provide evidence of workflow execution during pull request validation.
+
+PR Workflow checks,
+
+![PRworkflowPic1.png](../reports/figures/PRworkflowPic1.png)
+
+#### Pull Request Workflow Auto-generated Comments
+
+The following screenshots provide evidence of successful auto-generated comments during pull request validation.
+
+![PRworkflowComment1.png](../reports/figures/PRworkflowComment1.png)
+![PRworkflowComment2.png](../reports/figures/PRworkflowComment2.png)
+![PRworkflowComment3.png](../reports/figures/PRworkflowComment3.png)
+![PRworkflowComment4.png](../reports/figures/PRworkflowComment4.png)
+![PRworkflowComment5.png](../reports/figures/PRworkflowComment5.png)
+
+#### Pull Request Workflow Merge Comfirmation and Github Actions
+
+![PR-MergeConfirmation1.png](../reports/figures/PR-MergeConfirmation1.png)
+![PR-MergeConfirmation2.png](../reports/figures/PR-MergeConfirmation2.png)
+
+### Automated Docker CI/CD
+
+Implemented automated Docker workflows using GitHub Actions.
+
+Features include:
+
+- Docker image builds on push and pull requests
+- Docker Hub integration
+- SHA-tagged Docker image versioning
+- latest image tagging
+- manual workflow dispatch support
+- version tag build triggers
+
+Docker images are automatically pushed to:
+
+```bash
+nshastry00/fraud-detection-mlops
+```
+
+Docker Build Actions Summary in the Pull Request,
+
+![PRworkflowPic2.png](../reports/figures/PRworkflowPic2.png)
+
+![PRworkflowPic3.png](../reports/figures/PRworkflowPic3.png)
+
+The following screenshots provide evidence of successful Docker image publishing after merging pull request validation is completed - the Image is pushed only when merged to ```feature/``` and ```main``` branches and also during code update ```git push```.
+
+GitHub Actions Summary regarding Docker Image push with artifacts details,
+
+![GitActionsDockerPic5.png](../reports/figures/GitActionsDockerPic5.png)
+![GitActionsDockerPic6.png](../reports/figures/GitActionsDockerPic6.png)
+![GitActionsDockerPic7.png](../reports/figures/GitActionsDockerPic7.png)
+
+DockerHub Image Push Details with versions,
+
+![DockerHubPic1.png](../reports/figures/DockerHubPic1.png)
+
+DockerHub Tags tab,
+
+![DockerHubPic2.png](../reports/figures/DockerHubPic2.png)
+
+DockerHub Image Management tab,
+
+![DockerHubPic3.png](../reports/figures/DockerHubPic3.png)
+
+GitHub Actions details regarding Docker Image push,
+
+![GitActionsDockerPic1.png](../reports/figures/GitActionsDockerPic1.png)
+![GitActionsDockerPic2.png](../reports/figures/GitActionsDockerPic2.png)
+![GitActionsDockerPic3.png](../reports/figures/GitActionsDockerPic3.png)
+![GitActionsDockerPic4.png](../reports/figures/GitActionsDockerPic4.png)
+
+### Continuous Machine Learning (CML)
+
+Implemented a Continuous Machine Learning workflow using GitHub Actions.
+
+The workflow automatically:
+- Executes the fraud detection training pipeline
+- Generates classification reports
+- Produces monitoring outputs
+- Uploads generated artifacts
+- Posts automated model evaluation summaries on pull requests
+
+The following screenshots provide evidence of successful workflow execution of the automated CML reporting during pull request validation.
+
+CML workflow Github Actions Summary,
+
+![PRworkflowPic4.png](../reports/figures/PRworkflowPic4.png)
+
+Automated Train and Report, (*The same is observed after the merge/code push to the branch occurs*)
+
+![PRworkflowPic4a.png](../reports/figures/PRworkflowPic4a.png)
+![PRworkflowPic4b.png](../reports/figures/PRworkflowPic4b.png)
+![PRworkflowPic4c.png](../reports/figures/PRworkflowPic4c.png)
+![PRworkflowPic4d.png](../reports/figures/PRworkflowPic4d.png)
+![PRworkflowPic4d.png](../reports/figures/PRworkflowPic4d.png)
+![PRworkflowPic4f.png](../reports/figures/PRworkflowPic4f.png)
+![PRworkflowPic4g.png](../reports/figures/PRworkflowPic4g.png)
+
+### Implemented Workflows
+
+| Workflow                         | Purpose    |
+| --------- | ---------------------------------|
+| ```ci.yml```           | Testing, linting, formatting, type checking |
+| ```docker-build.yml``` | Automated Docker build and push |
+| ```cml.yml```       | Automated ML training and PR reporting |
+
+### Evaluated Models
+
+The CML workflow evaluates and compares:
+- Logistic Regression
+- Random Forest
+- LightGBM
+- XGBoost
+
+### Generated Outputs
+
+Generated outputs include:
+- Classification reports
+- Confusion matrices
+- MLflow comparison visualizations
+- Monitoring CSV outputs
+- Resource usage metrics
+
+### DVC Integration with GitHub Actions
+
+The Phase 3 workflows were extended to support external dataset versioning and secure dataset retrieval through DVC.
+
+Processed datasets are maintained outside the Git repository using DVC with Google Drive remote storage. GitHub Actions workflows dynamically authenticate and retrieve datasets during CI/CD execution.
+
+#### Implemented Features
+
+* Secure Google Drive authentication using GitHub Secrets
+* Automated `dvc pull` execution inside CI workflows
+* Reproducible dataset versioning
+* Cloud-authenticated dataset retrieval
+* CI-compatible DVC remote configuration
+
+#### Workflow Enhancements
+
+The following workflows were updated:
+
+| Workflow           | DVC Integration                               |
+| ------------------ | --------------------------------------------- |
+| `ci.yml`           | Automated dataset retrieval before tests      |
+| `cml.yml`          | Dataset retrieval before model training       |
+| `docker-build.yml` | Compatible with DVC-managed project structure |
+
+#### Security Architecture
+
+Sensitive authentication credentials are stored using GitHub Secrets and injected dynamically into workflow runners during execution.
+
+No Google Drive credentials or datasets are stored directly inside the repository.
+
+#### Benefits
+
+This implementation provides:
+
+* reproducible ML pipelines
+* scalable external dataset storage
+* secure CI/CD dataset retrieval
+* enterprise-style MLOps architecture
+* separation of code and large datasets
+
+---
+
 ## Known Limitations
 
 *To be filled in during Phase 3*
