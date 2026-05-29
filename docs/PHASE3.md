@@ -66,7 +66,7 @@ This section documents the implementation of the pull request workflow for Conti
 
 The following screenshot provide evidence of workflow execution during pull request validation.
 
-Initial PR Workflow,
+PR Workflow checks,
 
 ![PRworkflowPic1.png](../reports/figures/PRworkflowPic1.png)
 
