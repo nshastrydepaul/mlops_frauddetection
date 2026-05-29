@@ -89,6 +89,50 @@ Implemented a GitHub Actions based CML workflow that:
 - Generates monitoring outputs
 - Posts automated evaluation summaries on pull requests
 
+### DVC Remote Integration & Secure Dataset Retrieval
+
+Phase 3 additionally integrated secure DVC-based dataset retrieval inside GitHub Actions workflows using Google Drive as the remote storage backend.
+
+Since large processed datasets are not stored directly inside GitHub, CI/CD runners dynamically retrieve versioned datasets using DVC before executing training and evaluation workflows.
+
+The GitHub Actions workflows now automatically:
+
+* authenticate securely with Google Drive using GitHub Secrets
+* configure DVC remotes dynamically during runtime
+* execute `dvc pull` to retrieve processed datasets
+* ensure reproducible training and evaluation pipelines inside CI/CD
+
+### Secure Secret Management
+
+Sensitive credentials are securely managed through GitHub Actions Secrets, including:
+
+* `DOCKER_USERNAME`
+* `DOCKER_PASSWORD`
+* `GDRIVE_CREDENTIALS`
+
+This architecture enables secure cloud-authenticated dataset retrieval without exposing credentials directly in the repository.
+
+### DVC Workflow Integration
+
+The CI and CML workflows now follow the sequence:
+
+```text
+Install Dependencies
+- Configure Google Drive Credentials
+- Configure DVC Authentication
+- Pull Versioned Dataset via DVC
+- Execute Training / Testing Pipelines
+```
+
+This establishes a reproducible enterprise-style MLOps workflow combining:
+
+* GitHub Actions
+* DVC
+* Docker
+* Google Drive remote storage
+* Continuous Machine Learning (CML)
+* automated model evaluation
+
 ### Model Evaluation Outputs
 
 #### The automated CML workflow evaluates and compares:
