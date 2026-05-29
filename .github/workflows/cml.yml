@@ -13,13 +13,13 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      pull-requests: write
 
     steps:
       - name: Checkout Repository
@@ -29,6 +29,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: Set up CML
+        uses: iterative/setup-cml@v2
 
       - name: Install Dependencies
         run: |
@@ -66,6 +69,8 @@ jobs:
           find reports -type f
 
       - name: Create CML Report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "# Fraud Detection Model Report" > report.md
           echo "" >> report.md
@@ -96,7 +101,7 @@ jobs:
           echo "## Model Comparison Summary" >> report.md
           echo "" >> report.md
 
-          echo "| Model | Comparison Status |" >> report.md
+          echo "| Model | Status |" >> report.md
           echo "|---|---|" >> report.md
           echo "| Logistic Regression | Evaluated |" >> report.md
           echo "| RandomForest | Evaluated |" >> report.md
@@ -104,27 +109,53 @@ jobs:
           echo "| XGBoost | Evaluated |" >> report.md
           echo "" >> report.md
 
-          echo "## Generated Visualizations" >> report.md
+          echo "## Key Visualizations" >> report.md
           echo "" >> report.md
 
-          echo "| Visualization Type | Status |" >> report.md
-          echo "|---|---|" >> report.md
-          echo "| Confusion Matrices | Generated |" >> report.md
-          echo "| MLflow Comparison Plots | Generated |" >> report.md
-          echo "| Fraud Distribution Plots | Generated |" >> report.md
-          echo "| Feature Engineering Visualizations | Generated |" >> report.md
-          echo "" >> report.md
+          # Confusion matrices
+          for img in reports/figures/*confusion*.png reports/figures/*cm*.png; do
+            if [ -f "$img" ]; then
+              echo "### $(basename $img)" >> report.md
+              echo "![]($img)" >> report.md
+              echo "" >> report.md
+            fi
+          done
 
-          echo "## Key Figure Files" >> report.md
-          echo "" >> report.md
+          # MLflow comparison plots
+          for img in reports/figures/*mlflow*.png; do
+            if [ -f "$img" ]; then
+              echo "### $(basename $img)" >> report.md
+              echo "![]($img)" >> report.md
+              echo "" >> report.md
+            fi
+          done
 
-          find reports/figures -name "*.png" | head -10 >> report.md
-          echo "" >> report.md
+          # Fraud analysis plots
+          for img in \
+            reports/figures/*fraud*.png \
+            reports/figures/*heatmap*.png \
+            reports/figures/*class_balance*.png \
+            reports/figures/*correlation*.png; do
+
+            if [ -f "$img" ]; then
+              echo "### $(basename $img)" >> report.md
+              echo "![]($img)" >> report.md
+              echo "" >> report.md
+            fi
+          done
 
           echo "## Monitoring Outputs" >> report.md
           echo "" >> report.md
 
           find reports/monitoring -type f >> report.md || true
+
+          echo "" >> report.md
+          echo "## DVC Pipeline" >> report.md
+          echo "" >> report.md
+          echo "- Dataset retrieved successfully from Google Drive DVC remote." >> report.md
+          echo "- Models and processed datasets are version-controlled through DVC." >> report.md
+
+          cml comment create --publish report.md
 
       - name: Upload CML Artifacts
         uses: actions/upload-artifact@v4
@@ -134,11 +165,3 @@ jobs:
             report.md
             reports/figures
             reports/monitoring
-
-      - name: Comment PR with Report
-        if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file report.md
