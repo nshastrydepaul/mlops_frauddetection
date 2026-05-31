@@ -43,11 +43,18 @@ extend-exclude = ["notebooks"]
 select = ["E", "F", "I", "N", "W", "B", "UP"]
 ignore = ["N803", "N806"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ANN201", "ANN001", "ANN002", "ANN003", "E501"]
+
 [tool.mypy]
 python_version = "3.11"
 warn_return_any = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

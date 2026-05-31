@@ -32,7 +32,7 @@ The team established the repository structure, configured the development enviro
 - Dataset statistics analyzed
 - Fraud class imbalance identified
 - Transaction behavior patterns explored across time, location and spending
-- Key predictive features identified for downstream modeling    
+- Key predictive features identified for downstream modeling
 - Visualizations generated for all major distribution and behavioral patterns
 - For the full detailed analysis, see the [Data Exploration Report](reports/phase1-data-exploration-report.md)
 

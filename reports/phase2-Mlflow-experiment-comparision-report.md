@@ -22,11 +22,11 @@ to identify the best hyperparameter configuration for fraud detection.
 ##  Experiment 3 vs Experiment 4
 
 * Experiment 3 (v3-rf100-lgb200):
-We ran all models but used fewer trees for Random Forest (100) and 
+We ran all models but used fewer trees for Random Forest (100) and
 LightGBM (200 rounds) to test a lighter but faster configuration.
 
 * Experiment 4 (v4-rf300-lgb100):
-We flipped it  more RF trees (300) but even fewer LightGBM rounds (100) 
+We flipped it  more RF trees (300) but even fewer LightGBM rounds (100)
 and more LR iterations (1500) to find the sweet spot between the two.
 
 ---
@@ -83,39 +83,39 @@ The only difference between the two LightGBM runs was the number of estimators  
 
 
 * Experiment 1 (deafult):
-Our baseline run with default settings  max_iter=1000 for LR, 
+Our baseline run with default settings  max_iter=1000 for LR,
 RF=200 trees, LGB=500 rounds. This is what we compare everything else against.
 
 * Experiment 2 (v2-max-iter500):
-We ran just the LR model with fewer iterations (500 instead of 1000) 
+We ran just the LR model with fewer iterations (500 instead of 1000)
 to see if less training time affects accuracy.
 
 **All runs from both experiments side by side:**
-We put all LR runs from Experiment 1 (iter=1000) and Experiment 2 (iter=500) 
+We put all LR runs from Experiment 1 (iter=1000) and Experiment 2 (iter=500)
 together to see which configuration performed better.
 
 ![Exp1 vs Exp2 Runs](figures/mlflow_exp_1_exp_2.png)
 
 **LR_balanced parallel coordinates plot:**
-This shows that LR_balanced with max_iter=1000 got cv_mean_f1 of 0.641 
+This shows that LR_balanced with max_iter=1000 got cv_mean_f1 of 0.641
 compared to 0.620 with max_iter=500  more iterations clearly helped.
 
 ![Exp1 vs Exp2 Compare 1](figures/mlflow_exp1_exp_2_compare1.png)
 
 **LR_balanced metrics side by side:**
-With max_iter=1000 we got test_f1=0.642 vs 0.633 with max_iter=500  
+With max_iter=1000 we got test_f1=0.642 vs 0.633 with max_iter=500
 the model converged better with more iterations.
 
 ![Exp1 vs Exp2 Compare 2](figures/mlflow_exp1_exp_2_compare2.png)
 
 **LR_SMOTE parallel coordinates plot:**
-Same pattern for SMOTE model  max_iter=1000 got cv_mean_f1 of 0.521 
+Same pattern for SMOTE model  max_iter=1000 got cv_mean_f1 of 0.521
 vs 0.503 with max_iter=500  SMOTE also benefits from more iterations.
 
 ![Exp1 vs Exp2 SMOTE](figures/mlflow_exp1_exp_2_smote.png)
 
 **LR_SMOTE metrics side by side:**
-max_iter=1000 gives test_f1=0.636 vs 0.626 with max_iter=500  
+max_iter=1000 gives test_f1=0.636 vs 0.626 with max_iter=500
 the difference is small but consistent across both LR models.
 
 ![Exp1 vs Exp2 SMOTE 2](figures/mlflow_exp1_exp_2_smote_2.png)

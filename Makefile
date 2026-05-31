@@ -22,7 +22,7 @@ predict:
 	python -m mlops_frauddetection.predict_model
 
 test:
-	pytest tests/
+	pytest tests/ -v 2>&1 | tee reports/figures/pytest_section1.txt
 
 lint:
 	ruff check .
