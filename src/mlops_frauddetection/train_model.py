@@ -186,11 +186,11 @@ def load_data(
         bucket = client.bucket(bucket_name)
         blobs = bucket.list_blobs(prefix=prefix)
         for blob in blobs:
-          filename = blob.name.split("/")[-1]
-          if filename:
-            dest = data_path / filename
-            blob.download_to_filename(str(dest))
-            logger.info("Downloaded %s", filename)
+            filename = blob.name.split("/")[-1]
+            if filename:
+                dest = data_path / filename
+                blob.download_to_filename(str(dest))
+                logger.info("Downloaded %s", filename)
         logger.info("Data downloaded from GCS successfully")
   
     logger.info("Loading data from %s", data_path)
@@ -1088,7 +1088,7 @@ def _validate_config(cfg: DictConfig) -> None:
 
     if cfg.project.seed < 0:
         errors.append("project.seed must be non-negative")
-    if not Path(cfg.data.processed_path).exists():
+    if not os.environ.get("GCS_DATA_PATH") and not Path(cfg.data.processed_path).exists():
         errors.append(f"data.processed_path not found: {cfg.data.processed_path}")
     if not (0 < cfg.data.test_size < 1):
         errors.append("data.test_size must be between 0 and 1")
