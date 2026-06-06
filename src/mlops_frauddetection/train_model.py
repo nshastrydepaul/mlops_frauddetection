@@ -179,17 +179,20 @@ def load_data(
     if gcs_path:
         logger.info("Downloading data from GCS: %s", gcs_path)
         data_path.mkdir(parents=True, exist_ok=True)
-        import subprocess
-        result = subprocess.run([
-            "gcloud", "storage", "cp", "-r",
-            f"{gcs_path}/",
-            str(data_path) + "/"
-        ], capture_output=True, text=True)
-        if result.returncode != 0:
-            logger.error("GCS download failed: %s", result.stderr)
-            raise RuntimeError(f"Failed to download data from GCS: {result.stderr}")
+        from google.cloud import storage
+        client = storage.Client()
+        bucket_name = gcs_path.replace("gs://", "").split("/")[0]
+        prefix = "/".join(gcs_path.replace("gs://", "").split("/")[1:]) + "/"
+        bucket = client.bucket(bucket_name)
+        blobs = bucket.list_blobs(prefix=prefix)
+        for blob in blobs:
+          filename = blob.name.split("/")[-1]
+          if filename:
+            dest = data_path / filename
+            blob.download_to_filename(str(dest))
+            logger.info("Downloaded %s", filename)
         logger.info("Data downloaded from GCS successfully")
-
+  
     logger.info("Loading data from %s", data_path)
     x_train = pd.read_csv(data_path / "x_train.csv")
     y_train = pd.read_csv(data_path / "y_train.csv").squeeze()
