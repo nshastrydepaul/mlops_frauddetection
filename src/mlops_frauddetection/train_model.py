@@ -30,6 +30,7 @@ from datetime import datetime
 from pathlib import Path
 
 # import argparse - replaced by Hydra
+import os
 import hydra
 import joblib
 import lightgbm as lgb
@@ -173,6 +174,22 @@ def load_data(
     Returns:
         Tuple of (x_train, y_train, x_test, y_test).
     """
+    # Download from GCS if path doesn't exist locally
+    gcs_path = os.environ.get("GCS_DATA_PATH")
+    if gcs_path and not data_path.exists():
+        logger.info("Downloading data from GCS: %s", gcs_path)
+        data_path.mkdir(parents=True, exist_ok=True)
+        import subprocess
+        result = subprocess.run([
+            "gcloud", "storage", "cp", "-r",
+            f"{gcs_path}/",
+            str(data_path) + "/"
+        ], capture_output=True, text=True)
+        if result.returncode != 0:
+            logger.error("GCS download failed: %s", result.stderr)
+            raise RuntimeError(f"Failed to download data from GCS: {result.stderr}")
+        logger.info("Data downloaded from GCS successfully")
+
     logger.info("Loading data from %s", data_path)
     x_train = pd.read_csv(data_path / "x_train.csv")
     y_train = pd.read_csv(data_path / "y_train.csv").squeeze()
