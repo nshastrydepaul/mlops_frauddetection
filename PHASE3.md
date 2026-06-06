@@ -178,6 +178,10 @@ Artifacts uploaded from GitHub Actions include:
 
 ## 3. Deployment on GCP
 
+> All detailed explanation, steps, screenshots, and evidence for Section 3 (FastAPI, GCP Artifact Registry, Vertex AI Training Job, Cloud Functions, and Cloud Run deployment) are documented in the full deployment report referenced below.
+
+ **Full GCP deployment evidence:** [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)
+
 - [x] **GCP Project Setup**: Create GCP project and enable necessary APIs
 - [ ] **Service Account**: Create service account with appropriate permissions for:
   - [x] Artifact Registry
@@ -193,7 +197,7 @@ Artifacts uploaded from GitHub Actions include:
   - [x] Create training container image
   - [x] Configure training job specification
   - [x] Document how to submit training jobs
-- [ ] **Compute Engine Training (Option B)**: Set up training on Compute Engine instance
+- [ ] **Compute Engine Training (Option B)**: Set up training on Compute Engine instance (not used)
   - [ ] Create VM instance with GPU if needed
   - [ ] Document SSH access and training process
   - [ ] Set up instance for automated training
@@ -213,7 +217,7 @@ Artifacts uploaded from GitHub Actions include:
   - [x] Document invocation and response format
 - [x] **Cloud Run Deployment (Option B)**: Deploy as containerized service on Cloud Run
   - [ ] Create Dockerfile optimized for Cloud Run
-  - [ ] Test locally with Cloud Run emulator
+  - [] Test locally with Cloud Run emulator
   - [x] Deploy to Cloud Run with auto-scaling
   - [x] Document deployment process
 - [ ] **Streamlit/Gradio Deployment (Option C)**: Deploy demo app on HuggingFace Spaces
@@ -235,32 +239,32 @@ Artifacts uploaded from GitHub Actions include:
 
 - [ ] **Comprehensive README**: Update README with:
   - [ ] Architecture diagram showing all components
-  - [ ] CI/CD pipeline overview
-  - [ ] Deployment instructions for each option (Cloud Run, Cloud Functions, HuggingFace)
-  - [ ] GCP setup and configuration guide
-  - [ ] How to invoke deployed models
+  - [x] CI/CD pipeline overview
+  - [x] Deployment instructions for each option (Cloud Run, Cloud Functions, HuggingFace)
+  - [x] GCP setup and configuration guide
+  - [x] How to invoke deployed models
   - [ ] Monitoring and troubleshooting guide
   - [ ] Cost estimation and optimization tips
-- [ ] **Deployment Guide**: Create detailed DEPLOYMENT.md with:
-  - [ ] Step-by-step GCP setup instructions
-  - [ ] Cloud Run deployment procedure
-  - [ ] Cloud Functions configuration
-  - [ ] Environment variables and secrets management
-  - [ ] Rollback procedures
-- [ ] **API Documentation**: Document all endpoints with:
-  - [ ] Request/response schemas
-  - [ ] Example curl/Python requests
+- [x] **Deployment Guide**: Create detailed DEPLOYMENT.md [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)  with:
+  - [x] Step-by-step GCP setup instructions
+  - [x] Cloud Run deployment procedure
+  - [x] Cloud Functions configuration
+  - [x] Environment variables and secrets management
+  - [x] Rollback procedures
+- [x] **API Documentation**: Document all endpoints with:
+  - [x] Request/response schemas
+  - [x] Example curl/Python requests
   - [ ] Error codes and messages
 - [ ] **Architecture Documentation**: Include diagrams showing:
   - [ ] Data pipeline
   - [ ] Training pipeline
   - [ ] Inference/serving architecture
   - [ ] CI/CD workflow
-- [ ] **Screenshots/Demos**: Add:
-  - [ ] Cloud Run dashboard screenshot
+- [x] **Screenshots/Demos**: Add:
+  - [x] Cloud Run dashboard screenshot
   - [ ] Monitoring dashboard screenshot
   - [ ] Streamlit/Gradio app screenshot
-  - [ ] API response example
+  - [x] API response example
   - [ ] CML workflow output sample
 - [ ] **Troubleshooting Guide**: Document solutions for:
   - [ ] Common deployment errors
@@ -272,12 +276,34 @@ Artifacts uploaded from GitHub Actions include:
   - [ ] Cleaning up Cloud Storage buckets
   - [ ] Disabling APIs to avoid charges
   - [ ] Cost monitoring recommendations
-- [ ] **Contributing Guide Update**: Update CONTRIBUTING.md with:
-  - [ ] CI/CD requirements
-  - [ ] Testing requirements for PRs
-  - [ ] Deployment process documentation
-- [ ] **Changelog**: Maintain CHANGELOG.md documenting releases and deployments
+- [x] **Contributing Guide Update**: Update CONTRIBUTING.md with:
+  - [x] CI/CD requirements
+  - [x] Testing requirements for PRs
+  - [x] Deployment process documentation
+- [x] **Changelog**: Maintain CHANGELOG.md documenting releases and deployments
 
 ---
 
+| File | Description |
+|---|---|
+| [GCP_deployment_report.md](reports/GCP_DEPLOYMENT_REPORT.md) | Full GCP deployment evidence  Section 3 |
+| [Cleanup.md](CLEANUP.md) | GCP resource cleanup instructions |
+| [Contribute.md](CONTRIBUTE.md) | CI/CD requirements, testing, deployment process |
+| [Changelog.md](CHANGELOG.md) | Release history and deployment log |
+| [reports/pr_musaddiq_phase3.txt](reports/pr_musaddiq_phase3.txt) | Phase 3 PR description |
+
+--- 
+
+## Team Contributions  Phase 3
+
+| Team Member | Section | Responsibilities |
+|---|---|---|
+| Israail Ghazzal | Section 1 | pytest unit/integration tests, GitHub Actions CI workflow, pre-commit hooks, test coverage |
+| Nishanth Shastry | Section 2 | Automated Docker builds, CML workflow, Docker Hub CI/CD, DVC remote integration |
+| Musaddiq Vavartar | Section 3 | FastAPI service, GCP Artifact Registry, Vertex AI training job, Cloud Functions deployment, Cloud Run |
+| Lohith Poola | Section 4 | README updates, API documentation, architecture documentation, deployment guide |
+| All Members | Section 5 | load testing, monitoring setup |
+| All Members | Section 6 | PHASE3.md documentation, GCP resource cleanup, CLEANUP.md, CONTRIBUTING.md |
+
 > **Checklist:** Use this as a guide for documenting your Phase 3 deliverables.
+
