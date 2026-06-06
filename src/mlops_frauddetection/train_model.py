@@ -176,7 +176,7 @@ def load_data(
     """
     # Download from GCS if path doesn't exist locally
     gcs_path = os.environ.get("GCS_DATA_PATH")
-    if gcs_path and not data_path.exists():
+    if gcs_path:
         logger.info("Downloading data from GCS: %s", gcs_path)
         data_path.mkdir(parents=True, exist_ok=True)
         import subprocess
