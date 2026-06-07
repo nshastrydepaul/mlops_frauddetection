@@ -1,5 +1,8 @@
 # Fraud Anomaly Classification & Behavioral Analytics
 
+![CI](https://github.com/nshastrydepaul/mlops_frauddetection/actions/workflows/ci.yml/badge.svg)
+![Docker](https://github.com/nshastrydepaul/mlops_frauddetection/actions/workflows/docker-build.yml/badge.svg)
+
 Scalable machine learning system for multi-class fraud anomaly classification, transaction behavior analysis, and financial risk analytics.
 
 ## Team Information
@@ -47,6 +50,8 @@ The exploration phase analyzed all the credit card transactions to understand th
 This contribution focuses on exploratory data analysis and machine learning model development for credit card fraud detection using a synthetic transaction dataset. The EDA notebook was completed prior to modeling to develop a thorough understanding of the dataset structure, class imbalance, and fraud-related patterns before any modeling decisions were made. The analysis examined transaction amount distributions, categorical fraud rates, temporal patterns, and multivariate feature interactions, identifying transaction amount as the strongest individual fraud signal with a 7.8× gap between fraudulent and legitimate transactions, and elevated fraud rates in online transaction categories. These findings directly informed downstream feature engineering, preprocessing decisions, and model selection.
 
 The machine learning notebook builds a complete fraud detection pipeline covering feature engineering, leakage prevention, class imbalance handling, model training, evaluation, threshold tuning, and model explainability. SMOTE was applied exclusively to the training set with a sampling strategy of 0.3 to address the severe class imbalance without leaking synthetic patterns into the test set. Four classification models were trained and compared — Logistic Regression, Random Forest, LightGBM, and XGBoost — and evaluated using fraud-appropriate metrics including F1 Score, ROC-AUC, Precision-Recall curves, confusion matrices, and TimeSeriesSplit cross-validation. XGBoost achieved the strongest performance with a ROC-AUC of 0.9614 and F1 of 0.5829, with an optimal classification threshold of 0.60 identified through threshold tuning. SHAP was used to interpret the final model and identify the features most influential in fraud predictions. Trained models are versioned using DVC with date-stamped joblib filenames, per-model metadata JSON files that append results across runs, and only DVC pointer files committed to git to keep model binaries out of the repository.
+
+The phase concludes the MLOps lifecycle by fully automating the pipeline process through CI/CD practices and the deployment of the developed fraud detection models in production on the GCP platform. Currently, the GitHub Actions workflows automatically execute the tests written with pytest, check the code style using ruff and mypy, build and push Docker images to Docker Hub and GCP Artifact Repository, and trigger CML runs that post results of model evaluation directly into pull requests. Trained models are hosted via the FastAPI service deployed both to GCP Cloud Functions and Cloud Run, and providing access to six model endpoints for two pipelines: Pipeline A (classification models with logistic regression) and Pipeline B (binary ensemble models), each one of them loaded dynamically from the GCS bucket. The Vertex AI custom training job has been set up to train new models on GCP resources based on data available in Cloud Storage.
 
 ## Transaction Classes
 
@@ -794,6 +799,25 @@ on:
   workflow_dispatch:
 ```
 
+### GCP Deployment (Phase 3)
+
+The fraud detection FastAPI service is deployed to GCP Cloud Functions and Cloud Run.
+
+**Live API Endpoint:**
+https://fraud-detection-predict-lj4hg275tq-uc.a.run.app
+
+**Quick test:**
+```bash
+curl https://fraud-detection-predict-lj4hg275tq-uc.a.run.app/health
+curl -X POST "https://fraud-detection-predict-lj4hg275tq-uc.a.run.app/predict/simple?amt=5000&merchant_risk_30_day=28&trans_time_is_night=1&avg_amt_per_customer=50"
+```
+
+**Available models:**
+- Pipeline A: `lr_balanced`, `lr_smote` (4-class fraud risk)
+- Pipeline B: `lightgbm`, `xgboost`, `randomforest`, `logisticregression` (binary)
+
+See [reports/GCP_deployment_report.md](reports/GCP_deployment_report.md) for full evidence.
+
 ### Generated Outputs
 
 Phase 3 workflows automatically generate:
@@ -809,6 +833,11 @@ Phase 3 workflows automatically generate:
 
 - [Phase 3 — CI/CD & Deployment](PHASE3.md)
 - [docs/PHASE3.md](docs/PHASE3.md)
+- [GCP Deployment Report](reports/GCP_deployment_report.md)
+- [Troubleshooting Guide](troubleshooting.md)
+- [Cleanup Guide](Cleanup.md)
+- [Contributing Guide](Contribute.md)
+- [Changelog](Changelogs.md)
 
 ## Contribution Summary
 
@@ -843,12 +872,14 @@ Phase 3 workflows automatically generate:
 
 ## Team Contributions - Phase 3
 
-| Team Member | Responsibilities |
-|---|---|
-| Nishanth Shastry | Docker CI/CD workflows, Docker Hub integration, GitHub Actions automation, Continuous Machine Learning (CML) workflows, PR evaluation reporting, Section 2, 6|
-| Israail Ghazzal | , Section 6|
-| Musaddiq Vavartar | , Section 6|
-| Lohith Poola | , Section 6|
+| Team Member | Section | Responsibilities |
+|---|---|---|
+| Israail Ghazzal | Section 1 | pytest unit/integration tests, GitHub Actions CI workflow, pre-commit hooks, test coverage |
+| Nishanth Shastry | Section 2 | Automated Docker builds, CML workflow, Docker Hub CI/CD, DVC remote integration |
+| Musaddiq Vavartar | Section 3 | FastAPI service, GCP Artifact Registry, Vertex AI training job, Cloud Functions deployment, Cloud Run, GCP resource cleanup, CLEANUP.md, CONTRIBUTING.md |
+| Lohith Poola | Section 4 | README updates, API documentation, architecture documentation, deployment guide |
+| All Members | Section 5 | load testing, monitoring setup |
+| All Members | Section 6 | PHASE3  documentation  |
 
 ## References
 
