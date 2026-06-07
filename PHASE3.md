@@ -178,56 +178,64 @@ Artifacts uploaded from GitHub Actions include:
 
 ## 3. Deployment on GCP
 
-- [ ] **GCP Project Setup**: Create GCP project and enable necessary APIs
+> All detailed explanation, steps, screenshots, and evidence for Section 3 (FastAPI, GCP Artifact Registry, Vertex AI Training Job, Cloud Functions, and Cloud Run deployment) are documented in the full deployment report referenced below.
+
+ **Full GCP deployment evidence:** [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)
+
+- [x] **GCP Project Setup**: Create GCP project and enable necessary APIs
 - [ ] **Service Account**: Create service account with appropriate permissions for:
-  - [ ] Artifact Registry
-  - [ ] Vertex AI
-  - [ ] Cloud Run
-  - [ ] Cloud Functions
-  - [ ] Compute Engine
-- [ ] **Artifact Registry**: Set up Artifact Registry for storing Docker images
-  - [ ] Create repository in Artifact Registry
+  - [x] Artifact Registry
+  - [x] Vertex AI
+  - [x] Cloud Run
+  - [x] Cloud Functions
+  - [ ] Compute Engine (not used)
+- [x] **Artifact Registry**: Set up Artifact Registry for storing Docker images
+  - [x] Create repository in Artifact Registry
   - [ ] Configure authentication from CI/CD
-  - [ ] Push Docker images to registry
-- [ ] **Vertex AI Training (Option A)**: Set up custom training on Vertex AI
-  - [ ] Create training container image
-  - [ ] Configure training job specification
-  - [ ] Document how to submit training jobs
-- [ ] **Compute Engine Training (Option B)**: Set up training on Compute Engine instance
+  - [x] Push Docker images to registry
+- [x] **Vertex AI Training (Option A)**: Set up custom training on Vertex AI
+  - [x] Create training container image
+  - [x] Configure training job specification
+  - [x] Document how to submit training jobs
+- [ ] **Compute Engine Training (Option B)**: Set up training on Compute Engine instance (not used)
   - [ ] Create VM instance with GPU if needed
   - [ ] Document SSH access and training process
   - [ ] Set up instance for automated training
-- [ ] **Model Registry**: Store trained models in GCS bucket with versioning
-  - [ ] Create GCS bucket for models
-  - [ ] Implement model upload from training
-  - [ ] Document model retrieval process
-- [ ] **FastAPI Service**: Create FastAPI application for model serving
-  - [ ] Define inference endpoint(s)
-  - [ ] Implement request validation
-  - [ ] Add health check endpoint
-  - [ ] Document API specification
-- [ ] **Cloud Functions Deployment (Option A)**: Deploy inference as Cloud Function
-  - [ ] Package model and FastAPI app for Cloud Functions
-  - [ ] Create Cloud Function with appropriate memory/timeout
-  - [ ] Configure HTTP trigger
-  - [ ] Document invocation and response format
-- [ ] **Cloud Run Deployment (Option B)**: Deploy as containerized service on Cloud Run
+- [x] **Model Registry**: Store trained models in GCS bucket with versioning
+  - [x] Create GCS bucket for models
+  - [x] Implement model upload from training
+  - [x] Document model retrieval process
+- [x] **FastAPI Service**: Create FastAPI application for model serving
+  - [x] Define inference endpoint(s)
+  - [x] Implement request validation
+  - [x] Add health check endpoint
+  - [x] Document API specification
+- [x] **Cloud Functions Deployment (Option A)**: Deploy inference as Cloud Function
+  - [x] Package model and FastAPI app for Cloud Functions
+  - [x] Create Cloud Function with appropriate memory/timeout
+  - [x] Configure HTTP trigger
+  - [x] Document invocation and response format
+- [x] **Cloud Run Deployment (Option B)**: Deploy as containerized service on Cloud Run
   - [ ] Create Dockerfile optimized for Cloud Run
-  - [ ] Test locally with Cloud Run emulator
-  - [ ] Deploy to Cloud Run with auto-scaling
-  - [ ] Document deployment process
+  - [] Test locally with Cloud Run emulator
+  - [x] Deploy to Cloud Run with auto-scaling
+  - [x] Document deployment process
 - [ ] **Streamlit/Gradio Deployment (Option C)**: Deploy demo app on HuggingFace Spaces
   - [ ] Create Streamlit or Gradio interface for model
   - [ ] Push to GitHub repository
   - [ ] Deploy to HuggingFace Spaces
   - [ ] Document feature walkthrough
-- [ ] **Load Testing**: Test deployment with load testing tool (locust, Apache JMeter)
-  - [ ] Establish baseline performance metrics
-  - [ ] Document scaling characteristics
-- [ ] **Monitoring Setup**: Configure Cloud Monitoring and Cloud Logging
-  - [ ] Set up log aggregation
-  - [ ] Create monitoring dashboards
-  - [ ] Set up alerts for anomalies
+- [x] **Load Testing**: Test deployment with load testing tool (locust) 
+  - [x] Establish baseline performance metrics
+  - [x] Document scaling characteristics
+- [x] **Monitoring Setup**: Configure Cloud Monitoring and Cloud Logging
+  - [x] Set up log aggregation
+  - [x] Create monitoring dashboards
+  - [x] Set up alerts for anomalies
+
+  Testing & Monitoring explanation & evidence exist in : [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)
+
+  Full Testing log : [Test_result](/reports/load_test_results.txt)
 
 ---
 
@@ -235,49 +243,71 @@ Artifacts uploaded from GitHub Actions include:
 
 - [ ] **Comprehensive README**: Update README with:
   - [ ] Architecture diagram showing all components
-  - [ ] CI/CD pipeline overview
-  - [ ] Deployment instructions for each option (Cloud Run, Cloud Functions, HuggingFace)
-  - [ ] GCP setup and configuration guide
-  - [ ] How to invoke deployed models
-  - [ ] Monitoring and troubleshooting guide
-  - [ ] Cost estimation and optimization tips
-- [ ] **Deployment Guide**: Create detailed DEPLOYMENT.md with:
-  - [ ] Step-by-step GCP setup instructions
-  - [ ] Cloud Run deployment procedure
-  - [ ] Cloud Functions configuration
-  - [ ] Environment variables and secrets management
-  - [ ] Rollback procedures
-- [ ] **API Documentation**: Document all endpoints with:
-  - [ ] Request/response schemas
-  - [ ] Example curl/Python requests
+  - [x] CI/CD pipeline overview
+  - [x] Deployment instructions for each option (Cloud Run, Cloud Functions, HuggingFace)
+  - [x] GCP setup and configuration guide
+  - [x] How to invoke deployed models
+  - [x] Monitoring and troubleshooting guide
+  - [x] Cost estimation and optimization tips
+- [x] **Deployment Guide**: Create detailed DEPLOYMENT.md [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)  with:
+  - [x] Step-by-step GCP setup instructions
+  - [x] Cloud Run deployment procedure
+  - [x] Cloud Functions configuration
+  - [x] Environment variables and secrets management
+  - [x] Rollback procedures
+- [x] **API Documentation**: Document all endpoints with:
+  - [x] Request/response schemas
+  - [x] Example curl/Python requests
   - [ ] Error codes and messages
 - [ ] **Architecture Documentation**: Include diagrams showing:
   - [ ] Data pipeline
   - [ ] Training pipeline
   - [ ] Inference/serving architecture
   - [ ] CI/CD workflow
-- [ ] **Screenshots/Demos**: Add:
-  - [ ] Cloud Run dashboard screenshot
-  - [ ] Monitoring dashboard screenshot
+- [x] **Screenshots/Demos**: Add:
+  - [x] Cloud Run dashboard screenshot
+  - [x] Monitoring dashboard screenshot
   - [ ] Streamlit/Gradio app screenshot
-  - [ ] API response example
+  - [x] API response example
   - [ ] CML workflow output sample
-- [ ] **Troubleshooting Guide**: Document solutions for:
-  - [ ] Common deployment errors
-  - [ ] Authentication issues
-  - [ ] Performance problems
-  - [ ] Cost overruns
-- [ ] **Resource Cleanup Reminder**: Create CLEANUP.md with instructions for:
+- [x] **Troubleshooting Guide**: Document solutions for:   [troubleshooting.md](troubleshooting.md) 
+  - [x] Common deployment errors
+  - [x] Authentication issues
+  - [x] Performance problems
+  - [x] Cost overruns
+- [ ] **Resource Cleanup Reminder**: Create CLEANUP.md with instructions for: [Cleanup.md](Cleanup.md)
   - [ ] Deleting GCP resources (VMs, databases, etc.)
   - [ ] Cleaning up Cloud Storage buckets
   - [ ] Disabling APIs to avoid charges
   - [ ] Cost monitoring recommendations
-- [ ] **Contributing Guide Update**: Update CONTRIBUTING.md with:
-  - [ ] CI/CD requirements
-  - [ ] Testing requirements for PRs
-  - [ ] Deployment process documentation
-- [ ] **Changelog**: Maintain CHANGELOG.md documenting releases and deployments
+- [x] **Contributing Guide Update**: Update CONTRIBUTING.md with:
+  - [x] CI/CD requirements
+  - [x] Testing requirements for PRs
+  - [x] Deployment process documentation
+- [x] **Changelog**: Maintain CHANGELOG.md documenting releases and deployments. [Changelog.md](Changelogs.md) 
 
 ---
 
+| File | Description |
+|---|---|
+| [GCP_deployment_report.md](reports/GCP_DEPLOYMENT_REPORT.md) | Full GCP deployment evidence  Section 3 |
+| [Cleanup.md](CLEANUP.md) | GCP resource cleanup instructions |
+| [Contribute.md](CONTRIBUTE.md) | CI/CD requirements, testing, deployment process |
+| [Changelog.md](CHANGELOG.md) | Release history and deployment log |
+| [reports/pr_musaddiq_phase3.txt](reports/pr_musaddiq_phase3.txt) | Phase 3 PR description |
+
+--- 
+
+## Team Contributions  Phase 3
+
+| Team Member | Section | Responsibilities |
+|---|---|---|
+| Israail Ghazzal | Section 1 | pytest unit/integration tests, GitHub Actions CI workflow, pre-commit hooks, test coverage |
+| Nishanth Shastry | Section 2 | Automated Docker builds, CML workflow, Docker Hub CI/CD, DVC remote integration |
+| Musaddiq Vavartar | Section 3 | FastAPI service, GCP Artifact Registry, Vertex AI training job, Cloud Functions deployment, Cloud Run |
+| Lohith Poola | Section 4 | README updates, API documentation, architecture documentation, deployment guide |
+| All Members | Section 5 | load testing, monitoring setup |
+| All Members | Section 6 | PHASE3.md documentation, GCP resource cleanup, CLEANUP.md, CONTRIBUTING.md |
+
 > **Checklist:** Use this as a guide for documenting your Phase 3 deliverables.
+
