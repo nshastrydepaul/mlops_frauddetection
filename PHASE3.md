@@ -225,13 +225,17 @@ Artifacts uploaded from GitHub Actions include:
   - [ ] Push to GitHub repository
   - [ ] Deploy to HuggingFace Spaces
   - [ ] Document feature walkthrough
-- [ ] **Load Testing**: Test deployment with load testing tool (locust, Apache JMeter)
-  - [ ] Establish baseline performance metrics
-  - [ ] Document scaling characteristics
-- [ ] **Monitoring Setup**: Configure Cloud Monitoring and Cloud Logging
-  - [ ] Set up log aggregation
-  - [ ] Create monitoring dashboards
-  - [ ] Set up alerts for anomalies
+- [x] **Load Testing**: Test deployment with load testing tool (locust) 
+  - [x] Establish baseline performance metrics
+  - [x] Document scaling characteristics
+- [x] **Monitoring Setup**: Configure Cloud Monitoring and Cloud Logging
+  - [x] Set up log aggregation
+  - [x] Create monitoring dashboards
+  - [x] Set up alerts for anomalies
+
+  Testing & Monitoring explanation & evidence exist in : [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)
+
+  Full Testing log : [Test_result](/reports/load_test_results.txt)
 
 ---
 
@@ -243,8 +247,8 @@ Artifacts uploaded from GitHub Actions include:
   - [x] Deployment instructions for each option (Cloud Run, Cloud Functions, HuggingFace)
   - [x] GCP setup and configuration guide
   - [x] How to invoke deployed models
-  - [ ] Monitoring and troubleshooting guide
-  - [ ] Cost estimation and optimization tips
+  - [x] Monitoring and troubleshooting guide
+  - [x] Cost estimation and optimization tips
 - [x] **Deployment Guide**: Create detailed DEPLOYMENT.md [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)  with:
   - [x] Step-by-step GCP setup instructions
   - [x] Cloud Run deployment procedure
@@ -262,16 +266,16 @@ Artifacts uploaded from GitHub Actions include:
   - [ ] CI/CD workflow
 - [x] **Screenshots/Demos**: Add:
   - [x] Cloud Run dashboard screenshot
-  - [ ] Monitoring dashboard screenshot
+  - [x] Monitoring dashboard screenshot
   - [ ] Streamlit/Gradio app screenshot
   - [x] API response example
   - [ ] CML workflow output sample
-- [ ] **Troubleshooting Guide**: Document solutions for:
-  - [ ] Common deployment errors
-  - [ ] Authentication issues
-  - [ ] Performance problems
-  - [ ] Cost overruns
-- [ ] **Resource Cleanup Reminder**: Create CLEANUP.md with instructions for:
+- [x] **Troubleshooting Guide**: Document solutions for:   [troubleshooting.md](troubleshooting.md) 
+  - [x] Common deployment errors
+  - [x] Authentication issues
+  - [x] Performance problems
+  - [x] Cost overruns
+- [ ] **Resource Cleanup Reminder**: Create CLEANUP.md with instructions for: [Cleanup.md](Cleanup.md)
   - [ ] Deleting GCP resources (VMs, databases, etc.)
   - [ ] Cleaning up Cloud Storage buckets
   - [ ] Disabling APIs to avoid charges
@@ -280,7 +284,7 @@ Artifacts uploaded from GitHub Actions include:
   - [x] CI/CD requirements
   - [x] Testing requirements for PRs
   - [x] Deployment process documentation
-- [x] **Changelog**: Maintain CHANGELOG.md documenting releases and deployments
+- [x] **Changelog**: Maintain CHANGELOG.md documenting releases and deployments. [Changelog.md](Changelogs.md) 
 
 ---
 
