@@ -220,11 +220,11 @@ Artifacts uploaded from GitHub Actions include:
   - [] Test locally with Cloud Run emulator
   - [x] Deploy to Cloud Run with auto-scaling
   - [x] Document deployment process
-- [ ] **Streamlit/Gradio Deployment (Option C)**: Deploy demo app on HuggingFace Spaces
-  - [ ] Create Streamlit or Gradio interface for model
-  - [ ] Push to GitHub repository
-  - [ ] Deploy to HuggingFace Spaces
-  - [ ] Document feature walkthrough
+- [x] **Streamlit/Gradio Deployment (Option C)**: Deploy demo app on HuggingFace Spaces
+  - [x] Create Streamlit or Gradio interface for model
+  - [x] Push to GitHub repository
+  - [x] Deploy to HuggingFace Spaces
+  - [x] Document feature walkthrough
 - [x] **Load Testing**: Test deployment with load testing tool (locust) 
   - [x] Establish baseline performance metrics
   - [x] Document scaling characteristics
@@ -262,12 +262,12 @@ Artifacts uploaded from GitHub Actions include:
 - [ ] **Architecture Documentation**: Include diagrams showing:
   - [ ] Data pipeline
   - [ ] Training pipeline
-  - [ ] Inference/serving architecture
+  - [x] Inference/serving architecture
   - [ ] CI/CD workflow
 - [x] **Screenshots/Demos**: Add:
   - [x] Cloud Run dashboard screenshot
   - [x] Monitoring dashboard screenshot
-  - [ ] Streamlit/Gradio app screenshot
+  - [x] Streamlit/Gradio app screenshot
   - [x] API response example
   - [ ] CML workflow output sample
 - [x] **Troubleshooting Guide**: Document solutions for:   [troubleshooting.md](troubleshooting.md) 
@@ -305,7 +305,7 @@ Artifacts uploaded from GitHub Actions include:
 | Israail Ghazzal | Section 1 | pytest unit/integration tests, GitHub Actions CI workflow, pre-commit hooks, test coverage |
 | Nishanth Shastry | Section 2 | Automated Docker builds, CML workflow, Docker Hub CI/CD, DVC remote integration |
 | Musaddiq Vavartar | Section 3 | FastAPI service, GCP Artifact Registry, Vertex AI training job, Cloud Functions deployment, Cloud Run |
-| Lohith Poola | Section 4 | README updates, API documentation, architecture documentation, deployment guide |
+| Lohith Poola | Section 4 | Interactive UI, README updates, API documentation, architecture documentation, deployment guide |
 | All Members | Section 5 | load testing, monitoring setup |
 | All Members | Section 6 | PHASE3.md documentation, GCP resource cleanup, CLEANUP.md, CONTRIBUTING.md |
 

@@ -427,6 +427,13 @@ This implementation provides:
 
 ---
 
+## User Interface Deployment (Section 4)
+
+A Streamlit-based user interface was developed and deployed on Hugging Face Spaces to provide an accessible frontend for the fraud detection platform. The application integrates with the deployed FastAPI backend to support batch predictions, model comparison, data exploration, and reporting features. In addition, a GitHub Actions workflow was configured to automate deployment updates to the Hugging Face Space.
+
+The user interface implementation, deployment process, architecture, feature walkthrough, backend integration, and deployment automation are documented separately. For more detailed report see [ Deployment and User Interface Documentation ](../reports/phase3-Deployment-&-UI-Documentation.md)
+
+
 ## Known Limitations
 
 - Vertex AI training job required 4 attempts to fix data path issues
