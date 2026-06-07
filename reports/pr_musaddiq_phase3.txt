@@ -1,0 +1,30 @@
+title:	Musaddiq/phase3 deployment
+state:	OPEN
+author:	trainee-io
+labels:	
+assignees:	
+reviewers:	Lohith8572 (Requested), nishanthshastry (Requested)
+projects:	
+milestone:	
+number:	49
+url:	https://github.com/nshastrydepaul/mlops_frauddetection/pull/49
+additions:	549
+deletions:	36
+auto-merge:	disabled
+--
+## Section 3 Changes
+
+### 3.1 Artifact Registry
+- Added GCP Artifact Registry push to docker-build.yml CI workflow
+
+### 3.2 Training Job  
+- Added GCS data download to train_model.py
+- Added gcp_train.sh script
+
+### 3.3 FastAPI + Cloud Functions
+- Built FastAPI with 6 model endpoints (Pipeline A + B)
+- Deployed to GCP Cloud Functions
+- Live URL: https://fraud-detection-predict-lj4hg275tq-uc.a.run.app
+
+### Models
+- Added DVC pointers for all 6 retrained models

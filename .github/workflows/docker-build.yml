@@ -7,22 +7,18 @@ on:
       - feature/**
     tags:
       - "v*"
-
   pull_request:
     branches:
       - main
       - feature/**
-
   workflow_dispatch:
 
 jobs:
   docker:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
