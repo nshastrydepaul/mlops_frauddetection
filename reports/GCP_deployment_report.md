@@ -452,4 +452,3 @@ gcloud iam service-accounts delete \
     --project=project-ff2892f0-e40d-452f-aa0
 ```
 
-**Note:** All GCP resources will remain running until the assignment has been graded. Cleanup will be done upon completion of assignment submission.

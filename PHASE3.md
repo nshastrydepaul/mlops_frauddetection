@@ -183,7 +183,7 @@ Artifacts uploaded from GitHub Actions include:
  **Full GCP deployment evidence:** [docs/GCP_DEPLOYMENT_REPORT.md](/reports/GCP_DEPLOYMENT_REPORT.md)
 
 - [x] **GCP Project Setup**: Create GCP project and enable necessary APIs
-- [ ] **Service Account**: Create service account with appropriate permissions for:
+- [x] **Service Account**: Create service account with appropriate permissions for:
   - [x] Artifact Registry
   - [x] Vertex AI
   - [x] Cloud Run
@@ -275,11 +275,11 @@ Artifacts uploaded from GitHub Actions include:
   - [x] Authentication issues
   - [x] Performance problems
   - [x] Cost overruns
-- [ ] **Resource Cleanup Reminder**: Create CLEANUP.md with instructions for: [Cleanup.md](Cleanup.md)
-  - [ ] Deleting GCP resources (VMs, databases, etc.)
-  - [ ] Cleaning up Cloud Storage buckets
-  - [ ] Disabling APIs to avoid charges
-  - [ ] Cost monitoring recommendations
+- [x] **Resource Cleanup Reminder**: Create CLEANUP.md with instructions for: [Cleanup.md](Cleanup.md)
+  - [x] Deleting GCP resources (VMs, databases, etc.)
+  - [x] Cleaning up Cloud Storage buckets
+  - [x] Disabling APIs to avoid charges
+  - [x] Cost monitoring recommendations
 - [x] **Contributing Guide Update**: Update CONTRIBUTING.md with:
   - [x] CI/CD requirements
   - [x] Testing requirements for PRs

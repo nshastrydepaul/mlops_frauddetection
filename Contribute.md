@@ -3,10 +3,10 @@
 ## Team Members
 | Member | Role | Responsibilities |
 |---|---|---|
-| Musaddiq | Pipeline A + API + GCP | LR models, FastAPI, GCP deployment |
-| Nishanth | Docker + CI/CD + Cloud Run | Docker builds, GitHub Actions, Cloud Run |
+| Musaddiq | Pipeline A + API + GCP | LR models, FastAPI, GCP deployment, Cloud Run|
+| Nishanth | Docker + CI/CD + Cloud Run | Docker builds, GitHub Actions |
 | Israail | Pipeline B +CI | Ensemble models, Gradio/Streamlit |
-| Lohith | Testing + UI | pytest, pre-commit, GitHub Actions CI |
+| Lohith | Testing + UI | pytest, pre-commit, GitHub Actions CI, hugging face |
 
 ---
 
@@ -91,7 +91,7 @@ python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
 python -m mlops_frauddetection.train_model training.pipeline=lr
 ```
 
-### GCP Deployment (Musaddiq)
+### GCP Deployment
 ```bash
 # Push to Artifact Registry
 bash scripts/push_to_artifact_registry.sh
@@ -103,7 +103,7 @@ bash scripts/gcp_train.sh
 bash scripts/deploy_cloud_function.sh
 ```
 
-### Docker (Nishanth)
+### Docker
 ```bash
 # Build image
 docker build -f dockerfiles/Dockerfile -t fraud-detection-mlops .
