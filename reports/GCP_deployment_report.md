@@ -211,10 +211,16 @@ curl -X POST "https://fraud-detection-predict-lj4hg275tq-uc.a.run.app/predict/si
 ### What was done
 The Cloud Function Gen2 by GCP automatically deploys and manages the infrastructure through Cloud Run. This means that there is no need to create any Cloud Run deployment as it is done automatically by Cloud Functions Gen2 as the fraud detection FastAPI service runs as a managed service using Cloud Run with automatic scaling.
 
+The fastapi for detecting the frauds was deployed into GCP Cloud Run through Cloud Functions Gen2. This was due to the Cloud Functions Gen2 automatically handling the provisioning and management of Cloud Run. In other words, the Cloud Functions deployment was indeed a deployment on Cloud Run.
+
 ### Live Service URL
 ```
 https://fraud-detection-predict-lj4hg275tq-uc.a.run.app
 ```
+
+### File Reference
+- `api/main.py`  FastAPI application
+- `scripts/deploy_cloud_function.sh`  deployment script
 
 ### Auto-scaling Configuration
 | Setting | Value |
@@ -237,6 +243,23 @@ curl https://fraud-detection-predict-lj4hg275tq-uc.a.run.app/health
 
 **Cloud Run service running with ACTIVE status:**
 ![Cloud Run Service](figures/GCP_cloud2.png)
+
+
+### Sample Request
+```bash
+curl https://fraud-detection-predict-lj4hg275tq-uc.a.run.app/health
+```
+
+### Sample Response
+```json
+{
+  "status": "healthy",
+  "model_loaded": true,
+  "gcs_bucket": "fraud-detection-mlops-data",
+  "pipeline_a_models": ["lr_balanced", "lr_smote"],
+  "pipeline_b_models": ["lightgbm", "randomforest", "xgboost", "logisticregression"]
+}
+```
 
 ---
 
