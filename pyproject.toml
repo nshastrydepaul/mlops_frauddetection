@@ -62,3 +62,16 @@ python_files = "test_*.py"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.coverage.run]
+source = ["src/mlops_frauddetection"]
+omit = [
+    "src/mlops_frauddetection/train_model.py",
+    "src/mlops_frauddetection/predict_model.py",
+    "src/mlops_frauddetection/visualization/*",
+    "src/mlops_frauddetection/monitoring/*",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

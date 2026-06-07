@@ -368,9 +368,9 @@ def run_debug_checks(
         f"Training feature/label mismatch: x_train={len(x_train)}, "
         f"y_train={len(y_train)}"
     )
-    assert len(x_test) == len(y_test), (
-        f"Testing feature/label mismatch: x_test={len(x_test)}, y_test={len(y_test)}"
-    )
+    assert len(x_test) == len(
+        y_test
+    ), f"Testing feature/label mismatch: x_test={len(x_test)}, y_test={len(y_test)}"
 
     logger.info("DEBUG x_train shape: %s", x_train.shape)
     logger.info("DEBUG x_test shape: %s", x_test.shape)
