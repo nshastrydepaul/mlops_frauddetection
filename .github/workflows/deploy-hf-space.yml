@@ -1,0 +1,46 @@
+name: Deploy Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Streamlit_UI/**"
+      - ".github/workflows/deploy-hf-space.yml"
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Clone Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ secrets.HF_SPACE }}
+        run: |
+          git clone https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE} hf_space
+
+      - name: Copy Streamlit UI Files
+        run: |
+          rm -rf hf_space/*
+          cp -r Streamlit_UI/* hf_space/
+
+      - name: Push Changes to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd hf_space
+
+          git config user.email "github-actions@github.com"
+          git config user.name "github-actions"
+
+          git add .
+
+          git commit -m "Auto deploy from GitHub Actions" || echo "No changes to commit"
+
+          git push
