@@ -143,7 +143,7 @@ The billing page shows the project is linked to a billing account. All services 
 
 ![Billing Account](reports/figures/GCP_cost1.png)
 
-![Cost Overview](reports/figures/GCP_cost_overview.png)
+![Billing cost](/reports/figures/GCP_billing.png)
 
 ---
 
