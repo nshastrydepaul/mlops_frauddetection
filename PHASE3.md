@@ -191,7 +191,7 @@ Artifacts uploaded from GitHub Actions include:
   - [ ] Compute Engine (not used)
 - [x] **Artifact Registry**: Set up Artifact Registry for storing Docker images
   - [x] Create repository in Artifact Registry
-  - [ ] Configure authentication from CI/CD
+  - [x] Configure authentication from CI/CD
   - [x] Push Docker images to registry
 - [x] **Vertex AI Training (Option A)**: Set up custom training on Vertex AI
   - [x] Create training container image
@@ -215,7 +215,7 @@ Artifacts uploaded from GitHub Actions include:
   - [x] Create Cloud Function with appropriate memory/timeout
   - [x] Configure HTTP trigger
   - [x] Document invocation and response format
-- [x] **Cloud Run Deployment (Option B)**: Deploy as containerized service on Cloud Run
+- [x] **Cloud Run Deployment (Option B)**: Deploy as containerized service on Cloud Run: (partially done for learning purpose | actual run is based on Option A & C)
   - [ ] Create Dockerfile optimized for Cloud Run
   - [] Test locally with Cloud Run emulator
   - [x] Deploy to Cloud Run with auto-scaling
