@@ -386,12 +386,39 @@ mlops_frauddetection/                  # Repository root
 
 ```
 .
+├── 0001-updated-documentation-for-UI.patch
+├── Changelogs.md
+├── Cleanup.md
+├── Contribute.md
 ├── LICENSE
 ├── Makefile
 ├── PHASE1.md
 ├── PHASE2.md
 ├── PHASE3.md
 ├── README.md
+├── Streamlit_UI
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── __init__.py
+│   ├── app.py
+│   ├── data
+│   │   └── raw
+│   │       └── data_25k.csv
+│   ├── mlops_frauddetection
+│   │   ├── __init__.py
+│   │   └── features
+│   │       ├── __init__.py
+│   │       └── build_features.py
+│   ├── models
+│   │   ├── RGhazzal_lightgbm_metadata.json
+│   │   ├── RGhazzal_logisticregression_metadata.json
+│   │   ├── RGhazzal_randomforest_metadata.json
+│   │   └── RGhazzal_xgboost_metadata.json
+│   └── requirements.txt
+├── api
+│   ├── __init__.py
+│   ├── main.py
+│   └── requirements.txt
 ├── configs
 │   ├── README.md
 │   ├── config.yaml
@@ -402,8 +429,8 @@ mlops_frauddetection/                  # Repository root
 ├── data
 │   ├── README.md
 │   ├── processed
-│   │   ├── X_test.csv
-│   │   ├── X_train.csv
+│   │   ├── x_test.csv
+│   │   ├── x_train.csv
 │   │   ├── y_test.csv
 │   │   └── y_train.csv
 │   └── raw
@@ -424,6 +451,9 @@ mlops_frauddetection/                  # Repository root
 │   ├── index.md
 │   ├── mkdocs.yml
 │   └── source
+├── logs
+│   ├── app.log
+│   └── error.log
 ├── mlflow.db
 ├── models
 │   ├── LR_SMOTE_model_metadata.json
@@ -438,24 +468,23 @@ mlops_frauddetection/                  # Repository root
 │   ├── lightgbm_20260520.joblib.dvc
 │   ├── lightgbm_20260521.joblib
 │   ├── lightgbm_20260521.joblib.dvc
-│   ├── lightgbm_20260522.joblib
+│   ├── lightgbm_20260606.joblib.dvc
 │   ├── logistic_regression_20260507.joblib
 │   ├── logistic_regression_20260507.joblib.dvc
 │   ├── logisticregression_20260520.joblib
 │   ├── logisticregression_20260520.joblib.dvc
 │   ├── logisticregression_20260521.joblib
 │   ├── logisticregression_20260521.joblib.dvc
-│   ├── logisticregression_20260522.joblib
+│   ├── logisticregression_20260606.joblib.dvc
 │   ├── lr_balanced_20260520.joblib
 │   ├── lr_balanced_20260520.joblib.dvc
 │   ├── lr_balanced_20260521.joblib
 │   ├── lr_balanced_20260521.joblib.dvc
-│   ├── lr_balanced_20260522.joblib
+│   ├── lr_balanced_20260606.joblib.dvc
 │   ├── lr_smote_20260520.joblib
 │   ├── lr_smote_20260520.joblib.dvc
 │   ├── lr_smote_20260521.joblib
 │   ├── lr_smote_20260521.joblib.dvc
-│   ├── lr_smote_20260522.joblib
 │   ├── preprocessor_20260507.joblib
 │   ├── preprocessor_20260507.joblib.dvc
 │   ├── random_forest_20260507.joblib
@@ -464,14 +493,14 @@ mlops_frauddetection/                  # Repository root
 │   ├── randomforest_20260520.joblib.dvc
 │   ├── randomforest_20260521.joblib
 │   ├── randomforest_20260521.joblib.dvc
-│   ├── randomforest_20260522.joblib
+│   ├── randomforest_20260606.joblib.dvc
 │   ├── xgboost_20260507.joblib
 │   ├── xgboost_20260507.joblib.dvc
 │   ├── xgboost_20260520.joblib
 │   ├── xgboost_20260520.joblib.dvc
 │   ├── xgboost_20260521.joblib
 │   ├── xgboost_20260521.joblib.dvc
-│   └── xgboost_20260522.joblib
+│   └── xgboost_20260606.joblib.dvc
 ├── notebooks
 │   ├── 1.0-Musaddiq-logistic-regression.ipynb
 │   ├── 1.0-lohith-data-exploration.ipynb
@@ -484,10 +513,90 @@ mlops_frauddetection/                  # Repository root
 ├── profile.json
 ├── pyproject.toml
 ├── reports
+│   ├── GCP_deployment_report.md
 │   ├── README.md
 │   ├── cprofile_training.prof
 │   ├── cprofile_training_output.txt
 │   ├── figures
+│   │   ├── DockerHubPic1.png
+│   │   ├── DockerHubPic2.png
+│   │   ├── DockerHubPic3.png
+│   │   ├── FastAPI_health.png
+│   │   ├── FastAPI_models.png
+│   │   ├── FastAPI_predict1.png
+│   │   ├── FastAPI_predict2.png
+│   │   ├── FastAPI_predict_A_lr_smote1.png
+│   │   ├── FastAPI_predict_A_lr_smote2.png
+│   │   ├── FastAPI_predict_B_LR1.png
+│   │   ├── FastAPI_predict_B_LR2.png
+│   │   ├── FastAPI_predict_B_xgboost1.png
+│   │   ├── FastAPI_predict_B_xgboost2.png
+│   │   ├── FastAPI_root.png
+│   │   ├── GCP3.1_1.png
+│   │   ├── GCP3.1_2.png
+│   │   ├── GCP3.1_3.png
+│   │   ├── GCP3.2_1.png
+│   │   ├── GCP3.2_2.png
+│   │   ├── GCP3.2_3.png
+│   │   ├── GCP_IAM.png
+│   │   ├── GCP_IAM_services.png
+│   │   ├── GCP_billing.png
+│   │   ├── GCP_cleanup_API_verify.png
+│   │   ├── GCP_cleanup_IAM.png
+│   │   ├── GCP_cleanup_UI_buckets.png
+│   │   ├── GCP_cleanup_UI_func.png
+│   │   ├── GCP_cleanup_artifact.png
+│   │   ├── GCP_cleanup_buckets.png
+│   │   ├── GCP_cleanup_disable_API.png
+│   │   ├── GCP_cleanup_func.png
+│   │   ├── GCP_cleanup_service.png
+│   │   ├── GCP_cloud.png
+│   │   ├── GCP_cloud1.png
+│   │   ├── GCP_cloud2.png
+│   │   ├── GCP_cloud_terminal.png
+│   │   ├── GCP_cost1.png
+│   │   ├── GCP_cost_overview.png
+│   │   ├── GCP_dp_errors.png
+│   │   ├── GCP_dp_logs1.png
+│   │   ├── GCP_dp_logs2.png
+│   │   ├── GCP_dp_logs3.png
+│   │   ├── GCP_monitoring1.png
+│   │   ├── GCP_monitoring2.png
+│   │   ├── GCP_monitoring3.png
+│   │   ├── GCP_monitoring4.png
+│   │   ├── GCP_monitoring5.png
+│   │   ├── GCP_monitoring6.png
+│   │   ├── GCP_test1.png
+│   │   ├── GCP_test2.png
+│   │   ├── GCP_test3.png
+│   │   ├── GCP_training1.png
+│   │   ├── GCP_training2.png
+│   │   ├── GCP_training_logs.png
+│   │   ├── GitActionsDockerPic1.png
+│   │   ├── GitActionsDockerPic2.png
+│   │   ├── GitActionsDockerPic3.png
+│   │   ├── GitActionsDockerPic4.png
+│   │   ├── GitActionsDockerPic5.png
+│   │   ├── GitActionsDockerPic6.png
+│   │   ├── GitActionsDockerPic7.png
+│   │   ├── PR-MergeConfirmation1.png
+│   │   ├── PR-MergeConfirmation2.png
+│   │   ├── PRworkflowComment1.png
+│   │   ├── PRworkflowComment2.png
+│   │   ├── PRworkflowComment3.png
+│   │   ├── PRworkflowComment4.png
+│   │   ├── PRworkflowComment5.png
+│   │   ├── PRworkflowPic1.png
+│   │   ├── PRworkflowPic2.png
+│   │   ├── PRworkflowPic3.png
+│   │   ├── PRworkflowPic4.png
+│   │   ├── PRworkflowPic4a.png
+│   │   ├── PRworkflowPic4b.png
+│   │   ├── PRworkflowPic4c.png
+│   │   ├── PRworkflowPic4d.png
+│   │   ├── PRworkflowPic4e.png
+│   │   ├── PRworkflowPic4f.png
+│   │   ├── PRworkflowPic4g.png
 │   │   ├── RGazzal_eda_01_target_variable_is_fraud.svg
 │   │   ├── RGazzal_eda_02_univariate_transaction_amount.svg
 │   │   ├── RGazzal_eda_03_univariate_categorical_features_All.svg
@@ -507,6 +616,15 @@ mlops_frauddetection/                  # Repository root
 │   │   ├── RGazzal_eda_16_fraud_rate_category_weekday_weekend.svg
 │   │   ├── Scalene-scripts_profile_training.py-1.png
 │   │   ├── Scalene-scripts_profile_training.py-2.png
+│   │   ├── UI_Data_exploration.png
+│   │   ├── UI_Report.png
+│   │   ├── UI_architecture.png
+│   │   ├── UI_batch_prediction.png
+│   │   ├── UI_dashboard.png
+│   │   ├── UI_git-action-diagram.png
+│   │   ├── UI_model_comparison.png
+│   │   ├── UI_result_1.png
+│   │   ├── UI_result_2.png
 │   │   ├── amount_distribution.png
 │   │   ├── avg_spend_per_category.png
 │   │   ├── class_balance.png
@@ -555,17 +673,24 @@ mlops_frauddetection/                  # Repository root
 │   │   ├── mlflow_runs_artifact_1.png
 │   │   ├── model_comparison_confusion.png
 │   │   ├── pipeline_architecture.png
+│   │   ├── pytest_section1.html
+│   │   ├── pytest_section1.txt
 │   │   ├── randomforest_classification_report.txt
+│   │   ├── test_Pre-commit-hooks.png
 │   │   ├── test_state.png
 │   │   ├── total_fraud_volume_by_state.png
 │   │   ├── transactions_by_hour_of_day.png
 │   │   └── xgboost_classification_report.txt
+│   ├── load_test_results.txt
 │   ├── monitoring
 │   │   ├── ensemble_pipeline_resource_usage.csv
 │   │   └── lr_pipeline_resource_usage.csv
 │   ├── phase1-data-exploration-report.md
 │   ├── phase2-Mlflow-experiment-comparision-report.md
 │   ├── phase2-monitoring-debugging.md
+│   ├── phase3-Deployment-&-UI-Documentation.md
+│   ├── pr_musaddiq_phase3.txt
+│   ├── pr_nishanth_phase3.txt
 │   ├── profiling_output.html
 │   ├── profiling_output.json
 │   └── profiling_output.txt
@@ -573,13 +698,26 @@ mlops_frauddetection/                  # Repository root
 ├── requirements_dev.txt
 ├── scripts
 │   ├── cprofile.py
-│   └── profile_training.py
+│   ├── deploy_cloud_function.sh
+│   ├── gcp_train.sh
+│   ├── profile_training.py
+│   ├── push_to_artifact_registry.sh
+│   └── save_test_report.py
 ├── src
 │   ├── mlops_frauddetection
 │   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── config.cpython-311.pyc
+│   │   │   └── logging_config.cpython-311.pyc
 │   │   ├── config.py
 │   │   ├── data
 │   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-311.pyc
+│   │   │   │   ├── exceptions.cpython-311.pyc
+│   │   │   │   ├── loaders.cpython-311.pyc
+│   │   │   │   └── make_dataset.cpython-311.pyc
 │   │   │   ├── exceptions.py
 │   │   │   ├── loaders.py
 │   │   │   └── make_dataset.py
@@ -588,6 +726,9 @@ mlops_frauddetection/                  # Repository root
 │   │   │   └── metrics.py
 │   │   ├── features
 │   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-311.pyc
+│   │   │   │   └── build_features.cpython-311.pyc
 │   │   │   └── build_features.py
 │   │   ├── logging_config.py
 │   │   ├── models
@@ -614,11 +755,16 @@ mlops_frauddetection/                  # Repository root
 │       ├── dependency_links.txt
 │       ├── requires.txt
 │       └── top_level.txt
-└── tests
-    ├── README.md
-    ├── __init__.py
-    ├── conftest.py
-    └── test_model.py
+├── tests
+│   ├── README.md
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── locust_test.py
+│   ├── test_coverage_boost.py
+│   ├── test_model.py
+│   └── test_pipeline.py
+└── troubleshooting.md
+
 ```
 
 ### Why `src/` layout?
