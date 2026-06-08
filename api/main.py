@@ -5,8 +5,8 @@ from __future__ import annotations
 import os
 import tempfile
 from pathlib import Path
-import functions_framework
 
+import functions_framework
 import joblib
 import numpy as np
 from fastapi import FastAPI, HTTPException
@@ -65,7 +65,10 @@ def _load_model(model_name: str, is_pipeline_b: bool = False):
     # Try GCS first
     try:
         from google.cloud import storage
-        gcs_filename = GCS_MODELS_B[model_name] if is_pipeline_b else GCS_MODELS_A[model_name]
+
+        gcs_filename = (
+            GCS_MODELS_B[model_name] if is_pipeline_b else GCS_MODELS_A[model_name]
+        )
         gcs_path = f"{GCS_MODELS_PREFIX}/{gcs_filename}"
 
         client = storage.Client()
@@ -79,14 +82,18 @@ def _load_model(model_name: str, is_pipeline_b: bool = False):
         _model_cache[model_name] = m
         return m
 
-    except Exception:
+    except Exception as err:
         # Fallback to local
-        local_path = LOCAL_MODELS_B[model_name] if is_pipeline_b else LOCAL_MODELS_A[model_name]
+        local_path = (
+            LOCAL_MODELS_B[model_name] if is_pipeline_b else LOCAL_MODELS_A[model_name]
+        )
         if Path(local_path).exists():
             m = joblib.load(local_path)
             _model_cache[model_name] = m
             return m
-        raise HTTPException(status_code=500, detail=f"Model '{model_name}' not found locally or in GCS")
+        raise HTTPException(
+            status_code=500, detail=f"Model '{model_name}' not found locally or in GCS"
+        ) from err
 
 
 # Load default model at startup
@@ -96,10 +103,12 @@ except Exception:
     default_model = None
 
 
-#  Pipeline A input (44 features) 
+#  Pipeline A input (44 features)
+
 
 class TransactionA(BaseModel):
     """Pipeline A transaction  44 features, 4-class output."""
+
     city_pop: float
     job: float
     amt: float
@@ -146,10 +155,12 @@ class TransactionA(BaseModel):
     night_high_amt: int
 
 
-#  Pipeline B input (38 features) 
+#  Pipeline B input (38 features)
+
 
 class TransactionB(BaseModel):
     """Pipeline B transaction  38 features, binary output (Fraud/Legit)."""
+
     log_amt: float
     city_pop: float
     customer_num_trans_1_day: float
@@ -191,45 +202,107 @@ class TransactionB(BaseModel):
 
 
 def _build_features_a(t: TransactionA) -> np.ndarray:
-    return np.array([[
-        t.city_pop, t.job, t.amt, t.merchant,
-        t.customer_num_trans_1_day, t.customer_num_trans_7_day, t.customer_num_trans_30_day,
-        t.trans_time_secs, t.trans_time_hrs, t.trans_time_is_night,
-        t.trans_time_day, t.trans_date_is_weekend,
-        t.customer_avg_amout_1_day, t.customer_avg_amount_7_day, t.customer_avg_amount_30_day,
-        t.merchant_num_trans_1_day, t.merchant_num_trans_7_day, t.merchant_num_trans_30_day,
-        t.merchant_risk_1_day, t.merchant_risk_7_day, t.merchant_risk_30_day, t.merchant_risk_90_day,
-        t.customer_txn_count, t.avg_amt_per_customer, t.merchant_txn_count,
-        t.gender_M,
-        t.category_food_dining, t.category_gas_transport, t.category_grocery_net,
-        t.category_grocery_pos, t.category_health_fitness, t.category_home,
-        t.category_kids_pets, t.category_misc_net, t.category_misc_pos,
-        t.category_personal_care, t.category_shopping_net, t.category_shopping_pos,
-        t.category_travel,
-        t.amt_ratio, t.combined_risk, t.amt_risk_score, t.is_high_spend, t.night_high_amt,
-    ]])
+    return np.array(
+        [
+            [
+                t.city_pop,
+                t.job,
+                t.amt,
+                t.merchant,
+                t.customer_num_trans_1_day,
+                t.customer_num_trans_7_day,
+                t.customer_num_trans_30_day,
+                t.trans_time_secs,
+                t.trans_time_hrs,
+                t.trans_time_is_night,
+                t.trans_time_day,
+                t.trans_date_is_weekend,
+                t.customer_avg_amout_1_day,
+                t.customer_avg_amount_7_day,
+                t.customer_avg_amount_30_day,
+                t.merchant_num_trans_1_day,
+                t.merchant_num_trans_7_day,
+                t.merchant_num_trans_30_day,
+                t.merchant_risk_1_day,
+                t.merchant_risk_7_day,
+                t.merchant_risk_30_day,
+                t.merchant_risk_90_day,
+                t.customer_txn_count,
+                t.avg_amt_per_customer,
+                t.merchant_txn_count,
+                t.gender_M,
+                t.category_food_dining,
+                t.category_gas_transport,
+                t.category_grocery_net,
+                t.category_grocery_pos,
+                t.category_health_fitness,
+                t.category_home,
+                t.category_kids_pets,
+                t.category_misc_net,
+                t.category_misc_pos,
+                t.category_personal_care,
+                t.category_shopping_net,
+                t.category_shopping_pos,
+                t.category_travel,
+                t.amt_ratio,
+                t.combined_risk,
+                t.amt_risk_score,
+                t.is_high_spend,
+                t.night_high_amt,
+            ]
+        ]
+    )
 
 
 def _build_features_b(t: TransactionB) -> np.ndarray:
-    return np.array([[
-        t.log_amt, t.city_pop,
-        t.customer_num_trans_1_day, t.customer_num_trans_7_day, t.customer_num_trans_30_day,
-        t.customer_avg_amout_1_day, t.customer_avg_amount_7_day, t.customer_avg_amount_30_day,
-        t.merchant_num_trans_1_day, t.merchant_num_trans_7_day, t.merchant_num_trans_30_day,
-        t.merchant_risk_1_day, t.merchant_risk_7_day, t.merchant_risk_30_day, t.merchant_risk_90_day,
-        t.trans_time_hrs, t.trans_hour_sin, t.trans_hour_cos,
-        t.trans_time_is_night, t.trans_date_is_weekend, t.trans_time_day,
-        t.category_is_online, t.online_x_log_amt, t.velocity_ratio,
-        t.gender_M,
-        t.category_food_dining, t.category_gas_transport, t.category_grocery_net,
-        t.category_grocery_pos, t.category_health_fitness, t.category_home,
-        t.category_kids_pets, t.category_misc_net, t.category_misc_pos,
-        t.category_personal_care, t.category_shopping_net, t.category_shopping_pos,
-        t.category_travel,
-    ]])
+    return np.array(
+        [
+            [
+                t.log_amt,
+                t.city_pop,
+                t.customer_num_trans_1_day,
+                t.customer_num_trans_7_day,
+                t.customer_num_trans_30_day,
+                t.customer_avg_amout_1_day,
+                t.customer_avg_amount_7_day,
+                t.customer_avg_amount_30_day,
+                t.merchant_num_trans_1_day,
+                t.merchant_num_trans_7_day,
+                t.merchant_num_trans_30_day,
+                t.merchant_risk_1_day,
+                t.merchant_risk_7_day,
+                t.merchant_risk_30_day,
+                t.merchant_risk_90_day,
+                t.trans_time_hrs,
+                t.trans_hour_sin,
+                t.trans_hour_cos,
+                t.trans_time_is_night,
+                t.trans_date_is_weekend,
+                t.trans_time_day,
+                t.category_is_online,
+                t.online_x_log_amt,
+                t.velocity_ratio,
+                t.gender_M,
+                t.category_food_dining,
+                t.category_gas_transport,
+                t.category_grocery_net,
+                t.category_grocery_pos,
+                t.category_health_fitness,
+                t.category_home,
+                t.category_kids_pets,
+                t.category_misc_net,
+                t.category_misc_pos,
+                t.category_personal_care,
+                t.category_shopping_net,
+                t.category_shopping_pos,
+                t.category_travel,
+            ]
+        ]
+    )
 
 
-#  Endpoints 
+#  Endpoints
+
 
 @app.get("/")
 def root():
@@ -253,7 +326,7 @@ def list_models():
         "pipeline_a": list(GCS_MODELS_A.keys()),
         "pipeline_b": list(GCS_MODELS_B.keys()),
         "all": list(GCS_MODELS_A.keys()) + list(GCS_MODELS_B.keys()),
-        "source": f"gs://{GCS_BUCKET}/{GCS_MODELS_PREFIX}/"
+        "source": f"gs://{GCS_BUCKET}/{GCS_MODELS_PREFIX}/",
     }
 
 
@@ -279,7 +352,10 @@ def predict_pipeline_a(model_name: str, transaction: TransactionA):
     if model_name not in GCS_MODELS_A:
         raise HTTPException(
             status_code=404,
-            detail=f"Model '{model_name}' not in Pipeline A. Available: {list(GCS_MODELS_A.keys())}"
+            detail=(
+                f"Model '{model_name}' not in Pipeline A. "
+                f"Available: {list(GCS_MODELS_A.keys())}"
+            ),
         )
     m = _load_model(model_name, is_pipeline_b=False)
     features = _build_features_a(transaction)
@@ -299,7 +375,10 @@ def predict_pipeline_b(model_name: str, transaction: TransactionB):
     if model_name not in GCS_MODELS_B:
         raise HTTPException(
             status_code=404,
-            detail=f"Model '{model_name}' not in Pipeline B. Available: {list(GCS_MODELS_B.keys())}"
+            detail=(
+                f"Model '{model_name}' not in Pipeline B. "
+                f"Available: {list(GCS_MODELS_B.keys())}"
+            ),
         )
     m = _load_model(model_name, is_pipeline_b=True)
     features = _build_features_b(transaction)
@@ -353,26 +432,29 @@ def predict_simple(
         "risk_level": "HIGH" if prediction >= 2 else "LOW",
     }
 
+
 @functions_framework.http
 def fraud_predict(request):
     """GCP Cloud Functions entry point  wraps FastAPI app."""
-    import json
     from starlette.testclient import TestClient
-    
+
     client = TestClient(app)
-    
+
     response = client.request(
         method=request.method,
-        url=request.path + ("?" + request.query_string.decode() if request.query_string else ""),
+        url=request.path
+        + ("?" + request.query_string.decode() if request.query_string else ""),
         content=request.get_data(),
         headers=dict(request.headers),
     )
-    
+
     return response.content, response.status_code, dict(response.headers)
 
-#  GCP Cloud Run / Cloud Functions entry point 
+
+#  GCP Cloud Run / Cloud Functions entry point
 
 if __name__ == "__main__":
     import uvicorn
+
     port = int(os.environ.get("PORT", 8080))
     uvicorn.run("main:app", host="0.0.0.0", port=port)

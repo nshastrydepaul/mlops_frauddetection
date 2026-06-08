@@ -1,4 +1,5 @@
-from locust import HttpUser, task, between
+from locust import HttpUser, between, task
+
 
 class FraudAPIUser(HttpUser):
     host = "https://fraud-detection-predict-lj4hg275tq-uc.a.run.app"
