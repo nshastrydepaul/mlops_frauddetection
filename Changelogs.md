@@ -12,19 +12,41 @@ All notable changes to this project are documented here.
 -TODO
 
 ### Added — Nishanth (Section 2)
+### Section 2 Changes
 
-* GitHub Actions CI pipeline with Ruff, mypy, pytest, and Codecov integration
-* Multi-stage Docker containerization for reproducible training and deployment
-* Docker Hub image publishing via automated GitHub Actions workflow
-* Continuous Machine Learning (CML) workflow for automated training, reporting, and artifact generation
-* DVC integration with Google Drive remote for dataset and model versioning in CI/CD
-* Automated monitoring pipeline including drift detection, performance monitoring, and retraining workflows
-* Prometheus-compatible monitoring metrics and system resource tracking
-* Streamlit dashboard integration for monitoring and experiment visualization
-* Dependency management refactoring with separate production and development requirements
-* GitHub Actions workflows for CI validation, CML automation, Docker build/publish, and deployment verification
-* End-to-end MLOps automation covering data versioning, model training, monitoring, reporting, containerization, and deployment workflows
-* Documentation and workflow standardization for reproducible ML engineering practices
+### 2.1 CI/CD Automation
+* Configured GitHub Actions CI workflow
+* Added Ruff linting and formatting checks
+* Added mypy static type checking
+* Added pytest test execution with coverage reporting
+* Added Codecov integration for coverage uploads
+* Simplified CI execution to Python 3.11
+
+### 2.2 CML Automation
+* Configured Continuous Machine Learning (CML) workflow
+* Automated DVC data retrieval from Google Drive remote
+* Automated model training execution in GitHub Actions
+* Automated experiment reporting generation
+* Added artifact upload for reports and monitoring outputs
+
+### 2.3 Dockerization
+* Implemented multi-stage Docker build for optimized image size
+* Added Docker Hub image build and push workflow
+* Added automated Docker image validation in CI
+* Configured Docker Buildx and image metadata generation
+* Added support for tagged image releases
+
+### 2.4 Dependency Management
+* Refactored requirements.txt into production dependencies
+* Created requirements_dev.txt for development tooling
+* Removed duplicate and conflicting package definitions
+* Fixed Python version compatibility issues in CI
+
+### 2.5 MLOps Infrastructure
+* Integrated DVC with GitHub Actions workflows
+* Automated model artifact management
+* Added workflow support for reproducible training runs
+* Improved repository automation and deployment readiness
 
 One pull request as evidence:
 
