@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import streamlit as st
-from mlops_frauddetection.features.build_features import engineer_features_ensemble
-import os
 import requests
+import streamlit as st
+
+from mlops_frauddetection.features.build_features import engineer_features_ensemble
 
 API_URL = os.getenv("API_URL", "http://localhost:8080").rstrip("/")
 
@@ -84,15 +85,17 @@ REQUIRED_FEATURES = [
 ]
 
 METADATA_FILES = {
-"Logistic Regression Binary": MODELS_DIR / "RGhazzal_logisticregression_metadata.json",
-"Random Forest": MODELS_DIR / "RGhazzal_randomforest_metadata.json",
-"LightGBM": MODELS_DIR / "RGhazzal_lightgbm_metadata.json",
-"XGBoost": MODELS_DIR / "RGhazzal_xgboost_metadata.json",
+    "Logistic Regression Binary": MODELS_DIR
+    / "RGhazzal_logisticregression_metadata.json",
+    "Random Forest": MODELS_DIR / "RGhazzal_randomforest_metadata.json",
+    "LightGBM": MODELS_DIR / "RGhazzal_lightgbm_metadata.json",
+    "XGBoost": MODELS_DIR / "RGhazzal_xgboost_metadata.json",
 }
 
 # =========================
 # Helpers
 # =========================
+
 
 def validate_input_columns(df: pd.DataFrame) -> list[str]:
     return [col for col in REQUIRED_FEATURES if col not in df.columns]
@@ -105,7 +108,7 @@ def prepare_input(df: pd.DataFrame) -> pd.DataFrame:
 def read_json(path: Path):
     try:
         if path.exists():
-            with open(path, "r") as f:
+            with open(path) as f:
                 return json.load(f)
     except Exception:
         return None
@@ -186,7 +189,6 @@ def render_sidebar(models: dict):
             st.metric("Rows Scored", sum(x["rows"] for x in log))
             st.metric("Fraud Flags", sum(x["fraud_count"] for x in log))
 
-
     return show_raw
 
 
@@ -246,6 +248,7 @@ def render_dashboard(models: dict):
     else:
         st.info("No prediction runs yet. Use the Batch Prediction tab to score a CSV.")
 
+
 def call_pipeline_b_api(df: pd.DataFrame, model_name: str) -> pd.DataFrame:
     api_model_name = MODEL_API_NAMES[model_name]
     predictions = []
@@ -279,6 +282,7 @@ def call_pipeline_b_api(df: pd.DataFrame, model_name: str) -> pd.DataFrame:
 
     return pd.DataFrame(predictions)
 
+
 # =========================
 # Data Explorer
 # =========================
@@ -296,10 +300,11 @@ def render_data_explorer():
         return
 
     selected_file = st.selectbox(
-    "Select dataset",
-    csv_files,
-    format_func=lambda p: str(p.relative_to(PROJECT_ROOT)),
-    key="reports_dataset_dataexplorer")
+        "Select dataset",
+        csv_files,
+        format_func=lambda p: str(p.relative_to(PROJECT_ROOT)),
+        key="reports_dataset_dataexplorer",
+    )
 
     df = pd.read_csv(selected_file)
 
@@ -315,9 +320,11 @@ def render_data_explorer():
     numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
 
     if numeric_cols:
-        selected_col = st.selectbox("Select numeric column",
-                                    numeric_cols,
-                                    key="data_explorer_numeric_col",)
+        selected_col = st.selectbox(
+            "Select numeric column",
+            numeric_cols,
+            key="data_explorer_numeric_col",
+        )
         fig = px.histogram(
             df,
             x=selected_col,
@@ -340,7 +347,8 @@ def render_batch_prediction(models: dict, show_raw: bool):
     selected_model = st.selectbox("Select Model", list(models.keys()))
 
     st.info(
-        "Upload a processed feature dataset in the same format as the training/test feature file. "
+        "Upload a processed feature dataset in the same format as the "
+        "training/test feature file. "
         "The file must contain the required engineered feature columns."
     )
 
@@ -369,20 +377,21 @@ def render_batch_prediction(models: dict, show_raw: bool):
         return
 
     if st.button("Process Batch", type="primary"):
-
         try:
             results = call_pipeline_b_api(df, selected_model)
         except Exception as e:
             st.error("Prediction API failed.")
             st.write(e)
             return
-        
+
         # Apply UI threshold to probability output.
-        results["threshold_label"] = results["label"].replace({
-            "Legit": "Legitimate",
-             "Fraud": "Fraud",
-            })
-        
+        results["threshold_label"] = results["label"].replace(
+            {
+                "Legit": "Legitimate",
+                "Fraud": "Fraud",
+            }
+        )
+
         final_df = pd.concat([df.reset_index(drop=True), results], axis=1)
 
         fraud_count = int((final_df["threshold_label"] == "Fraud").sum())
@@ -422,7 +431,7 @@ def render_batch_prediction(models: dict, show_raw: bool):
         st.markdown("---")
         st.subheader("Prediction Results")
         st.dataframe(final_df, use_container_width=True)
-        
+
         if show_raw:
             with st.expander("View Full Prediction Results"):
                 st.dataframe(final_df, use_container_width=True)
@@ -432,9 +441,12 @@ def render_batch_prediction(models: dict, show_raw: bool):
         st.download_button(
             "Download Results CSV",
             data=csv,
-            file_name=f"{selected_model.lower().replace(' ', '_')}_fraud_predictions.csv",
+            file_name=(
+                f"{selected_model.lower().replace(' ', '_')}_fraud_predictions.csv"
+            ),
             mime="text/csv",
         )
+
 
 # =========================
 # Model Comparison
@@ -470,8 +482,15 @@ def render_model_comparison():
         col3.metric("F1 Score", f"{best_model['F1']:.4f}")
 
     metric_cols = [
-        col for col in
-        ["Accuracy", "Precision", "Recall", "F1", "ROC-AUC", "Average Precision"]
+        col
+        for col in [
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "F1",
+            "ROC-AUC",
+            "Average Precision",
+        ]
         if col in df.columns
     ]
 
@@ -505,7 +524,7 @@ def render_reports():
     if not REPORT_DATASET.exists():
         st.error(f"Report dataset not found: {REPORT_DATASET}")
         return
-    
+
     df = pd.read_csv(REPORT_DATASET)
 
     st.success(f"Loaded report dataset: {REPORT_DATASET.name}")
@@ -628,9 +647,7 @@ def render_reports():
             return
 
         hourly = (
-            df.groupby(["trans_time_hrs", "is_fraud"])
-            .size()
-            .reset_index(name="count")
+            df.groupby(["trans_time_hrs", "is_fraud"]).size().reset_index(name="count")
         )
 
         fig = px.bar(
@@ -649,16 +666,16 @@ def render_reports():
             return
 
         day_map = {
-            0: "Mon", 1: "Tue", 2: "Wed", 3: "Thu",
-            4: "Fri", 5: "Sat", 6: "Sun",
+            0: "Mon",
+            1: "Tue",
+            2: "Wed",
+            3: "Thu",
+            4: "Fri",
+            5: "Sat",
+            6: "Sun",
         }
 
-        temp = (
-            df.groupby("trans_time_day")["is_fraud"]
-            .mean()
-            .mul(100)
-            .reset_index()
-        )
+        temp = df.groupby("trans_time_day")["is_fraud"].mean().mul(100).reset_index()
         temp["day"] = temp["trans_time_day"].map(day_map)
 
         fig = px.bar(
@@ -761,12 +778,7 @@ def render_reports():
             key="top_states_slider",
         )
 
-        temp = (
-            df[df["is_fraud"] == 1]["state"]
-            .value_counts()
-            .head(top_n)
-            .reset_index()
-        )
+        temp = df[df["is_fraud"] == 1]["state"].value_counts().head(top_n).reset_index()
         temp.columns = ["state", "fraud_count"]
 
         fig = px.bar(
@@ -880,14 +892,14 @@ def render_reports():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+
 # =========================
 # About
 # =========================
 def render_about():
     st.header("About This Project")
 
-    st.markdown(
-        """
+    st.markdown("""
         ### Credit Card Fraud Detection Dashboard
 
         This application provides an interactive interface for detecting potentially
@@ -948,8 +960,7 @@ def render_about():
         Uploaded CSV files should follow the transaction schema expected by the
         feature engineering pipeline. Predictions are generated through the deployed
         FastAPI service, not by loading models directly inside the Streamlit app.
-        """
-    )
+        """)
 
 
 # =========================
@@ -960,7 +971,10 @@ def main():
     show_raw = render_sidebar(models)
 
     st.title("🚨 Fraud Detection MLOps Dashboard")
-    st.caption("End-to-end Streamlit UI for fraud analytics, model comparison, and batch prediction.")
+    st.caption(
+        "End-to-end Streamlit UI for fraud analytics, model comparison, "
+        "and batch prediction."
+    )
 
     tabs = st.tabs(
         [

@@ -11,12 +11,13 @@ Pipeline B (Israail) — Binary ensemble:
 
 from __future__ import annotations
 
+import logging
+
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

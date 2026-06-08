@@ -16,6 +16,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  issues: write
 
 jobs:
   train-and-report:
@@ -53,7 +54,7 @@ jobs:
       - name: Configure DVC Remote
         run: |
           dvc remote modify storage \
-          gdrive_service_account_json_file_path gdrive-creds.json
+            gdrive_service_account_json_file_path gdrive-creds.json
 
       - name: Pull DVC Data
         run: |
@@ -73,9 +74,7 @@ jobs:
           echo "Generated report files:"
           find reports -type f
 
-      - name: Create CML Report
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate CML Report
         run: |
           echo "# Fraud Detection Model Report" > report.md
           echo "" >> report.md
@@ -95,7 +94,7 @@ jobs:
 
           for report in reports/figures/*classification_report.txt; do
             if [ -f "$report" ]; then
-              echo "### $(basename $report)" >> report.md
+              echo "### $(basename "$report")" >> report.md
               echo '```' >> report.md
               cat "$report" >> report.md
               echo '```' >> report.md
@@ -117,33 +116,29 @@ jobs:
           echo "## Key Visualizations" >> report.md
           echo "" >> report.md
 
-          # Confusion matrices
           for img in reports/figures/*confusion*.png reports/figures/*cm*.png; do
             if [ -f "$img" ]; then
-              echo "### $(basename $img)" >> report.md
+              echo "### $(basename "$img")" >> report.md
               echo "![]($img)" >> report.md
               echo "" >> report.md
             fi
           done
 
-          # MLflow comparison plots
           for img in reports/figures/*mlflow*.png; do
             if [ -f "$img" ]; then
-              echo "### $(basename $img)" >> report.md
+              echo "### $(basename "$img")" >> report.md
               echo "![]($img)" >> report.md
               echo "" >> report.md
             fi
           done
 
-          # Fraud analysis plots
           for img in \
             reports/figures/*fraud*.png \
             reports/figures/*heatmap*.png \
             reports/figures/*class_balance*.png \
             reports/figures/*correlation*.png; do
-
             if [ -f "$img" ]; then
-              echo "### $(basename $img)" >> report.md
+              echo "### $(basename "$img")" >> report.md
               echo "![]($img)" >> report.md
               echo "" >> report.md
             fi
@@ -160,6 +155,12 @@ jobs:
           echo "- Dataset retrieved successfully from Google Drive DVC remote." >> report.md
           echo "- Models and processed datasets are version-controlled through DVC." >> report.md
 
+      - name: Publish CML Comment
+        if: github.event_name == 'pull_request'
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+        run: |
           cml comment create --publish report.md
 
       - name: Upload CML Artifacts

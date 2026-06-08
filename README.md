@@ -829,6 +829,14 @@ Phase 3 workflows automatically generate:
 - Resource usage metrics
 - Pull request evaluation comments
 
+**Project Demonstration Video (4 min 30 sec)**
+
+[![Watch the Demo](https://img.shields.io/badge/Watch-Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/HaxQTxgTx5I)
+
+*A 4 minute 40 second end-to-end demonstration video was recorded and embedded in the main README. The demonstration shows dataset exploration, model comparison, fraud analytics reporting, batch prediction using the deployed API, and interaction with the Hugging Face Streamlit application.*
+
+*The video illustrates the complete MLOps workflow from data ingestion through cloud-hosted inference and reporting.*
+
 ### Related Documentation
 
 - [Phase 3 — CI/CD & Deployment](PHASE3.md)

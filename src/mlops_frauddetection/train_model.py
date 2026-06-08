@@ -23,14 +23,15 @@ from __future__ import annotations
 
 import json
 import logging
+
+# import argparse - replaced by Hydra
+import os
 import pdb
 import time
 import warnings
 from datetime import datetime
 from pathlib import Path
 
-# import argparse - replaced by Hydra
-import os
 import hydra
 import joblib
 import lightgbm as lgb
@@ -180,6 +181,7 @@ def load_data(
         logger.info("Downloading data from GCS: %s", gcs_path)
         data_path.mkdir(parents=True, exist_ok=True)
         from google.cloud import storage
+
         client = storage.Client()
         bucket_name = gcs_path.replace("gs://", "").split("/")[0]
         prefix = "/".join(gcs_path.replace("gs://", "").split("/")[1:]) + "/"
@@ -192,7 +194,7 @@ def load_data(
                 blob.download_to_filename(str(dest))
                 logger.info("Downloaded %s", filename)
         logger.info("Data downloaded from GCS successfully")
-  
+
     logger.info("Loading data from %s", data_path)
     x_train = pd.read_csv(data_path / "x_train.csv")
     y_train = pd.read_csv(data_path / "y_train.csv").squeeze()
@@ -368,9 +370,9 @@ def run_debug_checks(
         f"Training feature/label mismatch: x_train={len(x_train)}, "
         f"y_train={len(y_train)}"
     )
-    assert len(x_test) == len(
-        y_test
-    ), f"Testing feature/label mismatch: x_test={len(x_test)}, y_test={len(y_test)}"
+    assert len(x_test) == len(y_test), (
+        f"Testing feature/label mismatch: x_test={len(x_test)}, y_test={len(y_test)}"
+    )
 
     logger.info("DEBUG x_train shape: %s", x_train.shape)
     logger.info("DEBUG x_test shape: %s", x_test.shape)
@@ -1088,7 +1090,10 @@ def _validate_config(cfg: DictConfig) -> None:
 
     if cfg.project.seed < 0:
         errors.append("project.seed must be non-negative")
-    if not os.environ.get("GCS_DATA_PATH") and not Path(cfg.data.processed_path).exists():
+    if (
+        not os.environ.get("GCS_DATA_PATH")
+        and not Path(cfg.data.processed_path).exists()
+    ):
         errors.append(f"data.processed_path not found: {cfg.data.processed_path}")
     if not (0 < cfg.data.test_size < 1):
         errors.append("data.test_size must be between 0 and 1")
