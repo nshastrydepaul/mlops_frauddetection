@@ -65,6 +65,11 @@ jobs:
           mkdir -p reports/figures
           mkdir -p reports/monitoring
 
+      - name: Clean MLflow Database
+        run: |
+          rm -f mlflow.db
+          rm -rf mlruns
+
       - name: Run Training Pipeline
         run: |
           python -m mlops_frauddetection.train_model
