@@ -829,7 +829,7 @@ Phase 3 workflows automatically generate:
 - Resource usage metrics
 - Pull request evaluation comments
 
-**Project Demonstration Video (4 min 30 sec)**
+**Project Demonstration Video (4 min 40 sec)**
 
 [![Watch the Demo](https://img.shields.io/badge/Watch-Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/HaxQTxgTx5I)
 

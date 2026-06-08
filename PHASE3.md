@@ -258,7 +258,7 @@ Artifacts uploaded from GitHub Actions include:
 - [x] **API Documentation**: Document all endpoints with:
   - [x] Request/response schemas
   - [x] Example curl/Python requests
-  - [ ] Error codes and messages
+  - [x] Error codes and messages  [troubleshooting.md](troubleshooting.md) 
 - [x] **Architecture Documentation**: Include diagrams showing:
   - [x] Data pipeline
   - [x] Training pipeline
