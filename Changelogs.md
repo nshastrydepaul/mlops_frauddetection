@@ -12,7 +12,23 @@ All notable changes to this project are documented here.
 -TODO
 
 ### Added — Nishanth (Section 2)
--TODO
+
+* GitHub Actions CI pipeline with Ruff, mypy, pytest, and Codecov integration
+* Multi-stage Docker containerization for reproducible training and deployment
+* Docker Hub image publishing via automated GitHub Actions workflow
+* Continuous Machine Learning (CML) workflow for automated training, reporting, and artifact generation
+* DVC integration with Google Drive remote for dataset and model versioning in CI/CD
+* Automated monitoring pipeline including drift detection, performance monitoring, and retraining workflows
+* Prometheus-compatible monitoring metrics and system resource tracking
+* Streamlit dashboard integration for monitoring and experiment visualization
+* Dependency management refactoring with separate production and development requirements
+* GitHub Actions workflows for CI validation, CML automation, Docker build/publish, and deployment verification
+* End-to-end MLOps automation covering data versioning, model training, monitoring, reporting, containerization, and deployment workflows
+* Documentation and workflow standardization for reproducible ML engineering practices
+
+One pull request as evidence:
+
+* Full PR description: [reports/pr_nishanth_phase3.txt](reports/pr_nishanth_phase3.txt)
 
 ### Added — Musaddiq (Section 3)
 - FastAPI service with 6 model endpoints (Pipeline A + B)
